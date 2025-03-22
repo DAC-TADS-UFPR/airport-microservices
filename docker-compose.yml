@@ -1,0 +1,43 @@
+
+volumes:
+  mongodb-auth-data:
+
+services:
+  mongodb-auth:
+    image: mongo:6
+    container_name: mongodb-auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: auth_pass
+    volumes:
+      - mongodb-auth-data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: rabbit_pass
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    image: microservices/auth-service:latest
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:auth_pass@mongodb-auth:27017/auth_db?authSource=admin
+      JWT_SECRET: my_jwt_secret
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - mongodb-auth
+         
