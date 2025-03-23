@@ -1,6 +1,7 @@
 
 volumes:
   mongodb-auth-data:
+  postgres-cliente-data:
 
 services:
   mongodb-auth:
@@ -15,6 +16,18 @@ services:
       - "27017:27017"
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+
+  postgres-cliente:
+    image: postgres:15
+    container_name: postgres-cliente
+    environment:
+      POSTGRES_DB: cliente_db
+      POSTGRES_USER: cliente_user
+      POSTGRES_PASSWORD: cliente_pass
+    volumes:
+      - postgres-cliente-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cliente_user -d cliente_db"]
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -40,4 +53,16 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - mongodb-auth
-         
+ 
+  cliente-service:
+    build: ./cliente-service
+    container_name: cliente-service
+    ports:
+      - "8085:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-cliente:5432/cliente_db
+      SPRING_DATASOURCE_USERNAME: cliente_user
+      SPRING_DATASOURCE_PASSWORD: cliente_pass
+    depends_on:
+      postgres-cliente:
+        condition: service_healthy      
