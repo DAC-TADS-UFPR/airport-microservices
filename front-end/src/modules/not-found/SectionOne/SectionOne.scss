@@ -1,0 +1,59 @@
+.sectionOne {
+    position: relative;
+    overflow: hidden;
+    background-color: $color-white;
+    @include container();
+    @include resize(padding-top, 16, 8);
+    @include resize(padding-bottom, 153, 236);
+
+    .container {
+        display: flex;
+        justify-content: center;
+
+        .block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            @include resize(width, 570, 310);
+            @include resize(padding-top, 72, 141);
+
+            &__status {
+                color: $color-tertiary;
+                font-weight: 900;
+                @include resize(font-size, 200, 120);
+                @include resize(line-height, 171, 90);
+                @include resize(padding-bottom, 16);
+            }
+
+            &__message {
+                color: $color-black;
+                font-weight: 500;
+                @include resize(font-size, 32, 18);
+                @include resize(line-height, 40, 26);
+                @include resize(padding-bottom, 32, 24);
+            }
+
+            &__button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: $color-primary;
+                border-radius: 4px;
+                color: $color-black;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                padding: pCalc(16) pCalc(32);
+                @include resize(width, 266);
+                @include resize(gap, 10);
+                @include resize(font-size, 14);
+
+                &:hover {
+                    background: $color-secundary;
+                }
+            }
+        }
+    }
+}

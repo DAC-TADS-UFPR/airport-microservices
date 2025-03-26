@@ -1,0 +1,64 @@
+.footer {
+  position: relative;
+  background-color: $color-grey;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    @include resize(padding-inline, 80, 16);
+  }
+
+  &__links {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+
+  &__link {
+    color: $color-black;
+    font-weight: 700;
+    @include resize(font-size, $b1-fs);
+    @include resize(line-height, $b1-lh);
+    @include resize(padding-block, 10);
+  }
+
+  &__linkIcon {
+    @include resize(width, 24);
+    @include resize(height, 24);
+  }
+
+  &__copy {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 2px solid $color-black;
+    @include resize(padding-block, 16);
+  }
+
+  &__copyTitle {
+    color: $color-black;
+    @include resize(font-size, $b2-fs, $b3-fs);
+    @include resize(line-height, $b2-lh, $b3-lh);
+  }
+
+  &__domaContainer {
+    display: flex;
+    align-items: center;
+    @include resize(gap, 8);
+  }
+
+  &__doma {
+    color: $color-black;
+    @include resize(font-size, $b1-fs, $b2-fs);
+    @include resize(line-height, $b1-lh, $b2-lh);
+  }
+
+  &__domaIcon {
+    @include resize(width, 102);
+    @include resize(height, 16);
+    object-fit: contain;
+    object-position: center;
+  }
+}

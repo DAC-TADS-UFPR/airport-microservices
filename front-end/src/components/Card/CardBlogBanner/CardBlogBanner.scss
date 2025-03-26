@@ -1,0 +1,73 @@
+.cardBlogBanner {
+  position: relative;
+  &__title {
+    color: $color-white;
+    @include resize(font-size, $h2-fs, $h3-fs);
+    @include resize(line-height, $h2-lh, $h3-lh);
+  }
+  &__description {
+    color: $color-white;
+    @include resize(font-size, $s2-fs, $b1-fs);
+    @include resize(line-height, $s2-lh, $b1-lh);
+  }
+  &__category {
+    font-weight: 500;
+    color: $color-black;
+    text-transform: uppercase;
+    background-color: $color-primary;
+    @include resize(font-size, $l3-fs);
+    @include resize(line-height, $l3-lh);
+    @include resize(padding-inline, 16);
+    @include resize(padding-block, 8);
+    @include resize(border-radius, 4);
+  }
+  &__date {
+    color: $color-white;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+  }
+  &__categoryContainer {
+    display: flex;
+    align-items: center;
+    @include resize(gap, 16);
+  }
+  &__titleContainer {
+    @include lineclamp(2);
+    @include res-md {
+      @include lineclamp(3);
+    }
+  }
+  &__descriptionContainer {
+    @include lineclamp(2);
+  }
+  &__container {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    @include resize(width, 1190, 100%);
+    @include resize(height, 460, 360);
+    @include resize(border-radius, 4);
+    &:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0.42%, #000 100%);
+    }
+  }
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &__textContainer {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    @include resize(padding-inline, 48, 16);
+    @include resize(max-width, 789);
+    @include resize(bottom, 58, 42);
+    @include resize(gap, 8);
+  }
+}

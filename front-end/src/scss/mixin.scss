@@ -1,0 +1,218 @@
+@import "@/scss/base/typography.scss";
+@import "@/scss/base/responsives.scss";
+@import "@/scss/utils/colors.scss";
+
+// !exemple : width: dynamic-calc(12, 24, 1366, 1920);
+// !exemple2 : width: dCalc(12, 24) resolucoes ja definidas entre 1366px para 1920px
+// !original: width: calc(12px + (24 - 12) * ((100vw - 1366px) / (1920 - 1366)));
+//  ! VARIAVEIS DO PROJETO
+$maxResDesktop: 1920;
+$minReDesktop: 1366;
+
+@function pCalc($startValue) {
+  $value1: calc(#{$startValue} * 1px);
+  @return calc(
+    #{$value1} + ((#{$startValue}/ 0.72) - #{$startValue}) * ((100vw - calc(#{$minReDesktop} * 1px)) /
+          (#{$maxResDesktop} - #{$minReDesktop}))
+  );
+}
+@function rCalc($finalValue) {
+  $initial: calc(#{$finalValue} * 0.72);
+  $initialPX: calc(#{$initial} * 1px);
+  @return calc(
+    #{$initialPX} + (#{$finalValue} - #{$initial}) * ((100vw - calc(#{$minReDesktop} * 1px)) /
+          (#{$maxResDesktop} - #{$minReDesktop}))
+  );
+}
+@function dCalc($startValue, $endValue) {
+  $value1: calc(#{$startValue} * 1px);
+  @return calc(
+    #{$value1} + (#{$endValue} - #{$startValue}) * ((100vw - calc(#{$minReDesktop} * 1px)) /
+          (#{$maxResDesktop} - #{$minReDesktop}))
+  );
+}
+
+$valid-units: (
+  // Absolute length units
+  "pt",
+  "cm",
+  "mm",
+  "in",
+  "pc",
+  // Relative length units
+  "%",
+  "rem",
+  "em",
+  "ex",
+  "ch",
+  "vw",
+  "dvw",
+  "vh",
+  "dvh",
+  "vmin",
+  "vmax",
+  // CSS Grid unit
+  "fr",
+  // Angle units
+  "deg",
+  "grad",
+  "rad",
+  "turn",
+  // Time units
+  "s",
+  "ms",
+  // Frequency units
+  "Hz",
+  "kHz",
+  // Resolution units
+  "dpi",
+  "dpcm",
+  "dppx",
+  // Generic values
+  "auto",
+  "none",
+  // Global keyword values
+  "inherit",
+  "initial",
+  "unset",
+  // Alignment values for flex and grid
+  "center",
+  "start",
+  "end",
+  "flex-start",
+  "flex-end",
+  "space-between",
+  "space-around",
+  "space-evenly",
+  // Flexbox specific values
+  "baseline",
+  "stretch",
+  // Positional alignment values
+  "left",
+  "right",
+  "top",
+  "bottom",
+  // Display values
+  "block",
+  "inline",
+  "inline-block",
+  "flex",
+  "inline-flex",
+  // Overflow and visibility values
+  "visible",
+  "hidden",
+  "scroll",
+  "clip",
+  // Background properties
+  "cover",
+  "contain",
+  // Border properties
+  "solid",
+  "dashed",
+  "dotted",
+  "double",
+  "groove",
+  "ridge",
+  "inset",
+  "outset",
+  // Text and font properties
+  "normal",
+  "bold",
+  "italic",
+  "underline",
+  "line-through",
+  "overline",
+  // Z-index and positioning properties
+  "relative",
+  "absolute",
+  "fixed",
+  "sticky",
+  // Other common property values
+  "none",
+  "inline",
+  "static",
+  "inherit",
+  "fixed",
+  "absolute"
+);
+
+@mixin resize($prop, $startValue, $finalValue: null) {
+  // Converte o startValue para string para evitar erros
+  $startValueStr: #{$startValue};
+  // Converte o finalValue para string para evitar erros
+  $finalValueStr: #{$finalValue};
+
+  // Verifica se o $startValue contém uma unidade válida
+  $is-start-valid-unit: false;
+  @each $unit in $valid-units {
+    @if str-index($startValueStr, $unit) {
+      $is-start-valid-unit: true;
+    }
+  }
+  // Verifica se o $finalValue contém uma unidade válida
+  $is-final-valid-unit: false;
+  @each $unit in $valid-units {
+    @if str-index($finalValueStr, $unit) {
+      $is-final-valid-unit: true;
+    }
+  }
+  @if $finalValue == null {
+    @if $is-start-valid-unit {
+      // Usa o startValue diretamente se contiver uma unidade válida
+      #{$prop}: $startValue;
+      @include res-md {
+        #{$prop}: $startValue;
+      }
+    } @else {
+      // Usa a lógica da função mpCalc
+      $value2: pCalc($startValue);
+      #{$prop}: $value2;
+      @include res-md {
+        #{$prop}: calc(#{$startValue} * 1px);
+      }
+    }
+  } @else {
+    @if $is-start-valid-unit {
+      #{$prop}: $startValue;
+    } @else {
+      #{$prop}: pCalc($startValue);
+    }
+    @include res-md {
+      @if $is-final-valid-unit {
+        #{$prop}: $finalValue;
+      } @else {
+        #{$prop}: calc(#{$finalValue} * 1px);
+      }
+    }
+  }
+}
+
+@mixin container($type: null) {
+  @if $type == left {
+    padding-left: 0;
+    @include resize(padding-right, 88, 16);
+  } @else if $type == right {
+    padding-right: 0;
+    @include resize(padding-left, 88, 16);
+  } @else if $type == full {
+    padding-left: 0;
+    padding-right: 0;
+  } @else {
+    @include resize(padding-left, 88, 16);
+    @include resize(padding-right, 88, 16);
+  }
+}
+@mixin lineclamp($number, $direction: null) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: #{$number};
+  @if $direction == null {
+    -webkit-box-orient: vertical;
+  } @else if $direction == "vertical" {
+    -webkit-box-orient: $direction;
+  } @else if $direction == "horizontal" {
+    -webkit-box-orient: $direction;
+  } @else {
+    @error "A propriedade 'direction' deve ser 'vertical' ou 'horizontal'";
+  }
+}

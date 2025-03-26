@@ -1,0 +1,63 @@
+.inputFile {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  width: 100%;
+  @include resize(gap, 4);
+  @include resize(max-width, 570);
+  &__element {
+    width: 100%;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    border: 1px solid $color-grey;
+    @include resize(border-radius, 4);
+    @include resize(padding-block, 7);
+    @include resize(padding-inline, 8);
+    background-color: rgba($color-grey, 0.2);
+    &:focus,
+    &:hover {
+      border-color: $color-primary;
+    }
+    &[type="file" i]::-webkit-file-upload-button {
+      @include font-w;
+      background-color: $color-tertiary;
+      color: $color-white;
+      border: none;
+      @include resize(right, 12);
+      @include resize(font-size, $l1-fs);
+      @include resize(border-radius, 4);
+      @include resize(padding-block, 6);
+      @include resize(padding-inline, 12);
+    }
+  }
+  &__label {
+    @include font-w;
+    font-weight: 500;
+    cursor: pointer;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+    @include resize(max-width, 533);
+    &--invalid {
+      color: $color-error;
+    }
+    &:focus,
+    &:hover {
+      color: $color-primary;
+    }
+  }
+  &__helpText {
+    width: 100%;
+    @include resize(max-width, 533);
+    color: $color-error;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+  }
+  &--invalid {
+    .inputFile__element {
+      border-color: $color-error;
+    }
+  }
+}

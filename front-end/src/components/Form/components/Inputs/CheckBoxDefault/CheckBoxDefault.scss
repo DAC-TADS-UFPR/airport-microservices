@@ -1,0 +1,48 @@
+.checkBoxDefault {
+  position: relative;
+  &__container {
+    display: flex;
+    align-items: flex-start;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    width: 100%;
+    @include resize(gap, 8);
+    @include resize(max-width, 570);
+    @include res-md {
+      flex-wrap: unset;
+    }
+  }
+  &__element {
+    font-weight: 500;
+    border: 1px solid $color-grey;
+    @include resize(width, 20);
+    @include resize(height, 20);
+    &:focus,
+    &:hover {
+      color: $color-primary;
+    }
+  }
+  &__label {
+    @include font-w;
+    font-weight: 400;
+    cursor: pointer;
+    @include resize(font-size, $b3-fs);
+    @include resize(line-height, $b3-lh);
+    color: $color-light-black;
+    @include resize(max-width, 533);
+    &--invalid {
+      color: $color-error;
+    }
+    &:focus,
+    &:hover {
+      color: $color-primary;
+    }
+  }
+  &__helpText {
+    width: 100%;
+    @include resize(max-width, 533);
+    color: $color-error;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+  }
+}

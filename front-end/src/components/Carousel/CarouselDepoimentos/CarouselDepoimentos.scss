@@ -1,0 +1,26 @@
+.carouselDepoimentos {
+  .carouselDefault {
+    margin-bottom: 26px;
+    &__dots {
+      display: none;
+      @include res-md {
+        display: flex;
+        bottom: -26px;
+      }
+    }
+    &__dot {
+      border-color: $color-tertiary;
+      &--selected {
+        background-color: $color-tertiary;
+      }
+    }
+    &__button {
+      &--prev {
+        @include resize(left, -50);
+      }
+      &--next {
+        @include resize(right, -50);
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.buttonText {
+  position: relative;
+  display: inline-flex;
+
+  &__link {
+    display: flex;
+    align-items: center;
+
+    color: $color-tertiary;
+    font-weight: 500;
+    text-transform: uppercase;
+    @include resize(font-size, $l1-fs);
+    @include resize(line-height, $l1-lh);
+    @include resize(gap, 8);
+
+    transition: 0.15s ease-in;
+
+    &:after {
+      transition: 0.15s ease-in;
+      content: "";
+      @include resize(width, 20);
+      @include resize(height, 20);
+      background-image: url("/assets/img/icons/chevron-right-blue.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    &:hover {
+      transition: 0.15s ease-out;
+      color: $color-primary;
+
+      &:after {
+        transition: 0.15s ease-out;
+        background-image: url("/assets/img/icons/chevron-right-yellow.svg");
+      }
+    }
+  }
+}

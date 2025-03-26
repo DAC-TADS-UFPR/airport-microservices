@@ -1,0 +1,54 @@
+@import "@/scss/base/typography.scss";
+
+*,
+html,
+body {
+  font-family: $font-default;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-decoration: none;
+  line-height: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-shadow: rgba(0, 0, 0, 0.01) 0 0 1px;
+  text-shadow: rgba(0, 0, 0, 0.01) 0 0 1px;
+  outline: none;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  button {
+    background-color: unset;
+    &:focus {
+      outline: none;
+      outline: none;
+    }
+  }
+
+  a {
+    &:active,
+    &:focus {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  strong,
+  figure,
+  picture {
+    margin-bottom: unset;
+  }
+  li {
+    list-style: none;
+  }
+}

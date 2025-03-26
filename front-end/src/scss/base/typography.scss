@@ -1,0 +1,126 @@
+@font-face {
+  font-family: "Gotham HTF";
+  src:
+    url("../../../public/assets/fonts/GothamHTF-Book.woff2") format("woff2"),
+    url("../../../public/assets/fonts/GothamHTF-Book.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: "Gotham HTF";
+  src:
+    url("../../../public/assets/fonts/GothamHTF-Medium.woff2") format("woff2"),
+    url("../../../public/assets/fonts/GothamHTF-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Gotham HTF";
+  src:
+    url("../../../public/assets/fonts/GothamHTF-Bold.woff2") format("woff2"),
+    url("../../../public/assets/fonts/GothamHTF-Bold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Gotham HTF";
+  src:
+    url("../../../public/assets/fonts/GothamHTF-Black.woff2") format("woff2"),
+    url("../../../public/assets/fonts/GothamHTF-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
+}
+$font-default: "Gotham HTF", sans-serif;
+@mixin font-w {
+  font-family: $font-default;
+  font-weight: 400;
+  &.f-100 {
+    font-weight: 100;
+  }
+  &.f-200 {
+    font-weight: 200;
+  }
+  &.f-300 {
+    font-weight: 300;
+  }
+  &.f-400 {
+    font-weight: 400;
+  }
+  &.f-500 {
+    font-weight: 500;
+  }
+  &.f-600 {
+    font-weight: 600;
+  }
+  &.f-700 {
+    font-weight: 700;
+  }
+}
+@mixin content {
+  @content;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  strong {
+    @content;
+  }
+}
+
+/* Headline/H0 */
+$h0-fs: 56;
+$h0-lh: 64;
+$h0-ls: -2.4;
+/* Headline/H1 */
+$h1-fs: 40;
+$h1-lh: 48;
+$h1-ls: -2;
+/* Headline/H2 */
+$h2-fs: 32;
+$h2-lh: 41.6;
+$h2-ls: -1.6;
+/* Headline/H3 */
+$h3-fs: 24;
+$h3-lh: 32;
+$h3-ls: -1.2;
+
+/* Subtítulo/S1 */
+$s1-fs: 24;
+$s1-lh: 32;
+$s1-ls: -1.2;
+/* Subtítulo/S2 */
+$s2-fs: 18;
+$s2-lh: 26;
+$s2-ls: -0.8;
+
+/* Body/Body 1 */
+$b1-fs: 16;
+$b1-lh: 24;
+$b1-ls: -0.8;
+/* Body/Body 2 */
+$b2-fs: 14;
+$b2-lh: 22;
+$b2-ls: -0.6;
+/* Body/Body 3 */
+$b3-fs: 12;
+$b3-lh: 16;
+$b3-ls: 0.4;
+
+/* Button/Medium */
+$l1-fs: 14;
+$l1-lh: 22;
+$l1-ls: -0.6;
+/* Button/Small */
+$l2-fs: 12;
+$l2-lh: 16;
+$l2-ls: 0.4;

@@ -1,0 +1,30 @@
+.buttonDefault {
+  display: inline-flex;
+
+  &__link {
+    @include font-w;
+    cursor: pointer;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+
+    color: $color-black;
+    border: 1px solid $color-primary;
+    background-color: $color-primary;
+
+    padding: pCalc(16) pCalc(32);
+    transition: background-color 0.25s ease-in;
+
+    @include resize(border-radius, 4);
+    @include resize(font-size, $l2-fs);
+
+    @include res-md {
+      padding: 16px 32px;
+    }
+
+    &:hover {
+      background-color: $color-secundary;
+      transition: background-color 0.25s ease-out;
+    }
+  }
+}

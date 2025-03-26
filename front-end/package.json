@@ -1,0 +1,41 @@
+{
+  "name": "template-start",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.13.4",
+    "@types/he": "^1.2.3",
+    "@types/react-input-mask": "3.0.2",
+    "@types/validator": "^13.11.7",
+    "@use-gesture/react": "^10.3.0",
+    "axios": "^1.6.2",
+    "depcheck": "^1.4.7",
+    "embla-carousel": "^8.1.8",
+    "embla-carousel-auto-scroll": "^8.1.8",
+    "embla-carousel-autoplay": "^8.1.8",
+    "embla-carousel-class-names": "^8.1.8",
+    "embla-carousel-react": "^8.1.8",
+    "he": "^1.2.0",
+    "loader-utils": "^3.2.1",
+    "next": "^14.1.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-input-mask": "3.0.0-alpha.2",
+    "react-responsive": "^10.0.0",
+    "sass": "^1.69.3",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  }
+}

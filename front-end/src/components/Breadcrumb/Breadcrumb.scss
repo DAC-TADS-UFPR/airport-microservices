@@ -1,0 +1,51 @@
+.breadCrumb {
+  overflow: hidden;
+  display: flex;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  @include resize(max-width, 570, 90vw);
+  @include resize(gap, 4);
+
+  &__link {
+    &:not(:last-child) {
+      flex-shrink: 0;
+    }
+
+    pointer-events: none;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: $color-light-black;
+    @include resize(font-size, 14);
+    @include resize(max-width, 330);
+
+    &:focus,
+    &:focus-within {
+      color: $color-light-black;
+    }
+
+    &:hover {
+      color: $color-light-black;
+      opacity: 0.8;
+    }
+
+    &:not(:last-child) {
+      display: flex;
+      opacity: 0.72;
+      pointer-events: auto;
+      @include resize(gap, 4);
+
+      &::after {
+        content: ">";
+        display: block;
+      }
+
+      &:hover {
+        color: $color-light-black;
+        opacity: 0.8;
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+.carouselImages {
+  &__textfigure {
+    @include font-w;
+    color: $color-white;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+    @include lineclamp(1);
+  }
+  &__textfigureContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 85%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    @include resize(padding, 8);
+  }
+  &__imgContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    @include resize(max-width, 386);
+    @include resize(max-height, 386);
+  }
+  &__imgEmphasis {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .carouselDefault {
+    --slide-spacing: 1.5%;
+    --slide-size: 33%;
+    @include res-md {
+      --slide-size: 100%;
+      margin-bottom: 16px;
+    }
+    &__dots {
+      @include res-md {
+        bottom: -26px;
+      }
+    }
+    &__dot {
+      border-color: $color-black;
+      &--selected {
+        background-color: $color-black;
+      }
+    }
+    &__button--prev {
+      @include resize(left, -48);
+    }
+    &__button--next {
+      @include resize(right, -48);
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.InputPhone {
+  display: flex;
+  flex-direction: column;
+  @include resize(gap, 8);
+  width: 100%;
+  &__label {
+    color: $color-black;
+    font-weight: 500;
+    @include resize(font-size, $l1-fs);
+    @include resize(line-height, $l1-lh);
+  }
+  &__element {
+    width: 100%;
+    height: 100%;
+    font-weight: 500;
+    border: 1px solid $color-grey;
+    background: rgba($color-grey, 0.2);
+    @include resize(font-size, $l1-fs);
+    @include resize(border-radius, 4);
+    @include resize(padding-block, 12);
+    @include resize(padding-inline, 16);
+    &:focus,
+    &:hover {
+      border-color: $color-primary;
+    }
+  }
+  &__helpText {
+    color: $color-error;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+  }
+  &--invalid {
+    .InputPhone__label {
+      &--invalid {
+        color: $color-error;
+      }
+    }
+    .InputPhone__element {
+      &--invalid {
+        border-color: $color-error;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+.buttonLink {
+  display: inline-flex;
+  position: relative;
+  &__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: 0.15s ease-in;
+    color: $color-white;
+    @include resize(gap, 8);
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+    &:after {
+      content: "";
+      @include resize(width, 16);
+      @include resize(height, 16);
+      background-image: url("/assets/img/icons/chevron-right-white.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+    &[href=""] {
+      pointer-events: none;
+    }
+    &:hover,
+    &.active {
+      transition: 0.15s ease-out;
+      font-weight: 700;
+      color: $color-primary;
+      &:after {
+        background-image: url("/assets/img/icons/chevron-right-yellow.svg");
+      }
+    }
+  }
+}

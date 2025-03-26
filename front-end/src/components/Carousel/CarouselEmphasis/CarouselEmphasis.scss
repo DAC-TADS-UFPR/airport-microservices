@@ -1,0 +1,46 @@
+.carouselEmphasis {
+  position: relative;
+  background-color: $color-light-grey;
+  @include resize(padding-top, 0, 16);
+  @include resize(padding-bottom, 0, 16);
+  @include res-md {
+    background-color: $color-white;
+    @include container();
+  }
+
+  .carouselDefault {
+    &__slide {
+      transition: opacity 1s ease-in;
+      opacity: 0;
+      &.is-snapped {
+        transition: opacity 1s ease-out;
+        opacity: 1;
+      }
+    }
+    &__button {
+      @include resize(bottom, 56);
+
+      &:disabled {
+        opacity: 1;
+      }
+      &--prev {
+        @include resize(left, 88);
+      }
+      &--next {
+        @include resize(left, 130);
+      }
+    }
+    &__dots {
+      bottom: -25px;
+      @include res-md {
+        bottom: -26px;
+      }
+    }
+    &__dot {
+      border-color: $color-tertiary;
+      &--selected {
+        background-color: $color-tertiary;
+      }
+    }
+  }
+}
