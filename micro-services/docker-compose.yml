@@ -68,7 +68,7 @@ services:
     container_name: auth-service
     image: microservices/auth-service:latest
     ports:
-      - "8081:8080"
+      - "8081:8081"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:auth_pass@mongodb-auth:27017/auth_db?authSource=admin
       JWT_SECRET: my_jwt_secret
@@ -80,7 +80,7 @@ services:
     build: ./cliente-service
     container_name: cliente-service
     ports:
-      - "8085:8080"
+      - "8085:8085"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-cliente:5432/cliente_db
       SPRING_DATASOURCE_USERNAME: cliente_user
@@ -88,11 +88,12 @@ services:
     depends_on:
       postgres-cliente:
         condition: service_healthy
+  
   flight-service:
     build: ./flight-service
     container_name: flight-service
     ports:
-      - "8083:8080"
+      - "8083:8083"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight:5432/flight_db
       SPRING_DATASOURCE_USERNAME: flight_user
