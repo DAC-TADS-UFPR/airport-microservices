@@ -1,0 +1,48 @@
+.userMilesCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    @include resize(gap, 32);
+    @include resize(padding, 32, 16);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: $color-white;
+
+    &__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        @include resize(gap, 32);
+
+        &--mod {
+            justify-content: flex-start;
+            @include resize(gap, 4);
+        }
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include resize(width, 32);
+        @include resize(height, 32);
+    }
+
+    &__title {
+        color: $color-black;
+        @include resize(font-size, $b2-fs);
+        @include resize(line-height, $b2-lh);
+        @include resize(letter-spacing, $b2-ls);
+    }
+
+    &__miles {
+        font-weight: 500;
+        color: $color-black;
+        @include resize(font-size, $s2-fs);
+        @include resize(line-height, $s2-lh);
+        @include resize(letter-spacing, $s2-ls);
+    }
+}

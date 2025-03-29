@@ -1,0 +1,44 @@
+.userHistoryCard {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    @include resize(gap, 16);
+    @include resize(padding, 24, 16);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: $color-white;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include resize(width, 32);
+        @include resize(height, 32);
+        object-fit: contain;
+        object-position: center;
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        width: 100%;
+        @include resize(gap, 4);
+    }
+
+    &__title {
+        color: $color-black;
+        @include resize(font-size, $b3-fs);
+        @include resize(line-height, $b3-lh);
+        @include resize(letter-spacing, $b3-ls);
+    }
+
+    &__miles {
+        font-weight: 500;
+        color: $color-black;
+        @include resize(font-size, $s2-fs);
+        @include resize(line-height, $s2-lh);
+        @include resize(letter-spacing, $s2-ls);
+    }
+}
