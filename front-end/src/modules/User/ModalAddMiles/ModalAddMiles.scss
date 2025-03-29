@@ -1,0 +1,13 @@
+.modalAddMiles {
+    display: flex;
+    flex-direction: column;
+    @include resize(gap, 16);
+    @include resize(margin-top, 16);
+
+    &__row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        @include resize(gap, 4);
+    }
+}

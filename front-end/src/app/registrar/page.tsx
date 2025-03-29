@@ -32,6 +32,12 @@ export default function Page() {
         const data = await response.json();
         if (data.erro) {
           console.error("CEP não encontrado");
+          changeState("street", "value", "");
+          changeState("neighborhood", "value", "");
+          changeState("city", "value", "");
+          changeState("state", "value", "");
+          changeState("cep", "invalid", true);
+          changeState("cep", "errorLabel", "CEP não encontrado");
         } else {
           changeState("street", "value", data.logradouro || "");
           changeState("neighborhood", "value", data.bairro || "");
