@@ -5,6 +5,7 @@ import MainDefault from "@/components/Main/Main";
 import UserMilesCard from "@/modules/User/UserMilesCard/UserMilesCard";
 import UserHistoryCard from "@/modules/User/UserHistoryCard/UserHistoryCard";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import UserReservations from "@/modules/User/UserReservations/UserReservations";
 
 export default function Page() {
   const [navbar, setNavbar] = useState("reservas");
@@ -18,7 +19,7 @@ export default function Page() {
             <UserHistoryCard info="Earned" />
             <UserHistoryCard info="Used" />
           </div>
-          <ButtonDefault children={"Extrato de Milhas"} />
+          <ButtonDefault children={"Extrato de milhas"} />
         </div>
         <div className="user__navigation">
           <div className="user__navbar">
@@ -32,6 +33,8 @@ export default function Page() {
               Histórico
             </div>
           </div>
+
+          {navbar === "reservas" && <UserReservations />}
         </div>
       </section>
     </MainDefault>

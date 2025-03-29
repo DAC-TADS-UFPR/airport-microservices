@@ -26,6 +26,10 @@
     justify-content: center;
     align-items: center;
     @include resize(gap, 8);
+
+    &:hover {
+      opacity: 0.625;
+    }
   }
 
   &__logo {
