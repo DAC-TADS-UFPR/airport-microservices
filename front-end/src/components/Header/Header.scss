@@ -5,123 +5,82 @@
   top: 0;
   transition: top 0.25s ease;
   box-shadow:
-    0px 1px 3px 0px rgba(0, 0, 0, 0.1),
-    0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+    0px 0px 8px 4px rgba(0, 0, 0, 0.1),
+    0px 2px 20px -10px rgba(0, 0, 0, 0.1);
 
-  &__top {
-    top: 0;
-  }
-
-  &__scroll--down {
-    transition: top 0.25s ease;
-    @include resize(top, -100);
-  }
-
-  &__overlay {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    animation: menu-out 1 0.25s ease-out;
-  }
+  background-color: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(0px);
 
   &__containerHeader {
-    @include container;
     position: relative;
+    display: flex;
     z-index: 1;
+    align-items: center;
+    justify-content: space-between;
+    @include resize(padding-block, 16);
+    @include resize(padding-inline, 32);
+  }
+
+  &__logoContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $color-white;
-    @include res-md {
-      box-shadow:
-        0px 1px 3px 0px rgba(0, 0, 0, 0.1),
-        0px 1px 2px -1px rgba(0, 0, 0, 0.1);
-    }
+    @include resize(gap, 8);
   }
 
-  &__open--menu {
-    overflow: visible;
-    .header__overlay {
-      width: 100%;
-      height: 100%;
-      animation: menu-in 1 0.25s ease-out forwards;
-    }
-  }
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include resize(width, 32);
+    @include resize(height, 32);
 
-  &__titleContainer {
-    text-align: center;
-    @include lineclamp(1);
+    &--mod {
+      @include resize(width, 24);
+      @include resize(height, 24);
+    }
   }
 
   &__title {
-    @include font-w;
-    @include resize(font-size, $h0-fs);
-    @include resize(line-height, $h0-lh);
-    @include resize(letter-spacing, $h0-ls);
+    font-weight: 500;
+    color: $color-black;
+    @include resize(font-size, $h3-fs);
+    @include resize(line-height, $h3-lh);
+    @include resize(letter-spacing, $h3-ls);
   }
 
-  &__open--menu:not(.header__open--search) {
-    .header__bloco {
-      .header__containerTitle {
+  &__nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    @include resize(gap, 16);
+  }
+
+  &__navLink {
+    display: flex;
+    align-items: center;
+    @include resize(gap, 4);
+    &:hover {
+      opacity: 0.625;
+    }
+
+    &--mod {
+      &:hover {
         opacity: 1;
-        max-height: 100vh;
-        transition: 0.25s ease-out;
-        @include res-md {
-          pointer-events: all;
-          min-height: 100vh;
-        }
       }
     }
   }
 
-  &__open--search {
-    @include res-md {
-      overflow: visible;
-      .header__overlay {
-        width: 100%;
-        height: 100%;
-        animation: menu-in 1 0.25s ease-out forwards;
-      }
-    }
-  }
+  &__navLinkText {
+    font-weight: 500;
+    color: $color-black;
+    @include resize(font-size, $b1-fs);
+    @include resize(line-height, $b1-lh);
+    @include resize(letter-spacing, $b1-ls);
 
-  // Animation
-  @keyframes menu-in {
-    0% {
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
-    1% {
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes menu-out {
-    0% {
-      width: 100%;
-      height: 100%;
-      opacity: 1;
-    }
-    99% {
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-    }
-    100% {
-      width: 0;
-      height: 0;
-      opacity: 0;
+    &--mod {
+      color: $color-red-30;
     }
   }
 }

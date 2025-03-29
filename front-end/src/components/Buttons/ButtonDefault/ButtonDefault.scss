@@ -1,30 +1,96 @@
 .buttonDefault {
+  cursor: pointer;
+  position: relative;
   display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  @include resize(gap, 4);
+  @include resize(padding-block, 9);
+  @include resize(padding-inline, 32);
 
-  &__link {
-    @include font-w;
-    cursor: pointer;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: uppercase;
+  border-radius: 8px;
+  background-color: $color-primary;
 
-    color: $color-black;
+  color: $color-white;
+  font-style: normal;
+  font-weight: 600;
+  @include resize(font-size, $l1-fs);
+  @include resize(line-height, $l1-lh);
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    background-color: $color-secundary;
+    transition: background-color 0.125s ease;
+  }
+  &--reverse {
+    flex-direction: row-reverse;
+  }
+
+  &--small {
+    @include resize(padding-block, 5);
+    @include resize(padding-inline, 24);
+
+    .buttonDefault__iconContainer {
+      @include resize(width, 16);
+      @include resize(height, 16);
+    }
+  }
+
+  &--white {
     border: 1px solid $color-primary;
-    background-color: $color-primary;
+    background-color: $color-secundary;
 
-    padding: pCalc(16) pCalc(32);
-    transition: background-color 0.25s ease-in;
-
-    @include resize(border-radius, 4);
-    @include resize(font-size, $l2-fs);
-
-    @include res-md {
-      padding: 16px 32px;
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background-color: $color-primary;
+      transition: background-color 0.125s ease;
     }
+  }
 
-    &:hover {
-      background-color: $color-secundary;
-      transition: background-color 0.25s ease-out;
+  &--red {
+    color: $color-gray-90;
+    background-color: $color-red-30;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background-color: $color-red-20;
+      transition: background-color 0.125s ease;
     }
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: $color-gray-50;
+    border-color: $color-gray-50;
+    color: $color-gray-70;
+
+    .buttonDefault__icon {
+      filter: brightness(0) saturate(100%) invert(99%) sepia(59%) saturate(5470%) hue-rotate(177deg) brightness(107%)
+        contrast(97%);
+    }
+  }
+
+  &__iconContainer {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    @include resize(width, 22);
+    @include resize(height, 22);
+
+    &--active {
+      display: flex;
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
   }
 }
