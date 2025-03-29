@@ -1,0 +1,162 @@
+.modalCenter {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: fadeOut 350ms ease-out forwards;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: backgroundFadeOut 350ms ease-out forwards;
+  }
+
+  &--active {
+    pointer-events: all;
+    z-index: 10;
+    animation: fadeIn 350ms ease-in-out forwards;
+
+    &::before {
+      animation: backgroundFadeIn 350ms ease-in-out forwards;
+    }
+  }
+
+  &__container {
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Adjust width and height as needed */
+    // overflow-y: auto;
+    // max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: $color-gray-90;
+    animation: modalScaleOut 350ms ease-in forwards;
+    @include resize(border-radius, 4);
+    @include resize(box-shadow, 0 4px 8px rgba(0, 0, 0, 0.1));
+    &--active {
+      animation: modalScaleIn 350ms ease-in forwards;
+    }
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    @include resize(padding, 24);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include resize(gap, 16);
+    @include resize(min-width, 320);
+  }
+
+  &__title {
+    color: $color-gray-10;
+    font-weight: 700;
+    @include resize(font-size, $b1-fs);
+    @include resize(line-height, $b1-lh);
+  }
+  &__titleDefault {
+    font-weight: 400;
+    @include resize(font-size, $h2-fs);
+    @include resize(line-height, $h2-lh);
+  }
+
+  &__buttonClose {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    @include resize(width, 28);
+    @include resize(height, 28);
+    @include resize(padding, 2);
+
+    &:after {
+      content: "";
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: url("/icons/close.svg") no-repeat center;
+      background-size: contain;
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background-color: $color-gray-70;
+    }
+  }
+  // Keyframes for animations
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      z-index: 10;
+    }
+    to {
+      opacity: 0;
+      z-index: 0;
+    }
+  }
+  @keyframes backgroundFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes backgroundFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes modalScaleIn {
+    from {
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes modalScaleOut {
+    from {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0;
+    }
+  }
+}

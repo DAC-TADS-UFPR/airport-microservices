@@ -15,6 +15,7 @@
     "@types/validator": "^13.11.7",
     "@use-gesture/react": "^10.3.0",
     "axios": "^1.6.2",
+    "date-fns": "^4.1.0",
     "depcheck": "^1.4.7",
     "embla-carousel": "^8.1.8",
     "embla-carousel-auto-scroll": "^8.1.8",
@@ -25,10 +26,12 @@
     "loader-utils": "^3.2.1",
     "next": "^14.1.4",
     "react": "^18",
+    "react-currency-input-field": "^3.10.0",
     "react-dom": "^18",
     "react-input-mask": "3.0.0-alpha.2",
     "react-responsive": "^10.0.0",
     "sass": "^1.69.3",
+    "uuid": "^11.1.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {

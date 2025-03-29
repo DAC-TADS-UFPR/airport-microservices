@@ -1,0 +1,115 @@
+.inputText {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 100%;
+  @include resize(gap, 4);
+
+  &:has(.inputText__element[disabled]) {
+    pointer-events: none;
+  }
+  &--invalid {
+    .inputText__label {
+      color: $color-red-40;
+    }
+    .inputText__element {
+      border-color: $color-red-40;
+      background-color: $color-red-90;
+    }
+    .inputText__helpText {
+      display: block;
+      color: $color-red-40;
+    }
+  }
+  &--white {
+    .inputText__label {
+      color: $color-gray-90;
+    }
+  }
+
+  &__label {
+    flex: 1 0 0;
+    align-self: stretch;
+    color: $color-gray-10;
+    font-style: normal;
+    font-weight: 500;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+  }
+
+  &__header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__element {
+    &--border {
+      border-radius: 300px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    align-self: stretch;
+    border: 2px solid $color-gray-70;
+    border-radius: 4px;
+    background: $color-gray-90;
+    @include resize(padding-block, 8);
+    @include resize(padding-inline, 16);
+    &:has(.inputText__input:disabled):not(.inputText__element--readOnly) {
+      opacity: 0.5;
+    }
+    &:has(.inputText__input:focus),
+    &:has(.inputText__input:focus-visible) {
+      outline: none;
+      border-color: $color-secundary;
+    }
+    &--readOnly {
+      // border: unset;
+      background-color: unset;
+      flex-shrink: 1;
+      justify-content: center;
+      .inputText__input {
+        text-align: center;
+        max-width: fit-content;
+      }
+    }
+  }
+  &__input {
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    width: 100%;
+    background-color: transparent;
+    color: $color-gray-0;
+    font-style: normal;
+    font-weight: 500;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+  }
+  &__suffix {
+    color: $color-gray-0;
+    text-wrap: nowrap;
+    font-weight: 500;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+  }
+
+  &__helpText {
+    color: $color-red-40;
+    font-style: normal;
+    font-weight: 400;
+    @include resize(min-height, $b3-lh);
+    @include resize(font-size, $b3-fs);
+    @include resize(line-height, $b3-lh);
+  }
+}

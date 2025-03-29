@@ -1,28 +1,30 @@
+"use client";
 import "./ButtonDefault.scss";
 import { FC } from "react";
-import LinkDefault from "@/components/LinkDefault/LinkDefault";
+
+type Size = "default" | "small";
+type Variant = "plus" | "export";
+type Color = "default" | "white" | "red";
 
 type Props = {
-  data: { url?: string; title?: string; target?: string; name: string };
-};
+  children?: string;
+  target?: string;
+  variant?: Variant;
+  loading?: boolean;
+  color?: Color;
+  size?: Size;
+} & React.ComponentProps<"button">;
 
-const ButtonDefault: FC<Props> = ({ data, ...rest }) => {
-  if (!data) return;
+const ButtonDefault: FC<Props> = ({ children, variant, color = "default", size = "default", loading, ...rest }) => {
   return (
-    <>
-      {data?.title && (
-        <div className="buttonDefault">
-          <LinkDefault
-            href={data?.url || "#"}
-            className="buttonDefault__link"
-            target={data?.target}
-            title={`Acessar ${data?.name}`}
-            dangerouslySetInnerHTML={{ __html: data?.title }}
-            {...rest}
-          />
-        </div>
-      )}
-    </>
+    <button
+      disabled={loading}
+      type="button"
+      className={`buttonDefault ${variant === "export" || loading ? "buttonDefault--reverse" : ""} buttonDefault--${size} buttonDefault--${color}`}
+      {...rest}
+    >
+      {loading ? "Carregando..." : children}
+    </button>
   );
 };
 

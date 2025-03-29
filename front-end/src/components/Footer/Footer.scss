@@ -1,6 +1,7 @@
 .footer {
   position: relative;
-  background-color: $color-grey;
+  bottom: 0;
+  background-color: $color-white;
 
   &__container {
     display: flex;

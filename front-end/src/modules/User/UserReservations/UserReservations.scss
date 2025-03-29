@@ -1,0 +1,62 @@
+.userReservations {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @include resize(gap, 32);
+
+    &__title {
+        font-weight: 500;
+        @include resize(font-size, $h3-fs);
+        @include resize(line-height, $h3-lh);
+        @include resize(letter-spacing, $h3-ls);
+    }
+
+    &__navbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background-color: $color-white;
+        border-radius: 8px;
+        @include resize(gap, 16);
+        @include resize(padding, 4);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &__navbarButton {
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        @include resize(padding, 4);
+
+        border-radius: 8px;
+        color: $color-black;
+        width: 100%;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+
+        &:hover {
+            background-color: $color-primary;
+            color: $color-white;
+            opacity: 0.8;
+        }
+
+        &--active {
+            background-color: $color-primary;
+            color: $color-white;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        @include resize(gap, 16);
+    }
+}
