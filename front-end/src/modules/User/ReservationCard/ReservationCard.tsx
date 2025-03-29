@@ -1,6 +1,8 @@
-import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import "./ReservationCard.scss";
 import { FC } from "react";
+import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
+import ImgDefault from "@/components/ImgDefault/ImgDefault";
+import ReservationModal from "../ReservationModal/ReservationModal";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 
 type Status = "Next" | "Completed" | "Canceled";
@@ -11,6 +13,15 @@ interface ReservationCardProps {
 }
 
 const ReservationCard: FC<ReservationCardProps> = ({ data, status }) => {
+  const { openModal } = useModal();
+
+  const detailsModal = () => {
+    openModal({
+      headerName: "Detalhes da reserva",
+      children: <ReservationModal status={status} />,
+    });
+  };
+
   return (
     <div className="reservationCard">
       {/* Header */}
@@ -43,11 +54,10 @@ const ReservationCard: FC<ReservationCardProps> = ({ data, status }) => {
         </div>
         <div className="reservationCard__footerInfo">
           <ImgDefault src="/icons/clock.svg" alt="Logo AirTADS" className="reservationCard__logo" />
-
           <span className="reservationCard__footerText">12:00 - 13:50</span>
         </div>
         <div className="reservationCard__footerInfo">
-          <ButtonDefault children={"Detalhes"} style={{ width: "auto" }} />
+          <ButtonDefault children={"Detalhes"} style={{ width: "auto" }} onClick={detailsModal} />
         </div>
       </div>
     </div>

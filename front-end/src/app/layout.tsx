@@ -1,6 +1,7 @@
 import "../scss/main.scss";
 import { Metadata } from "next";
 import Header from "@/components/Header/Header";
+import { ModalProvider } from "@/components/Provider/ModalProvider/ModalProvider";
 
 const metadata: Metadata = {
   title: "Air TADS",
@@ -13,8 +14,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="pt-BR">
       <body>
-        <Header />
-        {children}
+        <ModalProvider>
+          <Header />
+          {children}
+        </ModalProvider>
       </body>
     </html>
   );

@@ -1,0 +1,85 @@
+.inputCurrency {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 100%;
+    @include resize(gap, 4);
+
+    &:has(.inputCurrency__element[disabled]) {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    &--invalid {
+        .inputCurrency__label {
+            color: $color-red-40;
+        }
+
+        .inputCurrency__element {
+            border-color: $color-red-40;
+            background-color: $color-red-90;
+        }
+
+        .inputCurrency__helpText {
+            display: block;
+            color: $color-red-40;
+        }
+    }
+    &--white {
+        .inputCurrency__label {
+            color: $color-gray-90;
+        }
+    }
+
+    &__label {
+        flex: 1 0 0;
+        align-self: stretch;
+        color: $color-gray-10;
+        font-style: normal;
+        font-weight: 600;
+        @include resize(font-size, $b2-fs);
+        @include resize(line-height, $b2-lh);
+    }
+
+    &__element {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        align-self: stretch;
+        @include resize(gap, 27);
+
+        border: 2px solid $color-gray-70;
+        border-radius: 4px;
+        background: $color-gray-90;
+        @include resize(padding-block, 8);
+        @include resize(padding-inline, 16);
+
+        color: $color-gray-0;
+        font-style: normal;
+        font-weight: 500;
+        @include resize(font-size, $b2-fs);
+        @include resize(line-height, $b2-lh);
+
+        &:focus,
+        &:focus-visible {
+            outline: none;
+            border-color: $color-secundary;
+        }
+    }
+
+    &__helpText {
+        display: none;
+        flex: 1 0 0;
+        align-self: stretch;
+
+        color: $color-red-40;
+        font-style: normal;
+        font-weight: 400;
+        @include resize(font-size, $b3-fs);
+        @include resize(line-height, $b3-lh);
+    }
+}
