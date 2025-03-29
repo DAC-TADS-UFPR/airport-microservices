@@ -1,5 +1,5 @@
 
-## Getting Started
+## Getting Started with micro services
 
 1. Clone this repository on your local machine:
    ```sh
@@ -8,7 +8,7 @@
 
 2. Navigate to the project directory:
    ```sh
-   cd airport-microservices
+   cd airport-microservices/micro-services
    ```
 3. Run the following command to build the project images:
    ```sh
