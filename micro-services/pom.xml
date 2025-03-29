@@ -17,6 +17,8 @@
     <modules>
         <module>auth-service</module>
         <module>cliente-service</module>
+        <module>employee-service</module>
+        <module>flight-service</module>
     </modules>
 
     <properties>

@@ -2,6 +2,7 @@
 volumes:
   mongodb-auth-data:
   postgres-cliente-data:
+  postgres-flight-data:
 
 services:
   mongodb-auth:
@@ -29,6 +30,18 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U cliente_user -d cliente_db"]
 
+  postgres-flight:
+    image: postgres:15
+    container_name: postgres-flight
+    environment:
+      POSTGRES_DB: flight_db
+      POSTGRES_USER: flight_user
+      POSTGRES_PASSWORD: flight_pass
+    volumes:
+      - postgres-flight-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flight_user -d flight_db"]
+
   rabbitmq:
     image: rabbitmq:3.12-management
     container_name: rabbitmq
@@ -41,6 +54,15 @@ services:
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
 
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - cliente-service
+      - flight-service
+   
   auth-service:
     build: ./auth-service
     container_name: auth-service
@@ -65,4 +87,16 @@ services:
       SPRING_DATASOURCE_PASSWORD: cliente_pass
     depends_on:
       postgres-cliente:
-        condition: service_healthy      
+        condition: service_healthy
+  flight-service:
+    build: ./flight-service
+    container_name: flight-service
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight:5432/flight_db
+      SPRING_DATASOURCE_USERNAME: flight_user
+      SPRING_DATASOURCE_PASSWORD: flight_pass
+    depends_on:
+      postgres-flight:
+        condition: service_healthy   
