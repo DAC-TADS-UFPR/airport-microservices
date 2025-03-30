@@ -44,6 +44,18 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U flight_user -d flight_db"]
 
+  postgres-employee:
+    image: postgres:15
+    container_name: postgres-employee
+    environment:
+      POSTGRES_DB: employee_db
+      POSTGRES_USER: employee_user
+      POSTGRES_PASSWORD: employee_pass
+    volumes:
+      - postgres-employee-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U employee_user -d employee_db"]
+
   rabbitmq:
     image: rabbitmq:3.12-management
     container_name: rabbitmq
@@ -102,3 +114,16 @@ services:
     depends_on:
       postgres-flight:
         condition: service_healthy   
+
+  employee-service:
+    build: ./employee-service
+    container_name: employee-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-employee:5432/employee_db
+      SPRING_DATASOURCE_USERNAME: employee_user
+      SPRING_DATASOURCE_PASSWORD: employee_pass
+    depends_on:
+      postgres-employee:
+        condition: service_healthy 
