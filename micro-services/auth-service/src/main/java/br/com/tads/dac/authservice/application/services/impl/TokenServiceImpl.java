@@ -30,7 +30,7 @@ public class TokenServiceImpl implements TokenService {
     //@Autowired
     //UserService userService;
 
-    @Override
+    //@Override
     public String generateToken(LoginDTO loginDTO) {
         String token = null;
         /*Date today = new Date();
@@ -61,7 +61,7 @@ public class TokenServiceImpl implements TokenService {
         return token;
     }
 
-    @Override
+    //@Override
     public boolean validateToken(String token) {
          if (token == null) {
             return false;
@@ -81,5 +81,14 @@ public class TokenServiceImpl implements TokenService {
         }
         return false;
     }
-    
+
+    @Override
+    public String generateToken() {
+        return "";
+    }
+
+    @Override
+    public boolean validateToken() {
+        return false;
+    }
 }
