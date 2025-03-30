@@ -64,8 +64,8 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: rabbit_pass
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
 
