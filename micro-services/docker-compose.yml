@@ -3,6 +3,7 @@ volumes:
   mongodb-auth-data:
   postgres-cliente-data:
   postgres-flight-data:
+  postgres-employee-data:
 
 services:
   mongodb-auth:
@@ -113,13 +114,12 @@ services:
       SPRING_DATASOURCE_PASSWORD: flight_pass
     depends_on:
       postgres-flight:
-        condition: service_healthy   
-
+        condition: service_healthy
   employee-service:
     build: ./employee-service
     container_name: employee-service
     ports:
-      - "8083:8083"
+      - "8087:8087"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-employee:5432/employee_db
       SPRING_DATASOURCE_USERNAME: employee_user
