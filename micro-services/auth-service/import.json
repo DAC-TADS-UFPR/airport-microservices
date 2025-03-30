@@ -1,0 +1,20 @@
+[
+    {
+      "email": "admin@airline.com",
+      "password": "$2a$10$xJwL5v5Jz7YbW8Z5XQbZ.evYI1jZrFtjJ7XkQd9V3rJd5lNkKsXeG",
+      "salt": "$2a$10$xJwL5v5Jz7YbW8Z5XQbZ.e",
+      "userType": "FUNCIONARIO",
+      "userId": "65f7a1b2c8e9f01234567890",
+      "createdAt": { "$date": "2025-03-20T10:00:00Z" },
+      "updatedAt": { "$date": "2025-03-20T10:00:00Z" }
+    },
+    {
+      "email": "client1@airline.com",
+      "password": "$2a$10$yH9e.ZWp5rKj3V2lN1xZ.u3M7nPqRsT4wXkSd9F2gH5jKl2mNoXeS",
+      "salt": "$2a$10$yH9e.ZWp5rKj3V2lN1xZ.u",
+      "userType": "CLIENTE",
+      "userId": "65f7a1b2c8e9f01234567891",
+      "createdAt": { "$date": "2025-03-21T11:00:00Z" },
+      "updatedAt": { "$date": "2025-03-21T11:00:00Z" }
+    }
+  ]

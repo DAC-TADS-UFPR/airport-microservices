@@ -8,13 +8,15 @@ services:
   mongodb-auth:
     image: mongo:6
     container_name: mongodb-auth
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: auth_pass
+      MONGO_INITDB_DATABASE: auth_db
     volumes:
       - mongodb-auth-data:/data/db
     ports:
-      - "27017:27017"
+      - "27018:27017"
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
 
@@ -66,9 +68,8 @@ services:
   auth-service:
     build: ./auth-service
     container_name: auth-service
-    image: microservices/auth-service:latest
     ports:
-      - "8081:8081"
+      - "8086:8086"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:auth_pass@mongodb-auth:27017/auth_db?authSource=admin
       JWT_SECRET: my_jwt_secret

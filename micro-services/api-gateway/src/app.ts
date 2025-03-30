@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/login', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/flights', flightRoutes);
 
 
