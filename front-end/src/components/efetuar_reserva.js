@@ -68,4 +68,22 @@ const flights = [
       </table>
     </div>
   );
-    
+  const [selectedFlight, setSelectedFlight] = useState(null);
+
+  return (
+    <div>
+      {!selectedFlight ? (
+        <table> {/* Tabela de voos */} </table>
+      ) : (
+        <div>
+          <h2>Detalhes da Reserva</h2>
+          <p>Origem: {selectedFlight.origin}</p>
+          <p>Destino: {selectedFlight.destination}</p>
+          <p>Data/Hora: {selectedFlight.date} {selectedFlight.time}</p>
+          <p>Preço: ${selectedFlight.price}</p>
+          <button>Confirmar</button>
+        </div>
+      )}
+    </div>
+  );
+      
