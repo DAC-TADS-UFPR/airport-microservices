@@ -41,4 +41,31 @@ const flights = [
       </div>
     );
   }
-  
+  return (
+    <div>
+      <button onClick={handleSearch}>Buscar</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Origem</th>
+            <th>Destino</th>
+            <th>Data/Hora</th>
+            <th>Preço</th>
+            <th>Selecionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredFlights.map((flight) => (
+            <tr key={flight.id}>
+              <td>{flight.origin}</td>
+              <td>{flight.destination}</td>
+              <td>{flight.date} {flight.time}</td>
+              <td>${flight.price}</td>
+              <td><button onClick={() => setSelectedFlight(flight)}>Selecionar</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+    
