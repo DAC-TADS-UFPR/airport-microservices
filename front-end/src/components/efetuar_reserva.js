@@ -96,4 +96,23 @@ const flights = [
       <p>Total: ${totalPrice}</p>
     </div>
   );
-        
+  const [balanceMiles, setBalanceMiles] = useState(50000);
+  const [milesUsed, setMilesUsed] = useState(0);
+  const [reservationCode, setReservationCode] = useState(null);
+  
+  const handleConfirmReservation = () => {
+    const finalPrice = Math.max(0, totalPrice - milesUsed);
+    setBalanceMiles(balanceMiles - milesUsed);
+    setReservationCode("RES" + Math.floor(100 + Math.random() * 900));
+  };
+  
+  return (
+    <div>
+      <p>Saldo de Milhas: {balanceMiles}</p>
+      <input type="number" min="0" max={balanceMiles} value={milesUsed} onChange={(e) => setMilesUsed(Number(e.target.value))} />
+      <p>Valor a pagar: ${totalPrice - milesUsed}</p>
+      <button onClick={handleConfirmReservation}>Confirmar</button>
+      {reservationCode && <p>Código de Reserva: {reservationCode}</p>}
+    </div>
+  );
+          
