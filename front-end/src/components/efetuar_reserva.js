@@ -86,4 +86,14 @@ const flights = [
       )}
     </div>
   );
-      
+  const [tickets, setTickets] = useState(1);
+  const totalPrice = tickets * selectedFlight.price;
+  
+  return (
+    <div>
+      <p>Quantidade de passagens:</p>
+      <input type="number" min="1" value={tickets} onChange={(e) => setTickets(Number(e.target.value))} />
+      <p>Total: ${totalPrice}</p>
+    </div>
+  );
+        
