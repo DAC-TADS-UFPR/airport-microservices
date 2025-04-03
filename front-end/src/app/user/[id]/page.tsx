@@ -6,6 +6,7 @@ import UserMilesCard from "@/modules/User/UserMilesCard/UserMilesCard";
 import UserHistoryCard from "@/modules/User/UserHistoryCard/UserHistoryCard";
 import UserReservations from "@/modules/User/UserReservations/UserReservations";
 import UserHistory from "@/modules/User/UserHistory/UserHistory";
+import AvailableFlights from "@/modules/User/AvailableFlights/AvailableFlights";
 
 export default function Page() {
   const [navbar, setNavbar] = useState("reservas");
@@ -33,7 +34,7 @@ export default function Page() {
             </div>
           </div>
 
-          {navbar === "voos" ? <div>voos</div> : navbar === "historico" ? <UserHistory /> : <UserReservations />}
+          {navbar === "voos" ? <AvailableFlights /> : navbar === "historico" ? <UserHistory /> : <UserReservations />}
         </div>
       </section>
     </MainDefault>
