@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,15 +28,15 @@ public class User implements UserDetails{
     private String email;
     private String password;
     private String salt;
-    private String userType;
-    private String userId;
+    private UserRole userType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + userType));
+		authorities.add(new SimpleGrantedAuthority("ROLE_" + userType.getRole()));
 		return authorities;
     }
     @Override

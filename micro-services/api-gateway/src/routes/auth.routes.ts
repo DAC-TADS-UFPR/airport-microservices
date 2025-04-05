@@ -29,9 +29,7 @@ router.post('/login', async (req, res) => {
     res.status(response.status).json(response.data);
   } catch (e:any) {
     console.error('Error during login:', e.response?.data || e.message);
-    res.status(e.response?.status || 500).json({
-      message: e.response?.data?.message || 'Authentication failed'
-    });
+    res.status(e.response.status).json(e.response.data);
   }
 });
 

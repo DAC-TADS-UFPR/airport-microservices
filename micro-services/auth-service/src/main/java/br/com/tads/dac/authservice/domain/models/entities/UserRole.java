@@ -1,17 +1,17 @@
 package br.com.tads.dac.authservice.domain.models.entities;
 
 public enum UserRole {
-    CLIENTE("CLIENTE"),
-    FUNCIONARIO("FUNCIONARIO");
+    CLIENT("CLIENT"),
+    EMPLOYEE("EMPLOYEE");
     
 
-    private final String descricao;
+    private final String description;
 
-    UserRole(String descricao) {
-        this.descricao = descricao;
+    UserRole(String description) {
+        this.description = description;
     }
 
     public String getRole() {
-        return descricao;
+        return description;
     }    
 }

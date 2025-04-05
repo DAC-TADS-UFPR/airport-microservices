@@ -85,7 +85,7 @@ services:
       - "8086:8086"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:auth_pass@mongodb-auth:27017/auth_db?authSource=admin
-      JWT_SECRET: my_jwt_secret
+      JWT_SECRET: wu9VYp7NkD3Gq1rLv2xE5zP8cJ6bX9mQ0oA4fK7yH1tS5dF3gU6iW4nM2jR9eB0vC8lO5pI3hT7kY2
       SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - mongodb-auth

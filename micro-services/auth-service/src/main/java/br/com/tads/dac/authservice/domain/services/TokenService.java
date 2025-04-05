@@ -35,7 +35,7 @@ public class TokenService {
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("userType", user.getUserType())
-                .claim("userId", user.getUserId())
+                .claim("userId", user.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -59,14 +59,14 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
     
-    public User getUserByIdUser(String token) {
+    public User getUser(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token).getBody();
         User user = null;
         try {
-            user = userService.findByUserId(claims.getSubject());
+            user = userService.findByEmail(claims.getSubject());
             return user;
         }  catch (Exception e) {
             e.printStackTrace();
