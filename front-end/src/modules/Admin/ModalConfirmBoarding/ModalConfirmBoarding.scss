@@ -1,0 +1,13 @@
+.modalConfirmBoarding {
+    display: flex;
+    flex-direction: column;
+    @include resize(gap, 16);
+    @include resize(margin-top, 4);
+
+    &__description {
+        color: $color-gray-20;
+        @include resize(font-size, $b1-fs);
+        @include resize(line-height, $b1-lh);
+        @include resize(letter-spacing, $b1-ls);
+    }
+}

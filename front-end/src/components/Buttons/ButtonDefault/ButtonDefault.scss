@@ -29,8 +29,10 @@
   }
 
   &--small {
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
     @include resize(padding-block, 5);
-    @include resize(padding-inline, 24);
+    @include resize(padding-inline, 12);
 
     .buttonDefault__iconContainer {
       @include resize(width, 16);
@@ -40,11 +42,12 @@
 
   &--white {
     border: 1px solid $color-primary;
-    background-color: $color-secundary;
-
+    background-color: $color-white;
+    color: $color-primary;
     &:hover,
     &:focus,
     &:focus-visible {
+      color: $color-white;
       background-color: $color-primary;
       transition: background-color 0.125s ease;
     }
@@ -58,6 +61,18 @@
     &:focus,
     &:focus-visible {
       background-color: $color-red-20;
+      transition: background-color 0.125s ease;
+    }
+  }
+
+  &--green {
+    color: $color-gray-90;
+    background-color: $color-green-30;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background-color: $color-green-20;
       transition: background-color 0.125s ease;
     }
   }
