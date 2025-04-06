@@ -4,7 +4,7 @@ import { FC } from "react";
 
 type Size = "default" | "small";
 type Variant = "plus" | "export";
-type Color = "default" | "white" | "red";
+type Color = "default" | "white" | "red" | "green";
 
 type Props = {
   children?: string;

@@ -1,0 +1,17 @@
+.modalConfirmFlight {
+    display: flex;
+    flex-direction: column;
+    @include resize(gap, 8);
+    @include resize(margin-top, 8);
+
+    &__description {
+        @include resize(font-size, $b1-fs);
+        @include resize(line-height, $b1-lh);
+        @include resize(letter-spacing, $b1-ls);
+
+        &--mod {
+            font-weight: 600;
+            @include resize(margin-bottom, 16);
+        }
+    }
+}
