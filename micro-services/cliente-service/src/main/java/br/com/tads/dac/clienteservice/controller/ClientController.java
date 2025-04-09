@@ -1,35 +1,47 @@
 package br.com.tads.dac.clienteservice.controller;
 
-import org.springframework.http.HttpStatus;
+import br.com.tads.dac.clienteservice.model.Cliente;
+import br.com.tads.dac.clienteservice.service.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import ch.qos.logback.core.net.server.Client;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
-
 public class ClientController {
-    public ResponseEntity create(@RequestBody Client client) {
-        return new ResponseEntity(HttpStatus.OK);
-}
-    public ResponseEntity update(@RequestBody Client client) {
-        return new ResponseEntity(HttpStatus.OK);
+
+    @Autowired
+    private ClientService clienteService;
+
+    @PostMapping
+    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
+        Cliente created = clienteService.create(cliente);
+        return ResponseEntity.ok(created);
     }
 
-    public ResponseEntity delete(@RequestBody Client client) {
-        return new ResponseEntity(HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
+        Cliente updated = clienteService.update(cliente);
+        return ResponseEntity.ok(updated);
     }
 
-    public ResponseEntity getAll() {
-        return new ResponseEntity(HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        clienteService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity getById(@PathVariable Long id) {
-        return new ResponseEntity(HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<Cliente>> getAll() {
+        return ResponseEntity.ok(clienteService.getAll());
     }
-    
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
+        return clienteService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
