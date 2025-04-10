@@ -10,7 +10,7 @@ interface AvailableFlightsModalProps {
   status?: Status;
 }
 
-const ReservationModal: FC<AvailableFlightsModalProps> = ({ data, status }) => {
+const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status }) => {
   return (
     <div className="availableFlightsModal">
       {/* Header */}
