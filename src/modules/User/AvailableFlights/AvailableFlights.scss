@@ -1,0 +1,189 @@
+.availableFlights {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  @include resize(gap, 16);
+  @include resize(padding-inline, 32);
+  @include resize(padding-block, 24);
+  background-color: $color-white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  &__filter {
+    display: flex;
+    gap: 16px; // espaço entre os inputs
+    flex-wrap: nowrap; // caso queira que eles quebrem em telas menores
+    align-items: flex-end; // alinha os campos na base
+  }
+
+  &__fieldGroup {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 50%;
+    flex: 1; // ocupa metade do espaço se forem 2 inputs
+    min-width: 0; // evita quebra forçada
+  }
+
+  &__search {
+    position: absolute;
+    right: 10px; // distância da borda direita do input
+    top: 65%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+  }
+
+  &__searchBtn {
+    position: absolute;
+    right: 10px;
+    top: 65%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // opcional: se quiser feedback visual
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__inputWrapper {
+    position: relative;
+    width: 100%; // ou defina um tamanho fixo se preferir
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__headerInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include resize(gap, 4);
+  }
+
+  &__logo {
+    display: flex;
+    @include resize(width, 20);
+    @include resize(height, 20);
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__code {
+    color: $color-black;
+    text-transform: uppercase;
+    font-weight: 600;
+    @include resize(font-size, $b1-fs);
+    @include resize(line-height, $b1-lh);
+    @include resize(letter-spacing, $b1-ls);
+  }
+
+  &__status {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    @include resize(padding-block, 4);
+    @include resize(padding-inline, 16);
+
+    border-radius: 300px;
+
+    &--next {
+      background-color: $color-yellow-80;
+      border: 1px solid $color-yellow-10;
+      color: $color-yellow-10;
+    }
+
+    &--completed {
+      background-color: $color-green-80;
+      border: 1px solid $color-green-10;
+      color: $color-green-10;
+    }
+
+    &--canceled {
+      background-color: $color-red-80;
+      border: 1px solid $color-red-10;
+      color: $color-red-10;
+    }
+  }
+
+  &__statusText {
+    font-weight: 400;
+    text-transform: capitalize;
+    @include resize(font-size, $l2-fs);
+    @include resize(line-height, $l2-lh);
+    @include resize(letter-spacing, $l2-ls);
+  }
+
+  &__body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    @include resize(gap, 16);
+  }
+
+  &__cityBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__airport {
+    font-weight: 500;
+    text-transform: uppercase;
+    @include resize(font-size, $s2-fs);
+    @include resize(line-height, $s2-lh);
+    @include resize(letter-spacing, $s2-ls);
+  }
+
+  &__city {
+    font-weight: 400;
+    @include resize(font-size, $l1-fs);
+    @include resize(line-height, $l1-lh);
+    @include resize(letter-spacing, $l1-ls);
+  }
+
+  &__line {
+    @include resize(height, 1);
+    width: 100%;
+    max-width: 60%;
+    background-color: $color-gray-0;
+    opacity: 0.5;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__footerInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include resize(gap, 4);
+  }
+
+  &__footerText {
+    font-weight: 400;
+    @include resize(font-size, $l1-fs);
+    @include resize(line-height, $l1-lh);
+    @include resize(letter-spacing, $l1-ls);
+  }
+}

@@ -1,0 +1,167 @@
+.availableFlightsModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    @include resize(gap, 24);
+    @include resize(padding-top, 32);
+    @include resize(padding-bottom, 16);
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    &__headerInfo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        @include resize(gap, 4);
+    }
+
+    &__logo {
+        display: flex;
+        @include resize(width, 20);
+        @include resize(height, 20);
+        object-fit: cover;
+        object-position: center;
+        filter: brightness(0) saturate(100%) invert(52%) sepia(100%) saturate(1270%) hue-rotate(178deg) brightness(100%)
+            contrast(80%);
+
+        &--mod {
+            rotate: 45deg;
+        }
+    }
+
+    &__code {
+        color: $color-black;
+        text-transform: uppercase;
+        font-weight: 600;
+        @include resize(font-size, $b1-fs);
+        @include resize(line-height, $b1-lh);
+        @include resize(letter-spacing, $b1-ls);
+    }
+
+    &__status {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        @include resize(padding-block, 4);
+        @include resize(padding-inline, 16);
+
+        border-radius: 300px;
+
+        &--next {
+            background-color: $color-yellow-80;
+            border: 1px solid $color-yellow-10;
+            color: $color-yellow-10;
+        }
+
+        &--completed {
+            background-color: $color-green-80;
+            border: 1px solid $color-green-10;
+            color: $color-green-10;
+        }
+
+        &--canceled {
+            background-color: $color-red-80;
+            border: 1px solid $color-red-10;
+            color: $color-red-10;
+        }
+    }
+
+    &__statusText {
+        font-weight: 400;
+        text-transform: capitalize;
+        @include resize(font-size, $l2-fs);
+        @include resize(line-height, $l2-lh);
+        @include resize(letter-spacing, $l2-ls);
+    }
+
+    &__body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        @include resize(gap, 16);
+    }
+
+    &__cityBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__airport {
+        font-weight: 500;
+        text-transform: uppercase;
+        @include resize(font-size, $s2-fs);
+        @include resize(line-height, $s2-lh);
+        @include resize(letter-spacing, $s2-ls);
+    }
+
+    &__city {
+        font-weight: 400;
+        @include resize(font-size, $l1-fs);
+        @include resize(line-height, $l1-lh);
+        @include resize(letter-spacing, $l1-ls);
+    }
+
+    &__line {
+        @include resize(height, 1);
+        width: 100%;
+        max-width: 60%;
+        background-color: $color-gray-0;
+        opacity: 0.5;
+    }
+
+    &__details {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    &__detailsInfo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        @include resize(gap, 4);
+    }
+
+    &__detailsText {
+        font-weight: 400;
+        @include resize(font-size, $l1-fs);
+        @include resize(line-height, $l1-lh);
+        @include resize(letter-spacing, $l1-ls);
+    }
+
+    &__priceText {
+        font-weight: 400;
+        @include resize(font-size, $b1-fs);
+        @include resize(line-height, $b1-lh);
+        @include resize(letter-spacing, $b1-ls);
+    }
+
+    &__price {
+        font-weight: 500;
+        @include resize(font-size, $b1-fs);
+        @include resize(line-height, $b1-lh);
+        @include resize(letter-spacing, $b1-ls);
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        @include resize(gap, 24);
+        @include resize(margin-top, 16);
+    }
+}
