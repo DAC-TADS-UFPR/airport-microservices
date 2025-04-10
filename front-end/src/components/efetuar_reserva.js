@@ -115,4 +115,17 @@ const flights = [
       {reservationCode && <p>Código de Reserva: {reservationCode}</p>}
     </div>
   );
-          
+  import { Card, CardContent } from "@/components/ui/card";
+  import { Button } from "@/components/ui/button";
+  
+  return (
+    <Card>
+      <CardContent>
+        <h2 className="text-xl font-bold">Efetuar Reserva</h2>
+        <input className="border p-2 rounded" placeholder="Aeroporto Origem" />
+        <input className="border p-2 rounded" placeholder="Aeroporto Destino" />
+        <Button onClick={handleSearch}>Buscar</Button>
+      </CardContent>
+    </Card>
+  );
+            
