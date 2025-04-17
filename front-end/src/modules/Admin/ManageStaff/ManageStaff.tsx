@@ -26,7 +26,7 @@ const mockedData = [
     name: "Pedro Oliveira",
     cpf: "456.789.123-00",
     email: "pedro.oliveira@example.com",
-    telefone: "(31) 98765-4321",
+    telefone: "(31) 98765-4221",
     active: true,
   },
 ];
