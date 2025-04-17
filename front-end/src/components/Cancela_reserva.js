@@ -11,3 +11,15 @@ export default function CancelarReserva() {
     </div>
   );
 }
+type Reserva = {
+    id: string;
+    status: string;
+    voo: {
+      origem: string;
+      destino: string;
+      data: string;
+    };
+    milhasGastas: number;
+    valorPago: number;
+  };
+  
