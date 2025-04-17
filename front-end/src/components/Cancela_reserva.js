@@ -22,4 +22,12 @@ type Reserva = {
     milhasGastas: number;
     valorPago: number;
   };
-  
+  const [reserva, setReserva] = useState<Reserva | null>(null);
+
+useEffect(() => {
+  if (id) {
+    fetch(`/api/reservas/${id}`)
+      .then(res => res.json())
+      .then(data => setReserva(data));
+  }
+}, [id]);
