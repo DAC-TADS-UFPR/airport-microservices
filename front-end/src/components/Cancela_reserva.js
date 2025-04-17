@@ -31,3 +31,23 @@ useEffect(() => {
       .then(data => setReserva(data));
   }
 }, [id]);
+const podeCancelar = reserva?.status === 'CRIADA' || reserva?.status === 'CHECK-IN';
+const [mensagem, setMensagem] = useState('');
+
+const cancelarReserva = async () => {
+  if (!podeCancelar) {
+    setMensagem("Esta reserva não pode ser cancelada.");
+    return;
+  }
+
+  const res = await fetch(`/api/reservas/${id}/cancelar`, {
+    method: 'POST',
+  });
+
+  if (res.ok) {
+    setMensagem("Reserva cancelada com sucesso.");
+    router.push('/minhas-reservas');
+  } else {
+    setMensagem("Erro ao cancelar a reserva.");
+  }
+};
