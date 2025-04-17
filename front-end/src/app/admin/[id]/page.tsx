@@ -3,6 +3,8 @@ import "./page.scss";
 import { useState } from "react";
 import MainDefault from "@/components/Main/Main";
 import NextFlights from "@/modules/Admin/NextFlights/NextFlights";
+import ManageStaff from "@/modules/Admin/ManageStaff/ManageStaff";
+import ManageFlights from "@/modules/Admin/ManageFlights/ManageFlights";
 
 export default function Page() {
   const [navbar, setNavbar] = useState("proximos");
@@ -21,7 +23,7 @@ export default function Page() {
             Gerenciar equipe
           </div>
         </div>
-        {navbar === "gerenciar" ? <></> : navbar === "equipe" ? <></> : <NextFlights />}
+        {navbar === "gerenciar" ? <ManageFlights /> : navbar === "equipe" ? <ManageStaff /> : <NextFlights />}
       </section>
     </MainDefault>
   );

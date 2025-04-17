@@ -1,0 +1,148 @@
+.inputDate {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 100%;
+  @include resize(gap, 4);
+
+  &:has(.inputDate__element[disabled]) {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &--invalid {
+    .inputDate__label {
+      color: $color-red-40;
+    }
+
+    .inputDate__element {
+      border-color: $color-red-40;
+      background-color: $color-red-90;
+    }
+
+    .inputDate__input {
+      background-color: $color-red-90;
+    }
+
+    .inputDate__helpText {
+      display: block;
+      color: $color-red-40;
+    }
+  }
+
+  &--white {
+    .inputDate__label {
+      color: $color-gray-90;
+    }
+  }
+
+  &__label {
+    flex: 1 0 0;
+    align-self: stretch;
+    color: $color-gray-10;
+    font-style: normal;
+    font-weight: 600;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+  }
+
+  &__element {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-self: stretch;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    @include resize(gap, 27);
+    border: 2px solid $color-gray-70;
+    border-radius: 4px;
+    background: $color-gray-90;
+    @include resize(padding-block, 8.5);
+    @include resize(padding-inline, 16);
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+    }
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      outline: none;
+      border-color: $color-primary;
+    }
+
+    .selectDate {
+      @include resize(max-width, 310);
+      box-shadow:
+        0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__input {
+    width: 100%;
+    background: $color-gray-90;
+    color: $color-gray-0;
+    font-style: normal;
+    font-weight: 500;
+    @include resize(font-size, $b2-fs);
+    @include resize(line-height, $b2-lh);
+    &:focus,
+    &:focus-visible {
+      .inputDate__element {
+        outline: none;
+        border-color: $color-primary;
+      }
+    }
+  }
+
+  &__button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    @include resize(width, 22);
+    @include resize(height, 22);
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      &:not(:disabled) {
+        filter: brightness(0) saturate(100%) invert(80%) sepia(59%) saturate(5643%) hue-rotate(133deg) brightness(87%)
+          contrast(76%);
+      }
+    }
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: brightness(0) saturate(100%) invert(17%) sepia(21%) saturate(1143%) hue-rotate(165deg) brightness(94%)
+      contrast(96%);
+
+    &:hover {
+      filter: brightness(0) saturate(100%) invert(14%) sepia(51%) saturate(5369%) hue-rotate(167deg) brightness(96%)
+        contrast(99%);
+    }
+  }
+
+  &__helpText {
+    align-self: stretch;
+    color: $color-red-40;
+    font-style: normal;
+    font-weight: 400;
+    @include resize(min-height, $b3-lh);
+    @include resize(font-size, $b3-fs);
+    @include resize(line-height, $b3-lh);
+  }
+}

@@ -14,17 +14,7 @@ type InputProp = {
   onChange: (e: any) => void;
 };
 
-const InputCurrency: FC<InputProp> = ({
-  id,
-  label,
-  name,
-  erroMsg,
-  invalid,
-  variant = "default",
-  value,
-  onChange,
-  ...props
-}) => {
+const InputCurrency: FC<InputProp> = ({ id, label, name, erroMsg, invalid, variant = "default", value, onChange, ...props }) => {
   return (
     <div className={`inputCurrency ${invalid ? "inputCurrency--invalid" : ""} inputCurrency--${variant}`}>
       {label && (
@@ -47,8 +37,8 @@ const InputCurrency: FC<InputProp> = ({
           const syntheticEvent = {
             target: {
               name: name,
-              value: sanitizedValue
-            }
+              value: sanitizedValue,
+            },
           };
           onChange(syntheticEvent);
         }}
