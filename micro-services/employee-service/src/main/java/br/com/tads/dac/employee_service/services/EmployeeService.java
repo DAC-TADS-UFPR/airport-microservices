@@ -1,7 +1,9 @@
 package br.com.tads.dac.employee_service.services;
 
 import br.com.tads.dac.employee_service.entities.Employee;
+import br.com.tads.dac.employee_service.exceptions.ResourceNotFoundException;
 import br.com.tads.dac.employee_service.repositories.EmployeeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,8 +19,21 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee update(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee update(Long id,Employee employee) {
+        try {
+            Employee entity = employeeRepository.getReferenceById(id);
+            updateData(entity,employee);
+            return employeeRepository.save(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Employee entity, Employee obj) {
+        entity.setName(obj.getName());
+        entity.setEmail(obj.getEmail());
+        entity.setPhone(obj.getPhone());
     }
 
     public void delete(Long id) {
