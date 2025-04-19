@@ -15,19 +15,20 @@ export class ClientSagaOrchestatorator {
         return ClientSagaOrchestatorator.instance;
     }
     
-    public async createClient(clientData: IClient): Promise<any> {
+    public async createClient(clientData: IClient) {
         console.log('Client create request:', clientData);
-        const authRequest:IAuth = new IAuth(clientData.id, clientData.email, clientData.password , UserType.CLIENT);
-        const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/create`, clientData);
+        const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}`, clientData);
         const clientId = clientResponse.data?.id;
-        if(clientResponse.status !== 201) {
-            return clientResponse.data;
+        if(clientResponse.status !== 200) {
+            return clientResponse;
         }
-        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
+        const authRequest:IAuth = new IAuth(clientData.email, clientData.password , UserType.CLIENT);
+        console.log('Auth create request:', authRequest);
+        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/create`, authRequest);
         if(authResponse.status !== 201) {
             await axios.delete(`${SERVICE_CONFIG.CLIENT.url}/${clientId}`);
-            return authResponse.data;
+            return authResponse;
         }  
-        return authResponse.data;
+        return authResponse;
     }
 }

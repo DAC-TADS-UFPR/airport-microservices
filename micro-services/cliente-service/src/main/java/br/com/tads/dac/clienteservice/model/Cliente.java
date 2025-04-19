@@ -27,5 +27,6 @@ public class Cliente {
     private Integer milhas;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransacaoMilhas> transacoes;
+    @Builder.Default
+    private List<TransacaoMilhas> transacoes = new java.util.ArrayList<>();
 }

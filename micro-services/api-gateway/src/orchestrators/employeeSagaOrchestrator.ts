@@ -10,17 +10,17 @@ export class EmployeeSagaOrchestatorator {
     
     public async createEmployee(employeeData: IEmployee): Promise<any> {
         console.log('Employee create request:', employeeData);
-        const authRequest:IAuth = new IAuth(employeeData.id, employeeData.email, employeeData.password , UserType.EMPLOYEE);
         const employeeResponse = await axios.post(`${SERVICE_CONFIG.EMPLOYEE.url}`, employeeData);
         const employeeId = employeeResponse.data?.id;
-        if(employeeResponse.status !== 201) {
-            return employeeResponse.data;
+        if(employeeResponse.status !== 200) {
+            return employeeResponse;
         }
-        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
+        const authRequest:IAuth = new IAuth( employeeData.email, employeeData.password , UserType.EMPLOYEE);
+        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/create`, authRequest);
         if(authResponse.status !== 201) {
             await axios.delete(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeId}`);
-            return authResponse.data;
+            return authResponse;
         }  
-        return authResponse.data;
+        return authResponse;
     }
 }
