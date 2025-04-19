@@ -52,6 +52,8 @@ services:
       POSTGRES_DB: employee_db
       POSTGRES_USER: employee_user
       POSTGRES_PASSWORD: employee_pass
+    ports:
+      - "5434:5432"
     volumes:
       - postgres-employee-data:/var/lib/postgresql/data
     healthcheck:
@@ -124,6 +126,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-employee:5432/employee_db
       SPRING_DATASOURCE_USERNAME: employee_user
       SPRING_DATASOURCE_PASSWORD: employee_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
     depends_on:
       postgres-employee:
-        condition: service_healthy 
+        condition: service_healthy
