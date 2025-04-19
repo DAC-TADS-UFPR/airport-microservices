@@ -3,15 +3,13 @@ package br.com.tads.dac.employee_service.controllers;
 
 import br.com.tads.dac.employee_service.entities.Employee;
 import br.com.tads.dac.employee_service.services.EmployeeService;
-import ch.qos.logback.core.net.server.Client;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/")
 public class EmployeeController {
 
     @Autowired

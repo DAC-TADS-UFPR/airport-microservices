@@ -1,0 +1,2733 @@
+diff --git a/front-end/package.json b/front-end/package.json
+index 5308825..521e8e5 100644
+--- a/front-end/package.json
++++ b/front-end/package.json
+@@ -9,7 +9,6 @@
+     "lint": "next lint"
+   },
+   "dependencies": {
+-    "@floating-ui/react-dom": "^2.1.2",
+     "@tanstack/react-query": "^5.13.4",
+     "@types/he": "^1.2.3",
+     "@types/react-input-mask": "3.0.2",
+@@ -28,7 +27,6 @@
+     "next": "^14.1.4",
+     "react": "^18",
+     "react-currency-input-field": "^3.10.0",
+-    "react-day-picker": "^9.6.7",
+     "react-dom": "^18",
+     "react-input-mask": "3.0.0-alpha.2",
+     "react-responsive": "^10.0.0",
+diff --git a/front-end/src/app/admin/[id]/page.tsx b/front-end/src/app/admin/[id]/page.tsx
+index a9d62ec..f22c80b 100644
+--- a/front-end/src/app/admin/[id]/page.tsx
++++ b/front-end/src/app/admin/[id]/page.tsx
+@@ -3,8 +3,6 @@ import "./page.scss";
+ import { useState } from "react";
+ import MainDefault from "@/components/Main/Main";
+ import NextFlights from "@/modules/Admin/NextFlights/NextFlights";
+-import ManageStaff from "@/modules/Admin/ManageStaff/ManageStaff";
+-import ManageFlights from "@/modules/Admin/ManageFlights/ManageFlights";
+ 
+ export default function Page() {
+   const [navbar, setNavbar] = useState("proximos");
+@@ -23,7 +21,7 @@ export default function Page() {
+             Gerenciar equipe
+           </div>
+         </div>
+-        {navbar === "gerenciar" ? <ManageFlights /> : navbar === "equipe" ? <ManageStaff /> : <NextFlights />}
++        {navbar === "gerenciar" ? <></> : navbar === "equipe" ? <></> : <NextFlights />}
+       </section>
+     </MainDefault>
+   );
+diff --git a/front-end/src/components/Inputs/InputCurrency/InputCurrency.scss b/front-end/src/components/Inputs/InputCurrency/InputCurrency.scss
+index ad7418f..b3cfccf 100644
+--- a/front-end/src/components/Inputs/InputCurrency/InputCurrency.scss
++++ b/front-end/src/components/Inputs/InputCurrency/InputCurrency.scss
+@@ -36,6 +36,7 @@
+     }
+ 
+     &__label {
++        flex: 1 0 0;
+         align-self: stretch;
+         color: $color-gray-10;
+         font-style: normal;
+diff --git a/front-end/src/components/Inputs/InputCurrency/InputCurrency.tsx b/front-end/src/components/Inputs/InputCurrency/InputCurrency.tsx
+index 92e29d2..cb17e47 100644
+--- a/front-end/src/components/Inputs/InputCurrency/InputCurrency.tsx
++++ b/front-end/src/components/Inputs/InputCurrency/InputCurrency.tsx
+@@ -14,7 +14,17 @@ type InputProp = {
+   onChange: (e: any) => void;
+ };
+ 
+-const InputCurrency: FC<InputProp> = ({ id, label, name, erroMsg, invalid, variant = "default", value, onChange, ...props }) => {
++const InputCurrency: FC<InputProp> = ({
++  id,
++  label,
++  name,
++  erroMsg,
++  invalid,
++  variant = "default",
++  value,
++  onChange,
++  ...props
++}) => {
+   return (
+     <div className={`inputCurrency ${invalid ? "inputCurrency--invalid" : ""} inputCurrency--${variant}`}>
+       {label && (
+@@ -37,8 +47,8 @@ const InputCurrency: FC<InputProp> = ({ id, label, name, erroMsg, invalid, varia
+           const syntheticEvent = {
+             target: {
+               name: name,
+-              value: sanitizedValue,
+-            },
++              value: sanitizedValue
++            }
+           };
+           onChange(syntheticEvent);
+         }}
+diff --git a/front-end/src/components/Inputs/InputDate/InputDate.scss b/front-end/src/components/Inputs/InputDate/InputDate.scss
+deleted file mode 100644
+index d2ce0da..0000000
+--- a/front-end/src/components/Inputs/InputDate/InputDate.scss
++++ /dev/null
+@@ -1,148 +0,0 @@
+-.inputDate {
+-  position: relative;
+-
+-  display: flex;
+-  flex-direction: column;
+-  align-items: flex-start;
+-  flex-shrink: 0;
+-  align-self: stretch;
+-  width: 100%;
+-  @include resize(gap, 4);
+-
+-  &:has(.inputDate__element[disabled]) {
+-    opacity: 0.5;
+-    pointer-events: none;
+-  }
+-
+-  &--invalid {
+-    .inputDate__label {
+-      color: $color-red-40;
+-    }
+-
+-    .inputDate__element {
+-      border-color: $color-red-40;
+-      background-color: $color-red-90;
+-    }
+-
+-    .inputDate__input {
+-      background-color: $color-red-90;
+-    }
+-
+-    .inputDate__helpText {
+-      display: block;
+-      color: $color-red-40;
+-    }
+-  }
+-
+-  &--white {
+-    .inputDate__label {
+-      color: $color-gray-90;
+-    }
+-  }
+-
+-  &__label {
+-    flex: 1 0 0;
+-    align-self: stretch;
+-    color: $color-gray-10;
+-    font-style: normal;
+-    font-weight: 600;
+-    @include resize(font-size, $b2-fs);
+-    @include resize(line-height, $b2-lh);
+-  }
+-
+-  &__element {
+-    position: relative;
+-    display: flex;
+-    flex-shrink: 0;
+-    align-self: stretch;
+-    align-items: center;
+-    justify-content: space-between;
+-    width: 100%;
+-    @include resize(gap, 27);
+-    border: 2px solid $color-gray-70;
+-    border-radius: 4px;
+-    background: $color-gray-90;
+-    @include resize(padding-block, 8.5);
+-    @include resize(padding-inline, 16);
+-    &[aria-disabled="true"] {
+-      opacity: 0.5;
+-    }
+-    &:focus,
+-    &:focus-within,
+-    &:focus-visible {
+-      outline: none;
+-      border-color: $color-primary;
+-    }
+-
+-    .selectDate {
+-      @include resize(max-width, 310);
+-      box-shadow:
+-        0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+-        0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+-    }
+-  }
+-
+-  &__input {
+-    width: 100%;
+-    background: $color-gray-90;
+-    color: $color-gray-0;
+-    font-style: normal;
+-    font-weight: 500;
+-    @include resize(font-size, $b2-fs);
+-    @include resize(line-height, $b2-lh);
+-    &:focus,
+-    &:focus-visible {
+-      .inputDate__element {
+-        outline: none;
+-        border-color: $color-primary;
+-      }
+-    }
+-  }
+-
+-  &__button {
+-    cursor: pointer;
+-    display: flex;
+-    align-items: center;
+-    justify-content: center;
+-    border-radius: 100%;
+-    @include resize(width, 22);
+-    @include resize(height, 22);
+-
+-    &:hover,
+-    &:focus,
+-    &:focus-visible {
+-      &:not(:disabled) {
+-        filter: brightness(0) saturate(100%) invert(80%) sepia(59%) saturate(5643%) hue-rotate(133deg) brightness(87%)
+-          contrast(76%);
+-      }
+-    }
+-    &:disabled {
+-      cursor: not-allowed;
+-      opacity: 0.5;
+-    }
+-  }
+-
+-  &__icon {
+-    width: 100%;
+-    height: 100%;
+-    object-fit: contain;
+-    object-position: center;
+-    filter: brightness(0) saturate(100%) invert(17%) sepia(21%) saturate(1143%) hue-rotate(165deg) brightness(94%)
+-      contrast(96%);
+-
+-    &:hover {
+-      filter: brightness(0) saturate(100%) invert(14%) sepia(51%) saturate(5369%) hue-rotate(167deg) brightness(96%)
+-        contrast(99%);
+-    }
+-  }
+-
+-  &__helpText {
+-    align-self: stretch;
+-    color: $color-red-40;
+-    font-style: normal;
+-    font-weight: 400;
+-    @include resize(min-height, $b3-lh);
+-    @include resize(font-size, $b3-fs);
+-    @include resize(line-height, $b3-lh);
+-  }
+-}
+diff --git a/front-end/src/components/Inputs/InputDate/InputDate.tsx b/front-end/src/components/Inputs/InputDate/InputDate.tsx
+deleted file mode 100644
+index 106e210..0000000
+--- a/front-end/src/components/Inputs/InputDate/InputDate.tsx
++++ /dev/null
+@@ -1,91 +0,0 @@
+-"use client";
+-import "./InputDate.scss";
+-import { FC, useState } from "react";
+-import { format, parse, isValid } from "date-fns";
+-import InputMask, { Props } from "react-input-mask";
+-import ImgDefault from "@/components/ImgDefault/ImgDefault";
+-import useClickOutside from "@/hooks/useClickOutside";
+-import SelectDate from "../SelectDate/SelectDate";
+-
+-type InputProp = Omit<Props, "mask"> & {
+-  label?: string;
+-  erroMsg?: string;
+-  invalid?: boolean;
+-  variant?: "default" | "white";
+-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+-  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+-  activeControl?: boolean;
+-};
+-
+-const InputDate: FC<InputProp> = ({ id, label, value, erroMsg = "", invalid, variant, onChange, onBlur, activeControl, disabled, ...rest }) => {
+-  const [invalidInput, setInvalidInput] = useState(invalid);
+-  const [inputValue, setInputValue] = useState(value);
+-  const [active, setActive, ref] = useClickOutside();
+-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(value ? parse(value.toString(), "dd/MM/yyyy", new Date()) : new Date());
+-  const toggleDialog = () => setActive(!active);
+-
+-  const handleDayPickerSelect = (date: Date | undefined) => {
+-    setSelectedDate(date);
+-    if (!date) return;
+-    setInvalidInput(false);
+-    const dateFormatted = format(date, "dd/MM/yyyy");
+-    setInputValue(dateFormatted);
+-    onChange({ target: { value: dateFormatted } } as React.ChangeEvent<HTMLInputElement>);
+-    onBlur && onBlur({ target: { value: dateFormatted } } as React.ChangeEvent<HTMLInputElement>);
+-    setActive(false);
+-  };
+-
+-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+-    setInputValue(e.target.value);
+-    const parsedDate = parse(e.target.value, "dd/MM/yyyy", new Date());
+-    if (!isValid(parsedDate)) {
+-      setInvalidInput(true);
+-      return setSelectedDate(undefined);
+-    }
+-    setInvalidInput(false);
+-    setSelectedDate(parsedDate);
+-  };
+-
+-  const handleOk = () => {
+-    if (selectedDate) setInputValue(format(selectedDate, "dd/MM/yyyy"));
+-    toggleDialog();
+-  };
+-
+-  return (
+-    <div className={`inputDate ${invalidInput || invalid ? "inputDate--invalid" : ""} inputDate--${variant}`}>
+-      {label && (
+-        <label htmlFor={id} className="inputDate__label inputDate__label--invalid">
+-          {label}
+-        </label>
+-      )}
+-      <div className="inputDate__element" id="inputDate" aria-disabled={disabled} ref={ref}>
+-        {/* @ts-ignore */}
+-        <InputMask
+-          id={id}
+-          disabled={disabled}
+-          type="text"
+-          value={inputValue || value}
+-          mask="99/99/9999"
+-          maskPlaceholder={null}
+-          autoComplete="one-time-code"
+-          className="inputDate__input"
+-          {...rest}
+-          onBlur={onBlur}
+-          onChange={(e) => {
+-            handleInputChange(e);
+-            onChange(e);
+-          }}
+-        />
+-        <button type="button" className="inputDate__button" onClick={toggleDialog} disabled={disabled}>
+-          <ImgDefault src="/icons/calendar.svg" alt="Calendário" className="inputDate__icon" />
+-        </button>
+-        {active && (
+-          <SelectDate mode="single" selectedDate={selectedDate} onSelect={handleDayPickerSelect} onCancel={toggleDialog} onOk={handleOk} isOpen={active} />
+-        )}
+-      </div>
+-      {erroMsg && <span className="inputDate__helpText">{invalid && erroMsg}</span>}
+-    </div>
+-  );
+-};
+-
+-export default InputDate;
+diff --git a/front-end/src/components/Inputs/SelectDate/SelectDate.scss b/front-end/src/components/Inputs/SelectDate/SelectDate.scss
+deleted file mode 100644
+index b34a7e8..0000000
+--- a/front-end/src/components/Inputs/SelectDate/SelectDate.scss
++++ /dev/null
+@@ -1,199 +0,0 @@
+-.selectDate {
+-  z-index: 5;
+-  overflow: hidden;
+-  position: absolute;
+-  right: 0;
+-  display: flex;
+-  flex-direction: column;
+-  justify-content: center;
+-  width: 100%;
+-  @include resize(max-width, 315);
+-  @include resize(min-width, 300);
+-  @include resize(padding, 16);
+-  @include resize(gap, 16);
+-
+-  border-radius: 4px;
+-  background: $color-white;
+-
+-  box-shadow:
+-    0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+-    0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+-
+-  opacity: 0;
+-  pointer-events: none;
+-  @include resize(max-height, 0);
+-  transition:
+-    max-height 350ms ease-out,
+-    opacity 200ms ease-out 150ms;
+-
+-  &--active {
+-    pointer-events: all;
+-    opacity: 1;
+-    @include resize(max-height, 600);
+-    transition:
+-      max-height 350ms ease-in,
+-      opacity 200ms ease-in;
+-  }
+-
+-  .rdp-root {
+-    position: relative;
+-    display: flex;
+-    justify-content: center;
+-    align-items: center;
+-
+-    .rdp-months {
+-      position: relative;
+-      width: 100%;
+-
+-      .rdp-nav {
+-        position: absolute;
+-        display: flex;
+-        align-items: center;
+-        right: 0;
+-        @include resize(gap, 6);
+-
+-        .rdp-button_previous,
+-        .rdp-button_next {
+-          cursor: pointer;
+-          opacity: 0.6;
+-          @include resize(width, 16);
+-          @include resize(height, 16);
+-
+-          &:hover,
+-          &:focus {
+-            opacity: 1;
+-            border-radius: 100%;
+-          }
+-
+-          svg {
+-            width: 100%;
+-            height: 100%;
+-            object-fit: contain;
+-            object-position: center;
+-            filter: brightness(0) saturate(100%) invert(9%) sepia(24%) saturate(527%) hue-rotate(168deg) brightness(96%)
+-              contrast(93%);
+-          }
+-        }
+-      }
+-
+-      .rdp-month {
+-        display: flex;
+-        flex-direction: column;
+-        @include resize(gap, 16);
+-
+-        &_caption {
+-          display: flex;
+-          justify-content: space-between;
+-          align-items: center;
+-          @include resize(width, 265);
+-          @include resize(margin-left, 8);
+-
+-          .rdp-caption_label {
+-            text-transform: capitalize;
+-            color: $color-gray-0;
+-            font-weight: 700;
+-            @include resize(font-size, $b1-fs);
+-            @include resize(line-height, $b1-lh);
+-          }
+-        }
+-        .rdp-month_grid {
+-          display: flex;
+-          flex-direction: column;
+-          @include resize(gap, 16);
+-
+-          .rdp-weekdays {
+-            display: grid;
+-            grid-template-columns: repeat(7, 1fr);
+-
+-            .rdp-weekday {
+-              text-transform: capitalize;
+-              color: $color-gray-10;
+-              text-align: center;
+-              font-weight: 600;
+-              @include resize(font-size, $b2-fs);
+-              @include resize(line-height, $b2-lh);
+-            }
+-          }
+-          .rdp-weeks {
+-            display: grid;
+-            @include resize(grid-row-gap, 6);
+-          }
+-          .rdp-week {
+-            display: grid;
+-            grid-template-columns: repeat(7, 1fr);
+-            @include resize(grid-column-gap, 8);
+-
+-            .rdp-day {
+-              display: flex;
+-              justify-self: center;
+-              justify-content: center;
+-              align-items: center;
+-              border-radius: 100%;
+-              @include resize(width, 32);
+-              @include resize(height, 32);
+-
+-              &:hover,
+-              &:focus,
+-              &:focus-visible {
+-                background-color: rgb(109, 246, 237, 0.5);
+-              }
+-
+-              &_button {
+-                cursor: pointer;
+-                width: 100%;
+-                height: 100%;
+-                border-radius: 100%;
+-                color: $color-gray-10;
+-                font-family: inherit;
+-                @include resize(font-size, $b2-fs);
+-                @include resize(line-height, $b2-lh);
+-
+-                &:hover,
+-                &:focus {
+-                  background-color: rgb(109, 246, 237, 0.5);
+-                }
+-              }
+-            }
+-
+-            .rdp-disabled {
+-              opacity: 0.5;
+-            }
+-
+-            .rdp-selected {
+-              border-radius: 100%;
+-              background-color: $color-secundary;
+-              z-index: 100;
+-              &.rdp-range_start:not(.rdp-range_end) {
+-                border-radius: 0;
+-                border-top-left-radius: 100%;
+-                border-bottom-left-radius: 100%;
+-              }
+-              &.rdp-range_end:not(.rdp-range_start) {
+-                border-radius: 0;
+-                border-top-right-radius: 100%;
+-                border-bottom-right-radius: 100%;
+-              }
+-              &.rdp-range_middle {
+-                position: relative;
+-                background-color: $color-secundary;
+-                border-radius: 0;
+-              }
+-            }
+-          }
+-        }
+-      }
+-    }
+-  }
+-
+-  &__calendarButtonContainer {
+-    display: flex;
+-    align-items: center;
+-    justify-content: flex-end;
+-
+-    .buttonSecondary {
+-      width: unset;
+-      @include resize(padding-block, 9);
+-      @include resize(padding-inline, 16);
+-    }
+-  }
+-}
+diff --git a/front-end/src/components/Inputs/SelectDate/SelectDate.tsx b/front-end/src/components/Inputs/SelectDate/SelectDate.tsx
+deleted file mode 100644
+index fd9fcc2..0000000
+--- a/front-end/src/components/Inputs/SelectDate/SelectDate.tsx
++++ /dev/null
+@@ -1,36 +0,0 @@
+-import "./SelectDate.scss";
+-import React, { CSSProperties, FC, Ref } from "react";
+-import { DayPicker } from "react-day-picker";
+-import { ptBR } from "date-fns/locale";
+-
+-interface SelectDateProps {
+-  selectedDate: any;
+-  isOpen: boolean;
+-  onSelect: (date: any) => void;
+-  onCancel?: () => void;
+-  onOk?: () => void;
+-  mode?: "single" | "range" | "multiple";
+-  defaultMonth?: Date;
+-  forwardRef?: Ref<HTMLDivElement>;
+-  styles?: CSSProperties;
+-}
+-
+-const SelectDate: FC<SelectDateProps> = ({ selectedDate, onSelect, isOpen, mode = "single", defaultMonth = selectedDate, forwardRef, styles }) => {
+-  return (
+-    <div className={`selectDate ${isOpen ? "selectDate--active" : ""}`} style={styles} ref={forwardRef}>
+-      <DayPicker
+-        mode={mode as any}
+-        onSelect={onSelect}
+-        selected={selectedDate}
+-        weekStartsOn={1}
+-        required
+-        defaultMonth={mode !== "multiple" && defaultMonth}
+-        locale={ptBR}
+-        autoFocus
+-        showOutsideDays
+-      />
+-    </div>
+-  );
+-};
+-
+-export default SelectDate;
+diff --git a/front-end/src/modules/Admin/ManageFlights/ManageFlights.scss b/front-end/src/modules/Admin/ManageFlights/ManageFlights.scss
+deleted file mode 100644
+index beefe0d..0000000
+--- a/front-end/src/modules/Admin/ManageFlights/ManageFlights.scss
++++ /dev/null
+@@ -1,75 +0,0 @@
+-.manageFlights {
+-    display: flex;
+-    flex-direction: column;
+-    width: 100%;
+-    @include resize(gap, 32);
+-
+-    &__header {
+-        display: flex;
+-        flex-direction: row;
+-        justify-content: space-between;
+-        align-items: center;
+-        width: 100%;
+-    }
+-
+-    &__title {
+-        font-weight: 500;
+-        @include resize(font-size, $h3-fs);
+-        @include resize(line-height, $h3-lh);
+-        @include resize(letter-spacing, $h3-ls);
+-    }
+-
+-    &__content {
+-        display: flex;
+-        flex-direction: column;
+-        justify-content: space-between;
+-        width: 100%;
+-        @include resize(gap, 16);
+-        @include resize(padding-inline, 16);
+-        @include resize(padding-block, 16);
+-        background-color: $color-white;
+-        border-radius: 8px;
+-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+-
+-        table {
+-            width: 100%;
+-            border-collapse: collapse;
+-            border-radius: 8px;
+-            overflow: hidden;
+-
+-            thead {
+-                border-bottom: 1px solid rgba($color-gray-10, 0.05);
+-
+-                th {
+-                    font-weight: 600;
+-                    @include resize(padding, 8);
+-                    @include resize(font-size, $l1-fs);
+-                    @include resize(line-height, $l1-lh);
+-                    @include resize(letter-spacing, $l1-ls);
+-                }
+-            }
+-
+-            tbody {
+-                tr {
+-                    @include resize(height, 56);
+-                    &:nth-child(even) {
+-                        background-color: rgba($color-gray-10, 0.025);
+-                    }
+-                    td {
+-                        text-align: center;
+-                        @include resize(padding, 8);
+-                        @include resize(font-size, $l1-fs);
+-                        @include resize(line-height, $l1-lh);
+-                        @include resize(letter-spacing, $l1-ls);
+-                    }
+-                    .nextFlights__actions {
+-                        display: flex;
+-                        flex-direction: row;
+-                        justify-content: center;
+-                        @include resize(gap, 8);
+-                    }
+-                }
+-            }
+-        }
+-    }
+-}
+diff --git a/front-end/src/modules/Admin/ManageFlights/ManageFlights.tsx b/front-end/src/modules/Admin/ManageFlights/ManageFlights.tsx
+deleted file mode 100644
+index 8c43121..0000000
+--- a/front-end/src/modules/Admin/ManageFlights/ManageFlights.tsx
++++ /dev/null
+@@ -1,275 +0,0 @@
+-import "./ManageFlights.scss";
+-import { FC } from "react";
+-import { formatDate } from "@/utils/formatDate";
+-import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
+-import formatFloat from "@/utils/formatFloat";
+-import formatToMoney from "@/utils/formatToMoney";
+-import ModalNewFlight from "../ModalNewFlight/ModalNewFlight";
+-import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+-
+-interface ManageFlightsProps {
+-  data?: any;
+-}
+-
+-const mockedData = [
+-  {
+-    code: "RES001",
+-    dateHour: "2023-10-10T10:00:00",
+-    origin: "CWB - Curitiba",
+-    destination: "GRU - São Paulo",
+-    price: 50000,
+-    seatsReserved: 100,
+-    seatsTotal: 175,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES002",
+-    dateHour: "2023-10-11T12:30:00",
+-    origin: "BSB - Brasília",
+-    destination: "GIG - Rio de Janeiro",
+-    price: 65000,
+-    seatsReserved: 80,
+-    seatsTotal: 150,
+-    status: "PENDENTE",
+-  },
+-  {
+-    code: "RES003",
+-    dateHour: "2023-10-12T15:45:00",
+-    origin: "POA - Porto Alegre",
+-    destination: "SSA - Salvador",
+-    price: 78000,
+-    seatsReserved: 120,
+-    seatsTotal: 180,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES004",
+-    dateHour: "2023-10-13T09:00:00",
+-    origin: "FOR - Fortaleza",
+-    destination: "REC - Recife",
+-    price: 42000,
+-    seatsReserved: 60,
+-    seatsTotal: 140,
+-    status: "CANCELADO",
+-  },
+-  {
+-    code: "RES005",
+-    dateHour: "2023-10-14T18:20:00",
+-    origin: "VIX - Vitória",
+-    destination: "CWB - Curitiba",
+-    price: 54000,
+-    seatsReserved: 110,
+-    seatsTotal: 175,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES006",
+-    dateHour: "2023-10-15T07:15:00",
+-    origin: "GRU - São Paulo",
+-    destination: "BSB - Brasília",
+-    price: 30000,
+-    seatsReserved: 90,
+-    seatsTotal: 160,
+-    status: "PENDENTE",
+-  },
+-  {
+-    code: "RES007",
+-    dateHour: "2023-10-16T20:00:00",
+-    origin: "MAO - Manaus",
+-    destination: "BEL - Belém",
+-    price: 92000,
+-    seatsReserved: 50,
+-    seatsTotal: 150,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES008",
+-    dateHour: "2023-10-17T14:10:00",
+-    origin: "GIG - Rio de Janeiro",
+-    destination: "POA - Porto Alegre",
+-    price: 66000,
+-    seatsReserved: 140,
+-    seatsTotal: 180,
+-    status: "CANCELADO",
+-  },
+-  {
+-    code: "RES009",
+-    dateHour: "2023-10-18T11:30:00",
+-    origin: "REC - Recife",
+-    destination: "FOR - Fortaleza",
+-    price: 48000,
+-    seatsReserved: 75,
+-    seatsTotal: 145,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES010",
+-    dateHour: "2023-10-19T16:40:00",
+-    origin: "SSA - Salvador",
+-    destination: "VIX - Vitória",
+-    price: 53000,
+-    seatsReserved: 95,
+-    seatsTotal: 155,
+-    status: "PENDENTE",
+-  },
+-  {
+-    code: "RES011",
+-    dateHour: "2023-10-20T08:50:00",
+-    origin: "CGR - Campo Grande",
+-    destination: "CWB - Curitiba",
+-    price: 71000,
+-    seatsReserved: 85,
+-    seatsTotal: 160,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES012",
+-    dateHour: "2023-10-21T13:25:00",
+-    origin: "POA - Porto Alegre",
+-    destination: "GIG - Rio de Janeiro",
+-    price: 64000,
+-    seatsReserved: 130,
+-    seatsTotal: 180,
+-    status: "CANCELADO",
+-  },
+-  {
+-    code: "RES013",
+-    dateHour: "2023-10-22T19:55:00",
+-    origin: "GRU - São Paulo",
+-    destination: "MAO - Manaus",
+-    price: 102000,
+-    seatsReserved: 70,
+-    seatsTotal: 150,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES014",
+-    dateHour: "2023-10-23T06:20:00",
+-    origin: "BSB - Brasília",
+-    destination: "REC - Recife",
+-    price: 58000,
+-    seatsReserved: 100,
+-    seatsTotal: 170,
+-    status: "PENDENTE",
+-  },
+-  {
+-    code: "RES015",
+-    dateHour: "2023-10-24T17:35:00",
+-    origin: "VIX - Vitória",
+-    destination: "FOR - Fortaleza",
+-    price: 49000,
+-    seatsReserved: 65,
+-    seatsTotal: 140,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES016",
+-    dateHour: "2023-10-25T12:00:00",
+-    origin: "CWB - Curitiba",
+-    destination: "SSA - Salvador",
+-    price: 77000,
+-    seatsReserved: 115,
+-    seatsTotal: 175,
+-    status: "CANCELADO",
+-  },
+-  {
+-    code: "RES017",
+-    dateHour: "2023-10-26T21:10:00",
+-    origin: "GIG - Rio de Janeiro",
+-    destination: "POA - Porto Alegre",
+-    price: 68000,
+-    seatsReserved: 125,
+-    seatsTotal: 180,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES018",
+-    dateHour: "2023-10-27T09:45:00",
+-    origin: "FOR - Fortaleza",
+-    destination: "BSB - Brasília",
+-    price: 43000,
+-    seatsReserved: 55,
+-    seatsTotal: 145,
+-    status: "PENDENTE",
+-  },
+-  {
+-    code: "RES019",
+-    dateHour: "2023-10-28T15:05:00",
+-    origin: "MAO - Manaus",
+-    destination: "GRU - São Paulo",
+-    price: 94000,
+-    seatsReserved: 95,
+-    seatsTotal: 155,
+-    status: "CONFIRMADO",
+-  },
+-  {
+-    code: "RES020",
+-    dateHour: "2023-10-29T11:15:00",
+-    origin: "BEL - Belém",
+-    destination: "CGR - Campo Grande",
+-    price: 81000,
+-    seatsReserved: 80,
+-    seatsTotal: 160,
+-    status: "CANCELADO",
+-  },
+-];
+-
+-const ManageFlights: FC<ManageFlightsProps> = ({}) => {
+-  const { openModal } = useModal();
+-
+-  const handleNewFlight = () => {
+-    openModal({
+-      headerName: "Criar novo voo",
+-      children: <ModalNewFlight />,
+-    });
+-  };
+-
+-  return (
+-    <div className="manageFlights">
+-      <div className="manageFlights__header">
+-        <div className="manageFlights__title">Gerenciar voos</div>
+-        <ButtonDefault children="Criar um voo" style={{ width: "auto" }} onClick={handleNewFlight} />
+-      </div>
+-      <div className="manageFlights__content">
+-        {mockedData && mockedData.length > 0 ? (
+-          <table className="manageFlights__table">
+-            <thead>
+-              <tr>
+-                <th>Código do voo</th>
+-                <th>Data/Hora</th>
+-                <th>Origem</th>
+-                <th>Destino</th>
+-                <th>Preço / Milhas</th>
+-                <th>Lugares</th>
+-                <th>Status</th>
+-              </tr>
+-            </thead>
+-            <tbody>
+-              {[...mockedData]
+-                .sort((a, b) => new Date(b.dateHour).getTime() - new Date(a.dateHour).getTime())
+-                .map((flight, index) => (
+-                  <tr key={index}>
+-                    <td>{flight?.code || ""}</td>
+-                    <td>{formatDate({ date: flight?.dateHour, type: "dateHour" })}</td>
+-                    <td>{flight?.origin}</td>
+-                    <td>{flight?.destination}</td>
+-                    <td>
+-                      R$ {formatToMoney(flight?.price)} / {formatFloat(formatToMoney(flight?.price) * 0.2)} Milhas
+-                    </td>
+-                    <td>
+-                      {flight?.seatsReserved} / {flight?.seatsTotal}
+-                    </td>
+-                    <td>{flight.status}</td>
+-                  </tr>
+-                ))}
+-            </tbody>
+-          </table>
+-        ) : (
+-          <p>Nenhum histórico disponível.</p>
+-        )}
+-      </div>
+-    </div>
+-  );
+-};
+-
+-export default ManageFlights;
+diff --git a/front-end/src/modules/Admin/ManageStaff/ManageStaff.scss b/front-end/src/modules/Admin/ManageStaff/ManageStaff.scss
+deleted file mode 100644
+index 24b9c4c..0000000
+--- a/front-end/src/modules/Admin/ManageStaff/ManageStaff.scss
++++ /dev/null
+@@ -1,75 +0,0 @@
+-.manageStaff {
+-    display: flex;
+-    flex-direction: column;
+-    width: 100%;
+-    @include resize(gap, 32);
+-
+-    &__header {
+-        display: flex;
+-        flex-direction: row;
+-        justify-content: space-between;
+-        align-items: center;
+-        width: 100%;
+-    }
+-
+-    &__title {
+-        font-weight: 500;
+-        @include resize(font-size, $h3-fs);
+-        @include resize(line-height, $h3-lh);
+-        @include resize(letter-spacing, $h3-ls);
+-    }
+-
+-    &__content {
+-        display: flex;
+-        flex-direction: column;
+-        justify-content: space-between;
+-        width: 100%;
+-        @include resize(gap, 16);
+-        @include resize(padding-inline, 16);
+-        @include resize(padding-block, 16);
+-        background-color: $color-white;
+-        border-radius: 8px;
+-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+-
+-        table {
+-            width: 100%;
+-            border-collapse: collapse;
+-            border-radius: 8px;
+-            overflow: hidden;
+-
+-            thead {
+-                border-bottom: 1px solid rgba($color-gray-10, 0.05);
+-
+-                th {
+-                    font-weight: 600;
+-                    @include resize(padding, 8);
+-                    @include resize(font-size, $l1-fs);
+-                    @include resize(line-height, $l1-lh);
+-                    @include resize(letter-spacing, $l1-ls);
+-                }
+-            }
+-
+-            tbody {
+-                tr {
+-                    @include resize(height, 56);
+-                    &:nth-child(even) {
+-                        background-color: rgba($color-gray-10, 0.025);
+-                    }
+-                    td {
+-                        text-align: center;
+-                        @include resize(padding, 8);
+-                        @include resize(font-size, $l1-fs);
+-                        @include resize(line-height, $l1-lh);
+-                        @include resize(letter-spacing, $l1-ls);
+-                    }
+-                    .nextFlights__actions {
+-                        display: flex;
+-                        flex-direction: row;
+-                        justify-content: center;
+-                        @include resize(gap, 8);
+-                    }
+-                }
+-            }
+-        }
+-    }
+-}
+diff --git a/front-end/src/modules/Admin/ManageStaff/ManageStaff.tsx b/front-end/src/modules/Admin/ManageStaff/ManageStaff.tsx
+deleted file mode 100644
+index 9a05902..0000000
+--- a/front-end/src/modules/Admin/ManageStaff/ManageStaff.tsx
++++ /dev/null
+@@ -1,82 +0,0 @@
+-import "./ManageStaff.scss";
+-import { FC } from "react";
+-import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
+-import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+-
+-interface ManageStaffProps {
+-  data?: any;
+-}
+-
+-const mockedData = [
+-  {
+-    name: "João Silva",
+-    cpf: "123.456.789-00",
+-    email: "joao.silva@example.com",
+-    telefone: "(11) 91234-5678",
+-    active: true,
+-  },
+-  {
+-    name: "Maria Souza",
+-    cpf: "987.654.321-00",
+-    email: "maria.souza@example.com",
+-    telefone: "(21) 99876-5432",
+-    active: false,
+-  },
+-  {
+-    name: "Pedro Oliveira",
+-    cpf: "456.789.123-00",
+-    email: "pedro.oliveira@example.com",
+-    telefone: "(31) 98765-4221",
+-    active: true,
+-  },
+-];
+-
+-const ManageStaff: FC<ManageStaffProps> = ({}) => {
+-  const { openModal } = useModal();
+-
+-  const handleNewMember = () => {
+-    openModal({
+-      headerName: "Adicionar novo funcionário",
+-      children: <></>,
+-    });
+-  };
+-
+-  return (
+-    <div className="manageStaff">
+-      <div className="manageStaff__header">
+-        <div className="manageStaff__title">Gerenciar equipe</div>
+-        <ButtonDefault children="Adicionar funcionário" style={{ width: "auto" }} onClick={handleNewMember} />
+-      </div>
+-      <div className="manageStaff__content">
+-        {mockedData && mockedData.length > 0 ? (
+-          <table className="manageStaff__table">
+-            <thead>
+-              <tr>
+-                <th>Nome</th>
+-                <th>CPF</th>
+-                <th>E-mail</th>
+-                <th>Telefone</th>
+-                <th>Ações</th>
+-              </tr>
+-            </thead>
+-            <tbody>
+-              {[...mockedData].map((member, index) => (
+-                <tr key={index}>
+-                  <td>{member?.name}</td>
+-                  <td>{member?.cpf}</td>
+-                  <td>{member?.email}</td>
+-                  <td>{member?.telefone}</td>
+-                  <td></td>
+-                </tr>
+-              ))}
+-            </tbody>
+-          </table>
+-        ) : (
+-          <p>Nenhum histórico disponível.</p>
+-        )}
+-      </div>
+-    </div>
+-  );
+-};
+-
+-export default ManageStaff;
+diff --git a/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.scss b/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.scss
+deleted file mode 100644
+index ae23ed8..0000000
+--- a/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.scss
++++ /dev/null
+@@ -1,20 +0,0 @@
+-.modalNewFlight {
+-    display: flex;
+-    flex-direction: column;
+-    @include resize(gap, 16);
+-    @include resize(margin-top, 4);
+-
+-    &__description {
+-        color: $color-gray-20;
+-        @include resize(font-size, $b1-fs);
+-        @include resize(line-height, $b1-lh);
+-        @include resize(letter-spacing, $b1-ls);
+-    }
+-
+-    &__grid {
+-        display: grid;
+-        grid-template-columns: repeat(2, 1fr);
+-        column-gap: 16px;
+-        row-gap: 8px;
+-    }
+-}
+diff --git a/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.tsx b/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.tsx
+deleted file mode 100644
+index d7e176f..0000000
+--- a/front-end/src/modules/Admin/ModalNewFlight/ModalNewFlight.tsx
++++ /dev/null
+@@ -1,132 +0,0 @@
+-import "./ModalNewFlight.scss";
+-import { FC } from "react";
+-import { useForm } from "@/hooks/useForm";
+-import { useModalCenter } from "@/components/Modal/ModalCenter/ModalCenter";
+-import formatToMoney from "@/utils/formatToMoney";
+-import InputText from "@/components/Inputs/InputText/InputText";
+-import InputDate from "@/components/Inputs/InputDate/InputDate";
+-import InputCurrency from "@/components/Inputs/InputCurrency/InputCurrency";
+-import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+-
+-interface ModalNewFlightProps {
+-  data?: any;
+-}
+-
+-const ModalNewFlight: FC<ModalNewFlightProps> = ({ data }) => {
+-  const { closeModal } = useModalCenter();
+-
+-  const { form, loading, setLoading, changeState, validation } = useForm({
+-    date: {
+-      invalid: false,
+-      errorLabel: "Digite a data do voo.",
+-      value: "",
+-    },
+-    time: {
+-      invalid: false,
+-      errorLabel: "Digite o horário do voo.",
+-      value: "",
+-    },
+-    origin: {
+-      invalid: false,
+-      errorLabel: "Digite a origem do voo.",
+-      value: "",
+-    },
+-    destination: {
+-      invalid: false,
+-      errorLabel: "Digite o destino do voo.",
+-      value: "",
+-    },
+-    price: {
+-      invalid: false,
+-      errorLabel: "Digite o preço do voo.",
+-      value: formatToMoney(0) || "",
+-    },
+-    seatsTotal: {
+-      invalid: false,
+-      errorLabel: "Digite o número total de assentos do voo.",
+-      value: "",
+-    },
+-  });
+-
+-  return (
+-    <div className="modalNewFlight">
+-      <span className="modalNewFlight__description">Preencha os campos para criar um novo voo.</span>
+-      <div className="modalNewFlight__grid">
+-        <InputDate
+-          id="date"
+-          label={"Data de embarque"}
+-          name="date"
+-          placeholder="dd/mm/yyyy"
+-          value={form.date.value}
+-          erroMsg={form.date.errorLabel}
+-          invalid={form.date.invalid}
+-          onChange={(e) => {
+-            changeState("date", "value", e.target.value);
+-          }}
+-        />
+-        <InputText
+-          id="time"
+-          label={"Horário de embarque"}
+-          placeholder="hh:mm"
+-          name="time"
+-          type="time"
+-          value={form.time.value}
+-          erroMsg={form.time.errorLabel}
+-          invalid={form.time.invalid}
+-          onChange={(e) => {
+-            changeState("time", "value", e.target.value);
+-          }}
+-        />
+-        <InputText
+-          id="origin"
+-          label={"Origem"}
+-          placeholder="Origem do voo"
+-          value={form.origin.value}
+-          erroMsg={form.origin.errorLabel}
+-          invalid={form.origin.invalid}
+-          onChange={(e) => {
+-            changeState("origin", "value", e.target.value);
+-          }}
+-        />
+-        <InputText
+-          id="destination"
+-          label={"Destino"}
+-          placeholder="Destino do voo"
+-          value={form.destination.value}
+-          erroMsg={form.destination.errorLabel}
+-          invalid={form.destination.invalid}
+-          onChange={(e) => {
+-            changeState("destination", "value", e.target.value);
+-          }}
+-        />
+-        <InputCurrency
+-          id="price"
+-          label={"Valor (R$)"}
+-          name="price"
+-          value={form.price.value}
+-          erroMsg={form.price.errorLabel}
+-          invalid={form.price.invalid}
+-          onChange={(e) => {
+-            changeState("price", "value", e.target.value);
+-          }}
+-        />
+-        <InputText
+-          id="seatsTotal"
+-          label={"Número total de assentos"}
+-          placeholder="0"
+-          type="number"
+-          value={form.seatsTotal.value}
+-          erroMsg={form.seatsTotal.errorLabel}
+-          invalid={form.seatsTotal.invalid}
+-          onChange={(e) => {
+-            changeState("seatsTotal", "value", e.target.value);
+-          }}
+-        />
+-        <ButtonDefault children={"Cancelar"} color="white" onClick={closeModal} />
+-        <ButtonDefault children={"Confirmar embarque"} onClick={closeModal} />
+-      </div>
+-    </div>
+-  );
+-};
+-
+-export default ModalNewFlight;
+diff --git a/micro-services/api-gateway/package-lock.json b/micro-services/api-gateway/package-lock.json
+index 0470099..457be72 100644
+--- a/micro-services/api-gateway/package-lock.json
++++ b/micro-services/api-gateway/package-lock.json
+@@ -8,7 +8,7 @@
+       "name": "api-gateway-ts",
+       "version": "1.0.0",
+       "dependencies": {
+-        "amqplib": "^0.10.5",
++        "amqplib": "^0.10.3",
+         "axios": "^1.8.4",
+         "cors": "^2.8.5",
+         "dotenv": "^16.3.1",
+@@ -20,7 +20,7 @@
+         "winston": "^3.11.0"
+       },
+       "devDependencies": {
+-        "@types/amqplib": "^0.10.1",
++        "@types/amqplib": "^0.10.6",
+         "@types/axios": "^0.14.4",
+         "@types/cors": "^2.8.17",
+         "@types/express": "^4.17.21",
+@@ -1355,9 +1355,9 @@
+       "dev": true
+     },
+     "node_modules/@types/amqplib": {
+-      "version": "0.10.7",
+-      "resolved": "https://registry.npmjs.org/@types/amqplib/-/amqplib-0.10.7.tgz",
+-      "integrity": "sha512-IVj3avf9AQd2nXCx0PGk/OYq7VmHiyNxWFSb5HhU9ATh+i+gHWvVcljFTcTWQ/dyHJCTrzCixde+r/asL2ErDA==",
++      "version": "0.10.6",
++      "resolved": "https://registry.npmjs.org/@types/amqplib/-/amqplib-0.10.6.tgz",
++      "integrity": "sha512-vQLVypBS1JQcfTXhl1Td1EEeLdtb+vuulOb4TrzYiLyP2aYLMAEzB3pNmEA0jBm0xIXu946Y7Xwl19Eidl32SQ==",
+       "dev": true,
+       "dependencies": {
+         "@types/node": "*"
+@@ -1649,18 +1649,35 @@
+       }
+     },
+     "node_modules/amqplib": {
+-      "version": "0.10.5",
+-      "resolved": "https://registry.npmjs.org/amqplib/-/amqplib-0.10.5.tgz",
+-      "integrity": "sha512-Dx5zmy0Ur+Q7LPPdhz+jx5IzmJBoHd15tOeAfQ8SuvEtyPJ20hBemhOBA4b1WeORCRa0ENM/kHCzmem1w/zHvQ==",
++      "version": "0.10.3",
++      "resolved": "https://registry.npmjs.org/amqplib/-/amqplib-0.10.3.tgz",
++      "integrity": "sha512-UHmuSa7n8vVW/a5HGh2nFPqAEr8+cD4dEZ6u9GjP91nHfr1a54RyAKyra7Sb5NH7NBKOUlyQSMXIp0qAixKexw==",
+       "dependencies": {
+         "@acuminous/bitsyntax": "^0.1.2",
+         "buffer-more-ints": "~1.0.0",
++        "readable-stream": "1.x >=1.1.9",
+         "url-parse": "~1.5.10"
+       },
+       "engines": {
+         "node": ">=10"
+       }
+     },
++    "node_modules/amqplib/node_modules/readable-stream": {
++      "version": "1.1.14",
++      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.14.tgz",
++      "integrity": "sha512-+MeVjFf4L44XUkhM1eYbD8fyEsxcV81pqMSR5gblfcLCHfZvbrqy4/qYHE+/R5HoBUT11WV5O08Cr1n3YXkWVQ==",
++      "dependencies": {
++        "core-util-is": "~1.0.0",
++        "inherits": "~2.0.1",
++        "isarray": "0.0.1",
++        "string_decoder": "~0.10.x"
++      }
++    },
++    "node_modules/amqplib/node_modules/string_decoder": {
++      "version": "0.10.31",
++      "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
++      "integrity": "sha512-ev2QzSzWPYmy9GuqfIVildA4OdcGLeFZQrq5ys6RtiuF+RQQiZWr8TZNyAcuVXyQRYfEO+MsoB/1BuQVhOJuoQ=="
++    },
+     "node_modules/ansi-escapes": {
+       "version": "4.3.2",
+       "resolved": "https://registry.npmjs.org/ansi-escapes/-/ansi-escapes-4.3.2.tgz",
+@@ -2299,6 +2316,11 @@
+       "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz",
+       "integrity": "sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ=="
+     },
++    "node_modules/core-util-is": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz",
++      "integrity": "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
++    },
+     "node_modules/cors": {
+       "version": "2.8.5",
+       "resolved": "https://registry.npmjs.org/cors/-/cors-2.8.5.tgz",
+@@ -3363,6 +3385,11 @@
+         "url": "https://github.com/sponsors/sindresorhus"
+       }
+     },
++    "node_modules/isarray": {
++      "version": "0.0.1",
++      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz",
++      "integrity": "sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ=="
++    },
+     "node_modules/isexe": {
+       "version": "2.0.0",
+       "resolved": "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz",
+diff --git a/micro-services/api-gateway/package.json b/micro-services/api-gateway/package.json
+index dc089fa..0813ca2 100644
+--- a/micro-services/api-gateway/package.json
++++ b/micro-services/api-gateway/package.json
+@@ -12,7 +12,7 @@
+     "test": "jest"
+   },
+   "dependencies": {
+-    "amqplib": "^0.10.5",
++    "amqplib": "^0.10.3",
+     "axios": "^1.8.4",
+     "cors": "^2.8.5",
+     "dotenv": "^16.3.1",
+@@ -24,7 +24,7 @@
+     "winston": "^3.11.0"
+   },
+   "devDependencies": {
+-    "@types/amqplib": "^0.10.1",
++    "@types/amqplib": "^0.10.6",
+     "@types/axios": "^0.14.4",
+     "@types/cors": "^2.8.17",
+     "@types/express": "^4.17.21",
+diff --git a/micro-services/api-gateway/src/app.ts b/micro-services/api-gateway/src/app.ts
+index a2f8d04..5011c26 100644
+--- a/micro-services/api-gateway/src/app.ts
++++ b/micro-services/api-gateway/src/app.ts
+@@ -3,9 +3,11 @@ import authRoutes from './routes/auth.routes';
+ import flightRoutes from './routes/flight.routes';
+ import clientRoutes from './routes/client.routes';
+ import employeeRoutes from './routes/employee.routes';
++import { ClientSagaHandler } from './orchestrator/clientSagaHandler';
+ 
+ const PORT = process.env.PORT || 3000;
+ const app = express();
++const clientSagaHandler = new ClientSagaHandler();
+ 
+ app.use(express.json());
+ 
+@@ -14,6 +16,13 @@ app.use('/client', clientRoutes);
+ app.use('/flight', flightRoutes);
+ app.use('/employee', employeeRoutes);
+ 
++clientSagaHandler.initialize()
++  .then(() => {
++    console.log('Client Saga Handler incializado com sucesso!');
++  })
++  .catch(err => {
++    console.error('Falha ao incializar Client Saga Handler:', err);
++  });
+ 
+ app.listen(PORT, () => {
+     console.log(`API Gateway rodando na porta ${PORT}`);
+diff --git a/micro-services/api-gateway/src/models/client/IClient.ts b/micro-services/api-gateway/src/models/client/IClient.ts
+index e35b112..2e3c46c 100644
+--- a/micro-services/api-gateway/src/models/client/IClient.ts
++++ b/micro-services/api-gateway/src/models/client/IClient.ts
+@@ -1,42 +1,7 @@
+-export class IClient {
+-    id: string;
+-    name: string;
+-    email: string;
+-    password: string;
+-    phone: string;
+-    address: string;
+-    city: string;
+-    state: string;
+-    country: string;
+-    postalCode: string;
+-    createdAt: Date;
+-    updatedAt: Date;
+-
+-    constructor(
+-        id: string,
+-        name: string,
+-        email: string,
+-        password: string,
+-        phone: string,
+-        address: string,
+-        city: string,
+-        state: string,
+-        country: string,
+-        postalCode: string,
+-        createdAt?: Date,
+-        updatedAt?: Date
+-    ) {
+-        this.id = id;
+-        this.name = name;
+-        this.email = email;
+-        this.password = password;
+-        this.phone = phone;
+-        this.address = address;
+-        this.city = city;
+-        this.state = state;
+-        this.country = country;
+-        this.postalCode = postalCode;
+-        this.createdAt = createdAt || new Date();
+-        this.updatedAt = updatedAt || new Date();
+-    }
++export interface IClient {
++  id?: string;
++  name: string;
++  email: string;
++  document: string;
++  phone: string;
+ }
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/models/employee/IEmployee.ts b/micro-services/api-gateway/src/models/employee/IEmployee.ts
+deleted file mode 100644
+index b929772..0000000
+--- a/micro-services/api-gateway/src/models/employee/IEmployee.ts
++++ /dev/null
+@@ -1,42 +0,0 @@
+-export class IEmployee {
+-    id: string;
+-    name: string;
+-    email: string;
+-    password: string;
+-    phone: string;
+-    address: string;
+-    city: string;
+-    state: string;
+-    country: string;
+-    postalCode: string;
+-    createdAt: Date;
+-    updatedAt: Date;
+-
+-    constructor(
+-        id: string,
+-        name: string,
+-        email: string,
+-        password: string,
+-        phone: string,
+-        address: string,
+-        city: string,
+-        state: string,
+-        country: string,
+-        postalCode: string,
+-        createdAt?: Date,
+-        updatedAt?: Date
+-    ) {
+-        this.id = id;
+-        this.name = name;
+-        this.email = email;
+-        this.password = password;
+-        this.phone = phone;
+-        this.address = address;
+-        this.city = city;
+-        this.state = state;
+-        this.country = country;
+-        this.postalCode = postalCode;
+-        this.createdAt = createdAt || new Date();
+-        this.updatedAt = updatedAt || new Date();
+-    }
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/models/index.ts b/micro-services/api-gateway/src/models/index.ts
+new file mode 100644
+index 0000000..3bf17d0
+--- /dev/null
++++ b/micro-services/api-gateway/src/models/index.ts
+@@ -0,0 +1,2 @@
++export * from './client/IClient';
++export * from './saga/ISagaMessage';
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/models/saga/ISagaMessage.ts b/micro-services/api-gateway/src/models/saga/ISagaMessage.ts
+new file mode 100644
+index 0000000..8da3ec7
+--- /dev/null
++++ b/micro-services/api-gateway/src/models/saga/ISagaMessage.ts
+@@ -0,0 +1,14 @@
++export interface ISagaMessage {
++    sagaId: string;
++    success: boolean;
++    message?: string;
++  }
++  
++  export interface IClientCreationMessage extends ISagaMessage {
++    clientId?: string;
++  }
++  
++  export interface IAuthCreationMessage extends ISagaMessage {
++    authId?: string;
++    temporaryPassword?: string;
++  }
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/models/user/IAuth.ts b/micro-services/api-gateway/src/models/user/IAuth.ts
+deleted file mode 100644
+index eba0c27..0000000
+--- a/micro-services/api-gateway/src/models/user/IAuth.ts
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import { UserType } from "./UserType";
+-
+-export class IAuth {
+-    id: string;
+-    email: string;
+-    password: string;
+-    userType:UserType;
+-    constructor(
+-        id: string,
+-        email: string,
+-        password: string,
+-        userType:UserType
+-    ) {
+-        this.id = id;
+-        this.email = email;
+-        this.password = password;
+-        this.userType = userType;
+-    }  
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/models/user/UserType.ts b/micro-services/api-gateway/src/models/user/UserType.ts
+deleted file mode 100644
+index 1625a33..0000000
+--- a/micro-services/api-gateway/src/models/user/UserType.ts
++++ /dev/null
+@@ -1,5 +0,0 @@
+-export enum UserType {
+-    CLIENT = "CLIENT",
+-    EMPLOYEE = "EMPLOYEE",
+-    ADMIN = "ADMIN",
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/orchestrator/clientSagaHandler.ts b/micro-services/api-gateway/src/orchestrator/clientSagaHandler.ts
+new file mode 100644
+index 0000000..81ff4e4
+--- /dev/null
++++ b/micro-services/api-gateway/src/orchestrator/clientSagaHandler.ts
+@@ -0,0 +1,138 @@
++import { RabbitMQService } from '../services/rabbitMQService';
++import { IClient, IClientCreationMessage, IAuthCreationMessage, ISagaMessage } from '../models';
++
++export class ClientSagaHandler {
++  private rabbitMQService: RabbitMQService;
++  private sagaStates: Map<string, any>;
++
++  constructor() {
++    this.rabbitMQService = new RabbitMQService();
++    this.sagaStates = new Map();
++  }
++
++  async initialize(): Promise<void> {
++    await this.rabbitMQService.connect();
++    
++    await this.rabbitMQService.createQueue('client.create.queue');
++    await this.rabbitMQService.createQueue('client.auth.create.queue');
++    await this.rabbitMQService.createQueue('client.notification.queue');
++    await this.rabbitMQService.createQueue('client.compensate.queue');
++    await this.rabbitMQService.createQueue('client.saga.responses.queue');
++
++    await this.rabbitMQService.consumeQueue(
++      'client.saga.responses.queue',
++      this.handleSagaResponse.bind(this)
++    );
++  }
++
++  async startClientRegistration(clientData: IClient): Promise<string> {
++    const sagaId = crypto.randomUUID();
++    
++    this.sagaStates.set(sagaId, {
++      status: 'STARTED',
++      clientData,
++      step: 'CREATING_CLIENT'
++    });
++    
++    await this.rabbitMQService.sendToQueue('client.create.queue', {
++      sagaId,
++      ...clientData
++    });
++    
++    return sagaId;
++  }
++
++  private async handleSagaResponse(message: IClientCreationMessage | IAuthCreationMessage): Promise<void> {
++    const sagaState = this.sagaStates.get(message.sagaId);
++    
++    if (!sagaState) {
++      console.error(`Saga ID ${message.sagaId} not found`);
++      return;
++    }
++    
++    try {
++      switch (sagaState.step) {
++        case 'CREATING_CLIENT':
++          await this.handleClientCreationResponse(message as IClientCreationMessage, sagaState);
++          break;
++          
++        case 'CREATING_AUTH':
++          await this.handleAuthCreationResponse(message as IAuthCreationMessage, sagaState);
++          break;
++        case 'COMPENSATING':
++          sagaState.status = 'FAILED';
++          break;
++      }
++      
++      this.sagaStates.set(message.sagaId, sagaState);
++    } catch (error) {
++      console.error(`Error handling saga response: ${error}`);
++    }
++  }
++
++  private async handleClientCreationResponse(
++    message: IClientCreationMessage,
++    sagaState: any
++  ): Promise<void> {
++    if (message.success) {
++      sagaState.step = 'CREATING_AUTH';
++      sagaState.clientId = message.clientId;
++      
++      await this.rabbitMQService.sendToQueue('client.auth.create.queue', {
++        sagaId: message.sagaId,
++        clientId: message.clientId,
++        email: sagaState.clientData.email
++      });
++    } else {
++      sagaState.status = 'FAILED';
++    }
++  }
++
++  private async handleAuthCreationResponse(
++    message: IAuthCreationMessage,
++    sagaState: any
++  ): Promise<void> {
++    if (message.success) {
++      sagaState.step = 'SENDING_WELCOME';
++      sagaState.temporaryPassword = message.temporaryPassword;
++      
++      await this.rabbitMQService.sendToQueue('client.notification.queue', {
++        sagaId: message.sagaId,
++        clientId: sagaState.clientId,
++        email: sagaState.clientData.email,
++        temporaryPassword: message.temporaryPassword
++      });
++    } else {
++      sagaState.step = 'COMPENSATING';
++      await this.rabbitMQService.sendToQueue('client.compensate.queue', {
++        sagaId: message.sagaId,
++        clientId: sagaState.clientId
++      });
++    }
++  }
++
++  private async handleNotificationResponse(
++    message: ISagaMessage,
++    sagaState: any
++  ): Promise<void> {
++    if (message.success) {
++      sagaState.status = 'COMPLETED';
++    } else {
++      const retryCount = sagaState.retryCount || 0;
++      
++      if (retryCount < 3) {
++        sagaState.retryCount = retryCount + 1;
++        setTimeout(async () => {
++          await this.rabbitMQService.sendToQueue('client.notification.queue', {
++            sagaId: message.sagaId,
++            clientId: sagaState.clientId,
++            email: sagaState.clientData.email,
++            temporaryPassword: sagaState.temporaryPassword
++          });
++        }, 5000);
++      } else {
++        sagaState.status = 'FAILED';
++      }
++    }
++  }
++}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/orchestrator/employeeSagaHandler.ts b/micro-services/api-gateway/src/orchestrator/employeeSagaHandler.ts
+new file mode 100644
+index 0000000..e69de29
+diff --git a/micro-services/api-gateway/src/orchestrators/clientSagaOrchestrator.ts b/micro-services/api-gateway/src/orchestrators/clientSagaOrchestrator.ts
+deleted file mode 100644
+index aa9a310..0000000
+--- a/micro-services/api-gateway/src/orchestrators/clientSagaOrchestrator.ts
++++ /dev/null
+@@ -1,33 +0,0 @@
+-import axios from "axios";
+-import { SERVICE_CONFIG } from "../config/services";
+-import { IClient } from "../models/client/IClient";
+-import { IAuth } from "../models/user/IAuth";
+-import { UserType } from "../models/user/UserType";
+-
+-export class ClientSagaOrchestatorator {    
+-    private static instance: ClientSagaOrchestatorator;
+-    private constructor() {}
+-    
+-    public static getInstance(): ClientSagaOrchestatorator {
+-        if (!ClientSagaOrchestatorator.instance) {
+-        ClientSagaOrchestatorator.instance = new ClientSagaOrchestatorator();
+-        }
+-        return ClientSagaOrchestatorator.instance;
+-    }
+-    
+-    public async createClient(clientData: IClient): Promise<any> {
+-        console.log('Client create request:', clientData);
+-        const authRequest:IAuth = new IAuth(clientData.id, clientData.email, clientData.password , UserType.CLIENT);
+-        const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/create`, clientData);
+-        const clientId = clientResponse.data?.id;
+-        if(clientResponse.status !== 201) {
+-            return clientResponse.data;
+-        }
+-        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
+-        if(authResponse.status !== 201) {
+-            await axios.delete(`${SERVICE_CONFIG.CLIENT.url}/${clientId}`);
+-            return authResponse.data;
+-        }  
+-        return authResponse.data;
+-    }
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/orchestrators/employeeSagaOrchestrator.ts b/micro-services/api-gateway/src/orchestrators/employeeSagaOrchestrator.ts
+deleted file mode 100644
+index 085e2ec..0000000
+--- a/micro-services/api-gateway/src/orchestrators/employeeSagaOrchestrator.ts
++++ /dev/null
+@@ -1,26 +0,0 @@
+-import axios from "axios";
+-import { SERVICE_CONFIG } from "../config/services";
+-import { IAuth } from "../models/user/IAuth";
+-import { IEmployee } from "../models/employee/IEmployee";
+-import { UserType } from "../models/user/UserType";
+-import { EmployeeService } from "../services/employeeService";
+-
+-export class EmployeeSagaOrchestatorator {    
+-    public constructor() {}
+-    
+-    public async createEmployee(employeeData: IEmployee): Promise<any> {
+-        console.log('Employee create request:', employeeData);
+-        const authRequest:IAuth = new IAuth(employeeData.id, employeeData.email, employeeData.password , UserType.EMPLOYEE);
+-        const employeeResponse = await axios.post(`${SERVICE_CONFIG.EMPLOYEE.url}`, employeeData);
+-        const employeeId = employeeResponse.data?.id;
+-        if(employeeResponse.status !== 201) {
+-            return employeeResponse.data;
+-        }
+-        const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
+-        if(authResponse.status !== 201) {
+-            await axios.delete(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeId}`);
+-            return authResponse.data;
+-        }  
+-        return authResponse.data;
+-    }
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/routes/client.routes.ts b/micro-services/api-gateway/src/routes/client.routes.ts
+index d782640..d4ea7ee 100644
+--- a/micro-services/api-gateway/src/routes/client.routes.ts
++++ b/micro-services/api-gateway/src/routes/client.routes.ts
+@@ -1,14 +1,21 @@
+ import express from 'express';
+ import axios from 'axios';
++import { authenticateToken, authorize } from '../middleware/auth';
++import { createProxyMiddleware } from 'http-proxy-middleware';
+ import { SERVICE_CONFIG } from '../config/services';
+-import { ClientSagaOrchestatorator } from '../orchestrators/clientSagaOrchestrator';
++import { ClientSagaHandler } from '../orchestrator/clientSagaHandler';
++import { IClient } from '../models';
+ 
+ const router = express.Router();
+-const clientSagaOrchestrator = ClientSagaOrchestatorator.getInstance();
+-
++const clientSagaHandler = new ClientSagaHandler();
+ router.post('/create', async (req, res) => {
+     try {
+-      return await clientSagaOrchestrator.createClient(req.body);
++      console.log('Client create request:', req.body);
++  
++      //const response = await axios.post(`${SERVICE_CONFIG.AUTH.url}/create`, req.body);~
++      const clientData:IClient = req.body;
++      const sagaId = await clientSagaHandler.startClientRegistration(clientData);
++      res.status(201).json("response.data");
+     } catch (e:any) {
+       console.error('Error durante ao criar o cliente:', e.response?.data || e.message);
+       res.status(e.response.status).json(e.response.data);
+diff --git a/micro-services/api-gateway/src/routes/employee.routes.ts b/micro-services/api-gateway/src/routes/employee.routes.ts
+index 98a4775..48c86a2 100644
+--- a/micro-services/api-gateway/src/routes/employee.routes.ts
++++ b/micro-services/api-gateway/src/routes/employee.routes.ts
+@@ -1,16 +1,18 @@
+ import express from 'express';
++import axios from 'axios';
+ import { authenticateToken, authorize } from '../middleware/auth';
+-import { EmployeeSagaOrchestatorator } from '../orchestrators/employeeSagaOrchestrator';
++import { SERVICE_CONFIG } from '../config/services';
+ 
+ const router = express.Router();
+-const employeeSagaOrchestrator = new EmployeeSagaOrchestatorator();
+ 
+ router.post('/', authenticateToken, authorize('EMPLOYEE'), async (req, res) => {
+     try {
+-      const response = await employeeSagaOrchestrator.createEmployee(req.body)
++      console.log('url request:', `${SERVICE_CONFIG.EMPLOYEE.url}`);
++  
++      const response = await axios.get(`${SERVICE_CONFIG.EMPLOYEE.url}`);
+       res.status(response.status).json(response.data);
+     } catch (e:any) {
+-      console.error('Error during employee creation:', e.response?.data || e.message);
++      console.error('Erro durante a requesição:', e.response?.data || e.message);
+       res.status(e.response?.status || 500).json({
+         message: e.response?.data?.message || 'Authentication failed'
+       });
+diff --git a/micro-services/api-gateway/src/services/clientService.ts b/micro-services/api-gateway/src/services/clientService.ts
+deleted file mode 100644
+index 4e269ad..0000000
+--- a/micro-services/api-gateway/src/services/clientService.ts
++++ /dev/null
+@@ -1,10 +0,0 @@
+-import axios from "axios";
+-import { SERVICE_CONFIG } from "../config/services";
+-import { IClient } from "../models/client/IClient";
+-
+-export class ClientService {
+-    public async create(employeeData : IClient): Promise<any> {
+-        const response = await axios.post(`${SERVICE_CONFIG.CLIENT.url}` ,employeeData);
+-        return response;
+-    }
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/services/employeeService.ts b/micro-services/api-gateway/src/services/employeeService.ts
+deleted file mode 100644
+index 5e65823..0000000
+--- a/micro-services/api-gateway/src/services/employeeService.ts
++++ /dev/null
+@@ -1,10 +0,0 @@
+-import axios, { Axios, AxiosResponse } from "axios";
+-import { SERVICE_CONFIG } from "../config/services";
+-import { IEmployee } from "../models/employee/IEmployee";
+-
+-export class EmployeeService {
+-    public async create(employeeData : IEmployee): Promise<AxiosResponse<any , any>> {
+-        const response = await axios.post(`${SERVICE_CONFIG.EMPLOYEE.url}` ,employeeData);
+-        return response;
+-    }	
+-}
+\ No newline at end of file
+diff --git a/micro-services/api-gateway/src/services/rabbitMQService.ts b/micro-services/api-gateway/src/services/rabbitMQService.ts
+new file mode 100644
+index 0000000..3e4df12
+--- /dev/null
++++ b/micro-services/api-gateway/src/services/rabbitMQService.ts
+@@ -0,0 +1,77 @@
++import * as amqp from 'amqplib';
++import { Connection, Channel } from 'amqplib';
++
++export class RabbitMQService {
++  private connection: Connection | null = null;
++  private channel: Channel | null = null;
++  private connectionOptions: amqp.Options.Connect = {
++    protocol: 'amqp',
++    hostname: 'localhost',
++    port: 5672,
++    username: 'admin',
++    password: 'rabbit_pass',
++  };
++
++  async connect(): Promise<void> {
++    try {
++      this.connection = await amqp.connect(this.connectionOptions);
++      this.channel = await this.connection?.createChannel();
++      console.log('Successfully connected to RabbitMQ');
++    } catch (error) {
++      console.error('Failed to connect to RabbitMQ:', error);
++      throw error;
++    }
++  }
++
++  async createQueue(queueName: string, options: amqp.Options.AssertQueue = { durable: true }): Promise<void> {
++    if (!this.channel) {
++      throw new Error('Channel not initialized. Call connect() first.');
++    }
++    await this.channel.assertQueue(queueName, options);
++  }
++
++  async sendToQueue(queueName: string, message: unknown): Promise<boolean> {
++    if (!this.channel) {
++      throw new Error('Channel not initialized. Call connect() first.');
++    }
++    return this.channel.sendToQueue(
++      queueName,
++      Buffer.from(JSON.stringify(message)),
++      { persistent: true }
++    );
++  }
++
++  async consumeQueue<T>(
++    queueName: string,
++    callback: (msg: T) => Promise<void> | void,
++    options: amqp.Options.Consume = { noAck: false }
++  ): Promise<void> {
++    if (!this.channel) {
++      throw new Error('Channel not initialized. Call connect() first.');
++    }
++
++    await this.channel.consume(queueName, async (msg) => {
++      if (msg) {
++        try {
++          const content = JSON.parse(msg.content.toString()) as T;
++          await callback(content);
++          this.channel?.ack(msg);
++        } catch (error) {
++          console.error('Error processing message:', error);
++          this.channel?.nack(msg, false, false);
++        }
++      }
++    }, options);
++  }
++
++  async close(): Promise<void> {
++    if (this.channel) {
++      await this.channel.close();
++      this.channel = null;
++    }
++    if (this.connection) {
++      await this.connection.close();
++      this.connection = null;
++    }
++  }
++}
+\ No newline at end of file
+diff --git a/micro-services/auth-service/pom.xml b/micro-services/auth-service/pom.xml
+index bbc279a..a81b342 100644
+--- a/micro-services/auth-service/pom.xml
++++ b/micro-services/auth-service/pom.xml
+@@ -98,6 +98,10 @@
+ 			<artifactId>jaxb-api</artifactId>
+ 			<version>2.3.0</version>
+ 		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-amqp</artifactId>
++		</dependency>
+ 	</dependencies>
+ 
+ 	<build>
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/AuthController.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/AuthController.java
+index 0249cf9..06e21bf 100644
+--- a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/AuthController.java
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/AuthController.java
+@@ -49,7 +49,7 @@ public class AuthController {
+     @PostMapping("/create")
+     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody CreateUserRequest createUserDTO) {
+         return ResponseEntity.status(HttpStatus.CREATED)
+-                .body(userService.createUser(createUserDTO));
++                .body(userService.create(createUserDTO));
+         
+     }
+ }
+\ No newline at end of file
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/CreateUserDTO.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/CreateUserDTO.java
+deleted file mode 100644
+index 32f881a..0000000
+--- a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/CreateUserDTO.java
++++ /dev/null
+@@ -1,5 +0,0 @@
+-package br.com.tads.dac.authservice.domain.controllers;
+-
+-public class CreateUserDTO {
+-
+-}
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/UserController.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/UserController.java
+index 6f5d771..c30c1b1 100644
+--- a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/UserController.java
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/controllers/UserController.java
+@@ -22,7 +22,7 @@ public class UserController {
+     @PostMapping("/create")
+     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest createUserDTO) {
+         return ResponseEntity.status(HttpStatus.CREATED)
+-                .body(userService.createUser(createUserDTO));
++                .body(userService.create(createUserDTO));
+         
+     }
+ }
+\ No newline at end of file
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/models/dto/AuthCreationResponse.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/models/dto/AuthCreationResponse.java
+new file mode 100644
+index 0000000..17c6dd6
+--- /dev/null
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/models/dto/AuthCreationResponse.java
+@@ -0,0 +1,14 @@
++package br.com.tads.dac.authservice.domain.models.dto;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class AuthCreationResponse {
++    private String sagaId;
++    private boolean success;
++    private String message;
++}
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/services/UserService.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/services/UserService.java
+index b2c6828..3b960f1 100644
+--- a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/services/UserService.java
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/domain/services/UserService.java
+@@ -26,7 +26,7 @@ public class UserService {
+                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com id: " + userId));
+     }
+ 
+-    public UserDTO createUser(CreateUserRequest createUserDTO) {
++    public UserDTO create(CreateUserRequest createUserDTO) {
+         if (userRepository.existsByEmail(createUserDTO.getEmail())) {
+             throw new UserAlredyExistsException("Já existe um usuário com o email: " + createUserDTO.getEmail());
+         }
+@@ -34,4 +34,12 @@ public class UserService {
+         User user = userMapper.toEntity(createUserDTO);
+         return userMapper.toDTO(userRepository.save(user));
+     }
++    
++    public UserDTO create(User user) {
++        if (userRepository.existsByEmail(user.getEmail())) {
++            throw new UserAlredyExistsException("Já existe um usuário com o email: " + user.getEmail());
++        }
++        
++        return userMapper.toDTO(userRepository.save(user));
++    }
+ }
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/listeners/ClientListener.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/listeners/ClientListener.java
+new file mode 100644
+index 0000000..dffaa91
+--- /dev/null
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/listeners/ClientListener.java
+@@ -0,0 +1,48 @@
++package br.com.tads.dac.authservice.infraestructure.listeners;
++
++import org.springframework.amqp.rabbit.annotation.RabbitListener;
++import org.springframework.amqp.rabbit.core.RabbitTemplate;
++import org.springframework.beans.factory.annotation.Autowired;
++
++import br.com.tads.dac.authservice.domain.models.dto.AuthCreationResponse;
++import br.com.tads.dac.authservice.domain.models.dto.UserDTO;
++import br.com.tads.dac.authservice.domain.services.UserService;
++import br.com.tads.dac.authservice.infraestructure.mappers.UserMapper;
++import br.com.tads.dac.authservice.infraestructure.messages.AuthCreationMessage;
++
++public class ClientListener {
++
++    @Autowired
++    private RabbitTemplate rabbitTemplate;
++
++    @Autowired
++    private UserService userService;
++
++    @Autowired
++    private UserMapper userMapper;
++
++    @RabbitListener(queues = "client.auth.create.queue")
++    public void createClientAuth(AuthCreationMessage message) {
++        try {
++            UserDTO user = userService.create(userMapper.toEntity(message));
++            
++            rabbitTemplate.convertAndSend(
++                "client.saga.responses.queue",
++                new AuthCreationResponse(
++                    message.getSagaId(),
++                    true,
++                    "Auth created successfully"
++                )
++            );
++        } catch (Exception e) {
++            rabbitTemplate.convertAndSend(
++                "client.saga.responses.queue",
++                new AuthCreationResponse(
++                    message.getSagaId(),
++                    false,
++                    e.getMessage()
++                )
++            );
++        }
++    }
++}
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/mappers/UserMapper.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/mappers/UserMapper.java
+index fde5c1f..cf72adf 100644
+--- a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/mappers/UserMapper.java
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/mappers/UserMapper.java
+@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
+ import br.com.tads.dac.authservice.domain.models.dto.CreateUserRequest;
+ import br.com.tads.dac.authservice.domain.models.dto.UserDTO;
+ import br.com.tads.dac.authservice.domain.models.entities.User;
++import br.com.tads.dac.authservice.infraestructure.messages.AuthCreationMessage;
+ 
+ @Component
+ public class UserMapper {
+@@ -24,6 +25,17 @@ public class UserMapper {
+                 .build();
+     }
+ 
++    public User toEntity(AuthCreationMessage message) {
++        return User.builder()
++                .email(message.getEmail())
++                .password(new BCryptPasswordEncoder().encode(message.getPassword()))
++                .status(true)
++                .userType(message.getUserType())
++                .createdAt(LocalDateTime.now())
++                .updatedAt(LocalDateTime.now())
++                .build();
++    }
++
+     public UserDTO toDTO(User user) {
+         return UserDTO.builder()
+                 .email(user.getEmail())
+diff --git a/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/messages/AuthCreationMessage.java b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/messages/AuthCreationMessage.java
+new file mode 100644
+index 0000000..11e87ff
+--- /dev/null
++++ b/micro-services/auth-service/src/main/java/br/com/tads/dac/authservice/infraestructure/messages/AuthCreationMessage.java
+@@ -0,0 +1,18 @@
++package br.com.tads.dac.authservice.infraestructure.messages;
++
++import br.com.tads.dac.authservice.domain.models.entities.UserRole;
++import lombok.AllArgsConstructor;
++import lombok.Builder;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++@Builder
++public class AuthCreationMessage {
++    private String password;
++    private String email;
++    private UserRole userType;
++    private String sagaId;
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClienteController.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClientController.java
+similarity index 60%
+rename from micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClienteController.java
+rename to micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClientController.java
+index 68e1156..e50c6b4 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClienteController.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/controller/ClientController.java
+@@ -1,8 +1,7 @@
+ package br.com.tads.dac.clienteservice.controller;
+ 
+-import br.com.tads.dac.clienteservice.model.Cliente;
+-import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
+-import br.com.tads.dac.clienteservice.service.ClienteService;
++import br.com.tads.dac.clienteservice.model.entities.Cliente;
++import br.com.tads.dac.clienteservice.service.ClientService;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.*;
+@@ -10,20 +9,22 @@ import org.springframework.web.bind.annotation.*;
+ import java.util.List;
+ 
+ @RestController
+-@RequestMapping("/clientes")
+-public class ClienteController {
++@RequestMapping("/clients")
++public class ClientController {
+ 
+     @Autowired
+-    private ClienteService clienteService;
++    private ClientService clienteService;
+ 
+     @PostMapping
+     public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
+-        return ResponseEntity.ok(clienteService.create(cliente));
++        Cliente created = clienteService.create(cliente);
++        return ResponseEntity.ok(created);
+     }
+ 
+     @PutMapping
+     public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
+-        return ResponseEntity.ok(clienteService.update(cliente));
++        Cliente updated = clienteService.update(cliente);
++        return ResponseEntity.ok(updated);
+     }
+ 
+     @DeleteMapping("/{id}")
+@@ -43,9 +44,4 @@ public class ClienteController {
+                 .map(ResponseEntity::ok)
+                 .orElse(ResponseEntity.notFound().build());
+     }
+-
+-    @PostMapping("/{id}/transacoes")
+-    public ResponseEntity<TransacaoMilhas> adicionarTransacao(@PathVariable Long id, @RequestBody TransacaoMilhas transacao) {
+-        return ResponseEntity.ok(clienteService.adicionarTransacao(id, transacao));
+-    }
+ }
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/connections/RabbitMQConnection.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/connections/RabbitMQConnection.java
+similarity index 95%
+rename from micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/connections/RabbitMQConnection.java
+rename to micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/connections/RabbitMQConnection.java
+index 28dd593..df3d48e 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/connections/RabbitMQConnection.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/connections/RabbitMQConnection.java
+@@ -1,4 +1,4 @@
+-package br.com.tads.dac.clienteservice.connections;
++package br.com.tads.dac.clienteservice.infraestructure.connections;
+ 
+ import org.springframework.stereotype.Component;
+ import jakarta.annotation.PostConstruct;
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/listeners/ClientListener.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/listeners/ClientListener.java
+new file mode 100644
+index 0000000..3ea10d7
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/listeners/ClientListener.java
+@@ -0,0 +1,66 @@
++package br.com.tads.dac.clienteservice.infraestructure.listeners;
++
++import org.springframework.amqp.rabbit.annotation.RabbitListener;
++import org.springframework.amqp.rabbit.core.RabbitTemplate;
++import org.springframework.beans.factory.annotation.Autowired;
++
++import br.com.tads.dac.clienteservice.infraestructure.mappers.ClientMapper;
++import br.com.tads.dac.clienteservice.model.dto.ClientCreationResponse;
++import br.com.tads.dac.clienteservice.model.dto.CompensationResponse;
++import br.com.tads.dac.clienteservice.model.entities.Cliente;
++import br.com.tads.dac.clienteservice.model.messages.ClientCreationMessage;
++import br.com.tads.dac.clienteservice.model.messages.CompensationMessage;
++import br.com.tads.dac.clienteservice.service.ClientService;
++
++public class ClientListener {
++    
++    @Autowired
++    private RabbitTemplate rabbitTemplate;
++    
++    @Autowired
++    private ClientService clientService;
++
++    @Autowired
++    private ClientMapper clientMapper;
++
++    @RabbitListener(queues = "client.create.queue")
++    public void createClient(ClientCreationMessage message) {
++        try {
++            Cliente client = clientService.create(clientMapper.toClient(message));
++            
++            rabbitTemplate.convertAndSend(
++                "client.saga.responses.queue",
++                new ClientCreationResponse(
++                    message.getSagaId(),
++                    true,
++                    "Client created successfully",
++                    client.getId()
++                )
++            );
++        } catch (Exception e) {
++            rabbitTemplate.convertAndSend(
++                "client.saga.responses.queue",
++                new ClientCreationResponse(
++                    message.getSagaId(),
++                    false,
++                    e.getMessage(),
++                    null
++                )
++            );
++        }
++    }
++
++    @RabbitListener(queues = "client.compensate.queue")
++    public void compensateClient(CompensationMessage message) {
++        clientService.delete(Long.parseLong(message.getClientId()));
++        
++        rabbitTemplate.convertAndSend(
++            "client.saga.responses.queue",
++            new CompensationResponse(
++                message.getSagaId(),
++                true,
++                "Compensation completed"
++            )
++        );
++    }
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/mappers/ClientMapper.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/mappers/ClientMapper.java
+new file mode 100644
+index 0000000..25d74c5
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/infraestructure/mappers/ClientMapper.java
+@@ -0,0 +1,20 @@
++package br.com.tads.dac.clienteservice.infraestructure.mappers;
++import org.springframework.stereotype.Component;
++
++import br.com.tads.dac.clienteservice.model.entities.Cliente;
++import br.com.tads.dac.clienteservice.model.messages.ClientCreationMessage;
++
++@Component
++public class ClientMapper {
++    public Cliente toClient(ClientCreationMessage message) {
++        return Cliente.builder()
++                .cpf(message.getCpf())
++                .nome(message.getNome())
++                .email(message.getEmail())
++                .cep(message.getCep())
++                .build();
++    }
++}
++    
++    
++        
+\ No newline at end of file
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/ClientCreationResponse.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/ClientCreationResponse.java
+new file mode 100644
+index 0000000..c314e9a
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/ClientCreationResponse.java
+@@ -0,0 +1,16 @@
++package br.com.tads.dac.clienteservice.model.dto;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class ClientCreationResponse {
++    private String sagaId;
++    private boolean success;
++    private String message;
++    private Long clientId;
++    
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/CompensationResponse.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/CompensationResponse.java
+new file mode 100644
+index 0000000..857f44b
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/dto/CompensationResponse.java
+@@ -0,0 +1,14 @@
++package br.com.tads.dac.clienteservice.model.dto;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class CompensationResponse {
++    private String sagaId;
++    private boolean success;
++    private String message;
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/Cliente.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/Cliente.java
+similarity index 91%
+rename from micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/Cliente.java
+rename to micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/Cliente.java
+index 6bacf79..1b69480 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/Cliente.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/Cliente.java
+@@ -1,4 +1,4 @@
+-package br.com.tads.dac.clienteservice.model;
++package br.com.tads.dac.clienteservice.model.entities;
+ 
+ import jakarta.persistence.*;
+ import lombok.*;
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TipoTransacao.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TipoTransacao.java
+similarity index 50%
+rename from micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TipoTransacao.java
+rename to micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TipoTransacao.java
+index 9d8fc67..d68ac7f 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TipoTransacao.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TipoTransacao.java
+@@ -1,4 +1,4 @@
+-package br.com.tads.dac.clienteservice.model;
++package br.com.tads.dac.clienteservice.model.entities;
+ 
+ public enum TipoTransacao {
+     ENTRADA,
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TransacaoMilhas.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TransacaoMilhas.java
+similarity index 94%
+rename from micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TransacaoMilhas.java
+rename to micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TransacaoMilhas.java
+index fc3021a..abf23ee 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/TransacaoMilhas.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/entities/TransacaoMilhas.java
+@@ -1,4 +1,4 @@
+-package br.com.tads.dac.clienteservice.model;
++package br.com.tads.dac.clienteservice.model.entities;
+ 
+ import java.time.LocalDateTime;
+ 
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/ClientCreationMessage.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/ClientCreationMessage.java
+new file mode 100644
+index 0000000..7d6ba1d
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/ClientCreationMessage.java
+@@ -0,0 +1,21 @@
++package br.com.tads.dac.clienteservice.model.messages;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class ClientCreationMessage {
++    private String id;
++    private String sagaId;
++    private String cpf;
++    private String nome;
++    private String email;
++    private String ruaNumero;
++    private String complemento;
++    private String cep;
++    private String cidade;
++    private String uf;
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/CompensationMessage.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/CompensationMessage.java
+new file mode 100644
+index 0000000..44863c1
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/model/messages/CompensationMessage.java
+@@ -0,0 +1,15 @@
++package br.com.tads.dac.clienteservice.model.messages;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class CompensationMessage {
++    private String sagaId;
++    private String clientId;
++    private String transactionId;
++    private String transactionType;
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/ClienteRepository.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/ClienteRepository.java
+index a88b7ce..0138c8c 100644
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/ClienteRepository.java
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/ClienteRepository.java
+@@ -1,9 +1,10 @@
+ package br.com.tads.dac.clienteservice.repository;
+ 
+-import br.com.tads.dac.clienteservice.model.Cliente;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
++import br.com.tads.dac.clienteservice.model.entities.Cliente;
++
+ @Repository
+ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+ }
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/TransacaoMilhasRepository.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/TransacaoMilhasRepository.java
+deleted file mode 100644
+index bef0982..0000000
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/repository/TransacaoMilhasRepository.java
++++ /dev/null
+@@ -1,9 +0,0 @@
+-package br.com.tads.dac.clienteservice.repository;
+-
+-import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
+-import org.springframework.data.jpa.repository.JpaRepository;
+-import org.springframework.stereotype.Repository;
+-
+-@Repository
+-public interface TransacaoMilhasRepository extends JpaRepository<TransacaoMilhas, Long> {
+-}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClientService.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClientService.java
+new file mode 100644
+index 0000000..8937c47
+--- /dev/null
++++ b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClientService.java
+@@ -0,0 +1,36 @@
++package br.com.tads.dac.clienteservice.service;
++
++import br.com.tads.dac.clienteservice.model.entities.Cliente;
++import br.com.tads.dac.clienteservice.repository.ClienteRepository;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++import java.util.Optional;
++
++@Service
++public class ClientService {
++
++    @Autowired
++    private ClienteRepository clienteRepository;
++
++    public Cliente create(Cliente client) {
++        return clienteRepository.save(client);
++    }
++
++    public Cliente update(Cliente client) {
++        return clienteRepository.save(client);
++    }
++
++    public void delete(Long id) {
++        clienteRepository.deleteById(id);
++    }
++
++    public List<Cliente> getAll() {
++        return clienteRepository.findAll();
++    }
++
++    public Optional<Cliente> getById(Long id) {
++        return clienteRepository.findById(id);
++    }
++}
+diff --git a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClienteService.java b/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClienteService.java
+deleted file mode 100644
+index 149eeb9..0000000
+--- a/micro-services/cliente-service/src/main/java/br/com/tads/dac/clienteservice/service/ClienteService.java
++++ /dev/null
+@@ -1,58 +0,0 @@
+-package br.com.tads.dac.clienteservice.service;
+-
+-import br.com.tads.dac.clienteservice.model.*;
+-import br.com.tads.dac.clienteservice.repository.ClienteRepository;
+-import br.com.tads.dac.clienteservice.repository.TransacaoMilhasRepository;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.stereotype.Service;
+-
+-import java.time.LocalDateTime;
+-import java.util.List;
+-import java.util.Optional;
+-
+-@Service
+-public class ClienteService {
+-
+-    @Autowired
+-    private ClienteRepository clienteRepository;
+-
+-    @Autowired
+-    private TransacaoMilhasRepository transacaoRepository;
+-
+-    public Cliente create(Cliente cliente) {
+-        return clienteRepository.save(cliente);
+-    }
+-
+-    public Cliente update(Cliente cliente) {
+-        return clienteRepository.save(cliente);
+-    }
+-
+-    public void delete(Long id) {
+-        clienteRepository.deleteById(id);
+-    }
+-
+-    public List<Cliente> getAll() {
+-        return clienteRepository.findAll();
+-    }
+-
+-    public Optional<Cliente> getById(Long id) {
+-        return clienteRepository.findById(id);
+-    }
+-
+-    public TransacaoMilhas adicionarTransacao(Long clienteId, TransacaoMilhas transacao) {
+-        Cliente cliente = clienteRepository.findById(clienteId)
+-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+-
+-        transacao.setCliente(cliente);
+-        transacao.setDataHora(LocalDateTime.now());
+-
+-        if (transacao.getTipo() == TipoTransacao.ENTRADA) {
+-            cliente.setMilhas(cliente.getMilhas() + transacao.getQuantidade());
+-        } else if (transacao.getTipo() == TipoTransacao.SAIDA) {
+-            cliente.setMilhas(cliente.getMilhas() - transacao.getQuantidade());
+-        }
+-
+-        clienteRepository.save(cliente);
+-        return transacaoRepository.save(transacao);
+-    }
+-}
+diff --git a/micro-services/cliente-service/src/main/resources/application.properties b/micro-services/cliente-service/src/main/resources/application.properties
+index e331ac2..5b7e0af 100644
+--- a/micro-services/cliente-service/src/main/resources/application.properties
++++ b/micro-services/cliente-service/src/main/resources/application.properties
+@@ -13,4 +13,12 @@ spring.jpa.show-sql=true
+ spring.jpa.hibernate.ddl-auto=update
+ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+ 
+-server.port=8085
+\ No newline at end of file
++server.port=8085
++
++# RabbitMQ Configuration
++spring.rabbitmq.host=rabbitmq
++spring.rabbitmq.port=5671
++spring.rabbitmq.username=admin
++spring.rabbitmq.password=rabbit_pass
++spring.rabbitmq.virtual-host=/app
++spring.rabbitmq.ssl.enabled=true
+\ No newline at end of file
+diff --git a/micro-services/employee-service/pom.xml b/micro-services/employee-service/pom.xml
+index 2ca8d45..169a99a 100644
+--- a/micro-services/employee-service/pom.xml
++++ b/micro-services/employee-service/pom.xml
+@@ -35,11 +35,6 @@
+ 			<groupId>org.flywaydb</groupId>
+ 			<artifactId>flyway-core</artifactId>
+ 		</dependency>
+-		<dependency>
+-			<groupId>org.postgresql</groupId>
+-			<artifactId>postgresql</artifactId>
+-			<version>42.7.3</version>
+-		</dependency>
+ 
+ 		<dependency>
+ 			<groupId>org.springframework.boot</groupId>
+diff --git a/micro-services/employee-service/src/main/resources/application.properties b/micro-services/employee-service/src/main/resources/application.properties
+index 11a83da..aeb5f39 100644
+--- a/micro-services/employee-service/src/main/resources/application.properties
++++ b/micro-services/employee-service/src/main/resources/application.properties
+@@ -14,8 +14,10 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+ 
+ server.port=8087
+ 
+-spring.rabbitmq.host=localhost
+-spring.rabbitmq.port=5672
++# RabbitMQ Configuration
++spring.rabbitmq.host=rabbitmq
++spring.rabbitmq.port=5671
+ spring.rabbitmq.username=admin
+ spring.rabbitmq.password=rabbit_pass
+-
++spring.rabbitmq.virtual-host=/app
++spring.rabbitmq.ssl.enabled=true
+\ No newline at end of file
+diff --git a/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/Flight.java b/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/Flight.java
+deleted file mode 100644
+index f746031..0000000
+--- a/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/Flight.java
++++ /dev/null
+@@ -1,19 +0,0 @@
+-package br.com.tads.dac.flightservice.entities;
+-
+-import jakarta.persistence.*;
+-import lombok.AllArgsConstructor;
+-import lombok.Data;
+-import lombok.NoArgsConstructor;
+-
+-@Entity
+-@Table(name = "flight")
+-@AllArgsConstructor
+-@NoArgsConstructor
+-@Data
+-public class Flight {
+-
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+-    private Long id;
+-
+-}
+diff --git a/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/repositories/FlightRepository.java b/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/repositories/FlightRepository.java
+deleted file mode 100644
+index 57272b1..0000000
+--- a/micro-services/flight-service/src/main/java/br/com/tads/dac/flightservice/repositories/FlightRepository.java
++++ /dev/null
+@@ -1,7 +0,0 @@
+-package br.com.tads.dac.flightservice.repositories;
+-
+-import br.com.tads.dac.flightservice.entities.Flight;
+-import org.springframework.data.jpa.repository.JpaRepository;
+-
+-public interface FlightRepository extends JpaRepository<Flight,Long> {
+-}
