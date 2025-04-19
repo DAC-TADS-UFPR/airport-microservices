@@ -101,6 +101,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-cliente:5432/cliente_db
       SPRING_DATASOURCE_USERNAME: cliente_user
       SPRING_DATASOURCE_PASSWORD: cliente_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
     depends_on:
       postgres-cliente:
         condition: service_healthy
