@@ -43,7 +43,7 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        transacao.setCliente(cliente);
+        transacao.setClient(cliente);
         transacao.setDataHora(LocalDateTime.now());
 
         if (transacao.getTipo() == TipoTransacao.ENTRADA) {
