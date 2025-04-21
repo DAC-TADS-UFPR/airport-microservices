@@ -10,8 +10,11 @@ import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+
   const { form, loading, setLoading, changeState, validation } = useForm({
     name: { invalid: false, errorLabel: "Digite seu nome", value: "" },
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
@@ -59,6 +62,7 @@ export default function Page() {
     mutationFn: createUser,
     onSuccess: (data) => {
       console.log("User created successfully", data);
+      router.push("/");
     },
     onError: (error: any) => {
       console.error("Error creating user", error);

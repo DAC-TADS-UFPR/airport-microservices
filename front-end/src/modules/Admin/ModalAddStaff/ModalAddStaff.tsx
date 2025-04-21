@@ -6,6 +6,8 @@ import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPhone from "@/components/Inputs/InputPhone/InputPhone";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useMutation } from "@tanstack/react-query";
+import { createEmployee } from "@/data/config/employee";
 
 interface ModalAddStaffProps {
   data?: any;
@@ -21,10 +23,37 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
     phone: { invalid: false, errorLabel: "Digite seu telefone", value: "" },
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["createEmployee"],
+    mutationFn: createEmployee,
+    onSuccess: (data: any) => {
+      console.log("Funcionário criado com sucesso:", data);
+      closeModal();
+    },
+    onError: (error: any) => {
+      console.error("Erro ao criar funcionário:", error);
+      const apiErrors = error?.response?.data?.errors;
+      if (apiErrors) {
+        apiErrors.forEach((err: any) => {
+          const field = err.field;
+          const message = err.defaultMessage;
+          changeState(field, "invalid", true);
+          changeState(field, "errorLabel", message);
+        });
+      }
+    },
+  });
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validation()) return;
+    await mutateAsync({ payload: { form } });
+  };
+
   return (
     <div className="modalAddStaff">
       <span className="modalAddStaff__description">Digite o código de reserva para confirmar o embarque no voo.</span>
-      <form>
+      <form onSubmit={onSubmit}>
         <InputText
           disabled={loading}
           id="name"
@@ -67,7 +96,7 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
           invalid={form.phone.invalid}
           onChange={(e) => changeState("phone", "value", e.target.value)}
         />
-        <ButtonDefault children={"Adicionar membro"} onClick={closeModal} />
+        <ButtonDefault children={isPending ? "Carregando..." : "Adicionar funcionário"} type="submit" disabled={isPending || loading} />
       </form>
     </div>
   );
