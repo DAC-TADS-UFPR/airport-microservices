@@ -4,10 +4,10 @@ import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
-import InputText from "@/components/Inputs/InputText/InputText";
-import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
 import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
+import InputText from "@/components/Inputs/InputText/InputText";
+import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
+import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 
 export default function Page() {
   const { form, loading, setLoading, changeState, validation } = useForm({
