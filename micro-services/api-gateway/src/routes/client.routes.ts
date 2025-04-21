@@ -1,11 +1,9 @@
 import express from 'express';
 import axios from 'axios';
-import { SERVICE_CONFIG } from '../config/services';
-import { ClientSagaOrchestatorator } from '../orchestrators/clientSagaOrchestrator';
+import { ClientSagaOrchestatorator } from '../orchestrators/clientSaga.orchestrator';
 
 const router = express.Router();
-const clientSagaOrchestrator = ClientSagaOrchestatorator.getInstance();
-
+const clientSagaOrchestrator = new ClientSagaOrchestatorator();
 router.post('/create', async (req, res) => {
     try {
       const response  =  await clientSagaOrchestrator.createClient(req.body);

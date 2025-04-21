@@ -32,6 +32,8 @@ public class User implements UserDetails{
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean status;
+    private String name;
+    private Long userId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

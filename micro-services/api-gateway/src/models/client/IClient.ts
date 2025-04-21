@@ -1,30 +1,38 @@
 export class IClient {
     id: string;
-    nome: string;
+    name: string;
     email: string;
-    password: string;
-    phone: string;
-    uf: string;
-    complemento: string;
+    complement: string;
     cep: string;
-
+    cpf: string;
+    city: string;
+    street: string;
+    neighborhood: string;
+    number: string;
+    state: string;
     constructor(
         id: string,
-        nome: string,
+        name: string,
         email: string,
-        password: string,
-        phone: string,
-        uf: string,
-        complemento: string,
-        cep: string
+        complement: string,
+        cep: string,
+        cpf: string,
+        city: string,
+        street: string,
+        neighborhood: string,
+        number: string,
+        state: string,
     ) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.uf = uf;
-        this.complemento = complemento;
         this.cep = cep;
+        this.cpf = cpf;
+        this.city = city;
+        this.street = street;
+        this.neighborhood = neighborhood;
+        this.number = number;
+        this.state = state;
+        this.complement = complement;
     }
 }

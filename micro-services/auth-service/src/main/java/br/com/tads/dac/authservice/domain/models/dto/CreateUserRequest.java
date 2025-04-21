@@ -27,4 +27,9 @@ public class CreateUserRequest {
     @NotNull(message = "User type é obrigatório")
     private UserRole userType;
 
+    @NotBlank(message = "O nome é obrigatório")
+    private String name;
+
+    @NotBlank(message = "O id é obrigatório")
+    private Long userId;
 }

@@ -21,13 +21,16 @@ public class UserMapper {
                 .userType(dto.getUserType())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .name(dto.getName())
+                .userId(dto.getUserId())
                 .build();
     }
 
     public UserDTO toDTO(User user) {
         return UserDTO.builder()
                 .email(user.getEmail())
-                .id(user.getId())
+                .userId(user.getUserId())
+                .name(user.getName())
                 .role(user.getUserType())
                 .build();
     }

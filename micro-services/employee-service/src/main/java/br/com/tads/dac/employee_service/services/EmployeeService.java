@@ -1,7 +1,7 @@
 package br.com.tads.dac.employee_service.services;
 
-import br.com.tads.dac.employee_service.entities.Employee;
 import br.com.tads.dac.employee_service.exceptions.ResourceNotFoundException;
+import br.com.tads.dac.employee_service.models.entities.Employee;
 import br.com.tads.dac.employee_service.repositories.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

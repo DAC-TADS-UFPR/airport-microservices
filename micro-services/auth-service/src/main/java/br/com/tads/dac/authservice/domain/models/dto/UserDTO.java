@@ -7,5 +7,7 @@ import lombok.Builder;
 public record UserDTO (
     String id,
     String email,
+    String name,
+    Long userId,
     UserRole role
 ){}

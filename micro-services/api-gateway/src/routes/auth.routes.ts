@@ -12,19 +12,9 @@ router.get('/', createProxyMiddleware({
   changeOrigin: true
 }));
 
-router.post('/loginf', authenticateToken, authorize('FUNCIONARIO'), 
-  createProxyMiddleware({
-    target: SERVICE_CONFIG.AUTH.url,
-    pathRewrite: { '^/auth': '/auth' },
-    changeOrigin: true
-  })
-);
-
 router.post('/login', async (req, res) => {
   try {
-    console.log('Login request:', req.body);
     console.log('url request:', `${SERVICE_CONFIG.AUTH.url}/login`);
-
     const response = await axios.post(`${SERVICE_CONFIG.AUTH.url}/login`, req.body);
     res.status(response.status).json(response.data);
   } catch (e:any) {

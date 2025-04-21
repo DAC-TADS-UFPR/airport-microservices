@@ -17,13 +17,16 @@ public class Cliente {
     private Long id;
 
     private String cpf;
-    private String nome;
+    private String name;
     private String email;
-    private String ruaNumero;
-    private String complemento;
+    private String number;
+    private String complement;
     private String cep;
-    private String cidade;
+    private String city;
     private String uf;
+    private String street;
+    private String neighborhood;
+    private String state;
     private Integer milhas;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
