@@ -4,6 +4,8 @@ volumes:
   postgres-cliente-data:
   postgres-flight-data:
   postgres-employee-data:
+  postgres-reservation-data:
+
 
 services:
   mongodb-auth:
@@ -60,6 +62,20 @@ services:
       - postgres-employee-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U employee_user -d employee_db"]
+
+  postgres-reservation:
+    image: postgres:15
+    container_name: postgres-reservation
+    environment:
+      POSTGRES_DB: reservation_db
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: reservation_pass
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres-reservation-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -139,3 +155,23 @@ services:
     depends_on:
       postgres-employee:
         condition: service_healthy
+
+
+  reservation-service:
+    build: ./reservation-service
+    container_name: reservation-service
+    ports:
+      - "8084:8084"
+  environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/reservation_db
+      SPRING_DATASOURCE_USERNAME: reservation_user
+      SPRING_DATASOURCE_PASSWORD: reservation_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
+  depends_on:
+      postgres-reservation:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy        
