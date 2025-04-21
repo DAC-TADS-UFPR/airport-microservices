@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "employee")
+@Where(clause = "active = true")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -28,6 +30,9 @@ public class Employee {
 
     @Column(nullable = false)
     private String phone;
+
+    @Column(nullable = false)
+    private boolean active = true;
 
     public Employee(EmployeeCreateDTO employeeCreateDTO) {
         this.name = employeeCreateDTO.name();

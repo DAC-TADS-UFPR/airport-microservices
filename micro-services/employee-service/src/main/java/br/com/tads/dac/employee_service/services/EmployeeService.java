@@ -43,7 +43,9 @@ public class EmployeeService {
     }
 
     public void delete(Long id) {
-        employeeRepository.deleteById(id);
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionario nao encontrado"));
+        employee.setActive(false);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> getAll() {
