@@ -1,12 +1,18 @@
 package br.com.tads.dac.clienteservice.service;
 
+import br.com.tads.dac.clienteservice.exceptions.ClientRegisterException;
+import br.com.tads.dac.clienteservice.exceptions.FieldError;
+import br.com.tads.dac.clienteservice.infraestructure.mappers.ClientMapper;
 import br.com.tads.dac.clienteservice.model.*;
+import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
+import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 import br.com.tads.dac.clienteservice.repository.ClienteRepository;
 import br.com.tads.dac.clienteservice.repository.TransacaoMilhasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +25,15 @@ public class ClienteService {
     @Autowired
     private TransacaoMilhasRepository transacaoRepository;
 
-    public Cliente create(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    @Autowired
+    private ClientMapper mapper;
+
+    public ClientDTO create(RegisterRequestDTO dto) {
+        var errors = validate(dto);
+        if (!errors.isEmpty()) {
+            throw new ClientRegisterException("Erro ao salvar cliente", errors);
+        }
+        return mapper.toDto(clienteRepository.save(mapper.toEntity(dto)));
     }
 
     public Cliente update(Cliente cliente) {
@@ -54,5 +67,21 @@ public class ClienteService {
 
         clienteRepository.save(cliente);
         return transacaoRepository.save(transacao);
+    }
+
+    public List<FieldError> validate(RegisterRequestDTO dto) {
+        var cliente = clienteRepository.findByCpf(dto.cpf());
+        List<FieldError> errors = new ArrayList<>();
+        if (cliente.isPresent()) {
+            errors.add(new FieldError("cpf", "CPF já cadastrado"));
+        }
+        cliente = clienteRepository.findByEmail(dto.email());
+        if (cliente.isPresent()) {
+            errors.add(new FieldError("email", "E-mail já cadastrado"));
+        }
+
+        dto.cpf().replaceAll("[^0-9]", "");
+        dto.cep().replaceAll("[^0-9]", "");
+        return errors;
     }
 }

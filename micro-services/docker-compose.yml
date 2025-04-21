@@ -28,6 +28,8 @@ services:
       POSTGRES_DB: cliente_db
       POSTGRES_USER: cliente_user
       POSTGRES_PASSWORD: cliente_pass
+    ports:
+      - "5433:5432"  
     volumes:
       - postgres-cliente-data:/var/lib/postgresql/data
     healthcheck:

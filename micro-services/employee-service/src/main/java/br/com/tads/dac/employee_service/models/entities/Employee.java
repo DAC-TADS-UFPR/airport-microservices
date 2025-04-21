@@ -1,4 +1,4 @@
-package br.com.tads.dac.employee_service.entities;
+package br.com.tads.dac.employee_service.models.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,6 @@ public class Employee {
     private Long id;
     private String name;
     private String email;
-    private String password;
     private String cpf;
     private String phone;
 }

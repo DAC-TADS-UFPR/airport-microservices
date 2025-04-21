@@ -1,7 +1,7 @@
 package br.com.tads.dac.employee_service.controllers;
 
 
-import br.com.tads.dac.employee_service.entities.Employee;
+import br.com.tads.dac.employee_service.models.entities.Employee;
 import br.com.tads.dac.employee_service.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
