@@ -2,14 +2,19 @@
 import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "@/data/config/user";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+
   const { form, loading, setLoading, changeState, validation } = useForm({
     name: { invalid: false, errorLabel: "Digite seu nome", value: "" },
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
@@ -52,9 +57,29 @@ export default function Page() {
     }
   };
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["createUser"],
+    mutationFn: createUser,
+    onSuccess: (data) => {
+      console.log("User created successfully", data);
+      router.push("/");
+    },
+    onError: (error: any) => {
+      console.error("Error creating user", error);
+      const apiErrors = error?.response?.data?.errors;
+      if (Array.isArray(apiErrors)) {
+        apiErrors.forEach((err: { field: string; message: string }) => {
+          changeState(err.field, "invalid", true);
+          changeState(err.field, "errorLabel", err.message);
+        });
+      }
+    },
+  });
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("form", form);
+    if (!validation()) return;
+    await mutateAsync({ payload: { form } });
   };
 
   return (
@@ -180,7 +205,7 @@ export default function Page() {
               onChange={(e) => changeState("state", "value", e.target.value)}
             />
           </div>
-          <ButtonDefault children={"Criar Conta"} type="submit" disabled={loading} />
+          <ButtonDefault children={isPending ? "Carregando..." : "Criar Conta"} type="submit" disabled={loading || isPending} />
         </form>
       </section>
     </MainDefault>

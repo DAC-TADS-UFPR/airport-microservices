@@ -2,21 +2,45 @@
 import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
+import { login } from "@/data/config/auth";
+import { useMutation } from "@tanstack/react-query";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPassword from "@/components/Inputs/InputPassword/InputPassword";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { form, loading, setLoading, changeState, validation } = useForm({
+  const router = useRouter();
+
+  const { form, changeState, validation } = useForm({
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
     password: { invalid: false, errorLabel: "Digite sua senha", value: "", required: false },
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: login,
+    onSuccess: (data: any) => {
+      console.log("Login success:", data);
+      const { userId, role } = data.user;
+      if (role === "EMPLOYEE") {
+        router.push(`/admin/${userId}`);
+      } else if (role === "CLIENT") {
+        router.push(`/user/${userId}`);
+      }
+    },
+    onError: (error: any) => {
+      console.error("Error login:", error);
+      const apiErrors = error?.response?.data?.errors;
+    },
+  });
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("form", form);
+    if (!validation()) return;
+    mutateAsync({ payload: { form } });
   };
 
   return (
@@ -47,11 +71,9 @@ export default function Page() {
             invalid={form.password.invalid}
             onChange={(e) => changeState("password", "value", e.target.value)}
           />
-          <ButtonDefault children={"Login"} type="submit" />
+          <ButtonDefault children={isPending ? "Carregando..." : "Login"} type="submit" disabled={isPending} />
         </form>
       </section>
     </MainDefault>
   );
 }
-
-

@@ -4,6 +4,7 @@ import Header from "@/components/Header/Header";
 
 import { ModalProvider } from "@/components/Provider/ModalProvider/ModalProvider";
 import QueryProvider from "@/components/Provider/QueryProvider/QueryProvider";
+import AuthProvider from "@/components/Provider/AuthProvider/AuthProvider";
 
 const metadata: Metadata = {
   title: "Air TADS",
@@ -17,10 +18,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="pt-BR">
       <body>
         <QueryProvider>
-          <ModalProvider>
-            <Header />
-            {children}
-          </ModalProvider>
+          <AuthProvider>
+            <ModalProvider>
+              <Header />
+              {children}
+            </ModalProvider>
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>
