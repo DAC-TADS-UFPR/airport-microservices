@@ -2,8 +2,11 @@ package br.com.tads.dac.clienteservice.controller;
 
 import br.com.tads.dac.clienteservice.model.Cliente;
 import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
+import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
+import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 import br.com.tads.dac.clienteservice.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +20,8 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
-        return ResponseEntity.ok(clienteService.create(cliente));
+    public ResponseEntity<ClientDTO> create(@RequestBody RegisterRequestDTO cliente) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.create(cliente));
     }
 
     @PutMapping

@@ -1,11 +1,11 @@
 import express from 'express';
 import { authenticateToken, authorize } from '../middleware/auth';
-import { EmployeeSagaOrchestatorator } from '../orchestrators/employeeSagaOrchestrator';
+import { EmployeeSagaOrchestatorator } from '../orchestrators/employeeSaga.orchestrator';
 
 const router = express.Router();
 const employeeSagaOrchestrator = new EmployeeSagaOrchestatorator();
 
-router.post('/', authenticateToken, authorize('EMPLOYEE'), async (req, res) => {
+router.post('/create', authenticateToken, authorize('EMPLOYEE'), async (req, res) => {
     try {
       const response = await employeeSagaOrchestrator.createEmployee(req.body)
       res.status(response.status).json(response.data);

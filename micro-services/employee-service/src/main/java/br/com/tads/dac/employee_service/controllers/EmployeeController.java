@@ -1,9 +1,10 @@
 package br.com.tads.dac.employee_service.controllers;
 
-
-import br.com.tads.dac.employee_service.entities.Employee;
+import br.com.tads.dac.employee_service.models.dto.EmployeeCreateDTO;
+import br.com.tads.dac.employee_service.models.dto.EmployeeUpdateDTO;
+import br.com.tads.dac.employee_service.models.entities.Employee;
 import br.com.tads.dac.employee_service.services.EmployeeService;
-import ch.qos.logback.core.net.server.Client;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,28 +12,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/funcionarios")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> create(@RequestBody Employee employee) {
-            Employee employee_created = employeeService.create(employee);
-            return ResponseEntity.ok(employee_created);
+    public ResponseEntity<Employee> create(@RequestBody @Valid EmployeeCreateDTO employeeCreateDTO) {
+            Employee employee_created = new Employee(employeeCreateDTO);
+            this.employeeService.create(employee_created);
+            return ResponseEntity.status(HttpStatus.CREATED).body(employee_created);
     }
 
-    @PutMapping
-    public ResponseEntity<Employee> update(@RequestBody Employee employee) {
-        Employee employee_updated = employeeService.update(employee);
-        return ResponseEntity.ok(employee_updated);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<EmployeeUpdateDTO> update(@PathVariable Long id,@RequestBody @Valid EmployeeUpdateDTO employeeUpdateDTO) {
+        Employee employee_updated = employeeService.update(id,employeeUpdateDTO);
+        EmployeeUpdateDTO responseDTO = new EmployeeUpdateDTO(
+                employee_updated.getName(),
+                employee_updated.getEmail(),
+                employee_updated.getPhone()
+        );
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employeeService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
