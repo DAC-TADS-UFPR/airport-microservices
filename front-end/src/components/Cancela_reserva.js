@@ -11,7 +11,7 @@ export default function CancelarReserva() {
     </div>
   );
 }
-type Reserva = {
+type eserva = {
     id: string;
     status: string;
     voo: {
@@ -74,3 +74,4 @@ return (
     </button>
   </div>
 );
+{mensagem && <p className="mt-4 text-blue-700">{mensagem}</p>}
