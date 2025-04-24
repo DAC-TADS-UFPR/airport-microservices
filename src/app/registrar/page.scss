@@ -1,0 +1,53 @@
+#register {
+  .register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    @include resize(min-height, 768);
+    @include resize(padding, 40);
+    background: linear-gradient(0deg, rgba(0, 145, 242, 0.1) 0%, rgba(250, 252, 255, 1) 80%);
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      @include resize(gap, 8);
+      @include resize(padding, 32);
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      .buttonDefault {
+        @include resize(margin-top, 24);
+      }
+    }
+
+    &__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include resize(width, 32);
+      @include resize(height, 32);
+    }
+
+    &__title {
+      font-weight: 500;
+      color: #000;
+      @include resize(font-size, $h3-fs);
+      @include resize(line-height, $h3-lh);
+      @include resize(letter-spacing, $h3-ls);
+    }
+
+    &__grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      @include resize(gap, 8);
+      @include resize(margin-top, 24);
+    }
+  }
+}
