@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.tads.dac.flightservice.models.dto.UpdateStateRequest;
 
 @RequestMapping
+
 @RestController
 public class FlightController {
     

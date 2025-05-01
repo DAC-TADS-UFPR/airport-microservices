@@ -162,7 +162,7 @@ services:
     container_name: reservation-service
     ports:
       - "8084:8084"
-  environment:
+    environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/reservation_db
       SPRING_DATASOURCE_USERNAME: reservation_user
       SPRING_DATASOURCE_PASSWORD: reservation_pass
@@ -170,8 +170,6 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: rabbit_pass
-  depends_on:
+    depends_on:
       postgres-reservation:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy        

@@ -1,9 +1,8 @@
 import axios from "axios";
 import qs from "qs";
-
 import { redirect } from "next/navigation";
-import deleteCookieToken from "@/utils/deleteCookieToken";
 import getCookieToken from "@/utils/getCookieToken";
+import deleteCookieToken from "@/utils/deleteCookieToken";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 

@@ -2,14 +2,19 @@
 import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "@/data/config/user";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+
   const { form, loading, setLoading, changeState, validation } = useForm({
     name: { invalid: false, errorLabel: "Digite seu nome", value: "" },
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
@@ -17,7 +22,11 @@ export default function Page() {
     cep: { invalid: false, errorLabel: "Digite seu CEP", value: "" },
     street: { invalid: false, errorLabel: "Digite seu endereço", value: "" },
     number: { invalid: false, errorLabel: "Digite o número", value: "" },
-    complement: { invalid: false, errorLabel: "Digite o complemento", value: "" },
+    complement: {
+      invalid: false,
+      errorLabel: "Digite o complemento",
+      value: "",
+    },
     neighborhood: { invalid: false, errorLabel: "Digite o bairro", value: "" },
     city: { invalid: false, errorLabel: "Digite a cidade", value: "" },
     state: { invalid: false, errorLabel: "Digite o estado", value: "" },
@@ -52,18 +61,78 @@ export default function Page() {
     }
   };
 
+  interface CreateUserResponse {
+    message: string;
+  }
+
+  const { mutateAsync, isPending } = useMutation<CreateUserResponse, Error>({
+    mutationKey: ["createUser"],
+    mutationFn: createUser,
+    onSuccess: (data: CreateUserResponse) => {
+      console.log("User created successfully", data);
+      router.push("/");
+    },
+    onError: (error: any) => {
+      console.error("Error creating user", error);
+      const apiErrors = error?.response?.data?.errors;
+      if (Array.isArray(apiErrors)) {
+        apiErrors.forEach((err: { field: string; message: string }) => {
+          changeState(err.field, "invalid", true);
+          changeState(err.field, "errorLabel", err.message);
+        });
+      }
+    },
+  });
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("form", form);
+    if (!validation()) return;
+    const senha = gerarSenha();
+
+    await mutateAsync({ payload: { form, password: senha } });
+
+    try {
+      const response = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email.value,
+          password: senha,
+        }),
+      });
+
+      const emailData = await response.json();
+      if (response.ok) {
+        console.log("E-mail enviado com sucesso:", emailData.message);
+      } else {
+        console.error("Erro ao enviar o e-mail:", emailData.error);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar o e-mail:", error);
+    }
+
+    router.push("/");
+  };
+
+  const gerarSenha = (): string => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
   };
 
   return (
     <MainDefault id="register">
       <section className="register">
         <form className="register__container" onSubmit={onSubmit}>
-          <ImgDefault className="register__logo" src={"/icons/logo.svg"} alt="Air TADS logo" />
+          <ImgDefault
+            className="register__logo"
+            src={"/icons/logo.svg"}
+            alt="Air TADS logo"
+          />
           <h1 className="register__title">Criar Conta</h1>
-          <p className="login__subtitle">Junte-se à AirTADS para uma experiência de voo perfeita!</p>
+          <p className="login__subtitle">
+            Junte-se à AirTADS para uma experiência de voo perfeita!
+          </p>
           <div className="register__grid">
             <InputText
               disabled={loading}
@@ -144,7 +213,9 @@ export default function Page() {
               value={form.complement.value}
               erroMsg={form.complement.errorLabel}
               invalid={form.complement.invalid}
-              onChange={(e) => changeState("complement", "value", e.target.value)}
+              onChange={(e) =>
+                changeState("complement", "value", e.target.value)
+              }
             />
             <InputText
               disabled
@@ -155,7 +226,9 @@ export default function Page() {
               value={form.neighborhood.value}
               erroMsg={form.neighborhood.errorLabel}
               invalid={form.neighborhood.invalid}
-              onChange={(e) => changeState("neighborhood", "value", e.target.value)}
+              onChange={(e) =>
+                changeState("neighborhood", "value", e.target.value)
+              }
             />
             <InputText
               disabled
@@ -180,7 +253,11 @@ export default function Page() {
               onChange={(e) => changeState("state", "value", e.target.value)}
             />
           </div>
-          <ButtonDefault children={"Criar Conta"} type="submit" disabled={loading} />
+          <ButtonDefault
+            children={isPending ? "Carregando..." : "Criar Conta"}
+            type="submit"
+            disabled={loading || isPending}
+          />
         </form>
       </section>
     </MainDefault>
