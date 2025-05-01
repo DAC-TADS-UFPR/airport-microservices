@@ -5,16 +5,17 @@ import { EmployeeSagaOrchestatorator } from '../orchestrators/employeeSaga.orche
 const router = express.Router();
 const employeeSagaOrchestrator = new EmployeeSagaOrchestatorator();
 
-router.post('/create', authenticateToken, authorize('EMPLOYEE'), async (req, res) => {
-    try {
-      const response = await employeeSagaOrchestrator.createEmployee(req.body)
-      res.status(response.status).json(response.data);
-    } catch (e:any) {
-      console.error('Error during employee creation:', e.response?.data || e.message);
-      res.status(e.response?.status || 500).json({
-        message: e.response?.data?.message || 'Authentication failed'
-      });
-    }
+
+router.post('/', async (req, res) => {
+  try {
+    const response = await employeeSagaOrchestrator.createEmployee(req.body)
+    res.status(response.status).json(response.data);
+  } catch (e:any) {
+    console.error('Error during employee creation:', e.response?.data || e.message);
+    res.status(e.response?.status || 500).json({
+      message: e.response?.data?.message || 'Authentication failed'
+    });
+  }
 });
 
 export default router;

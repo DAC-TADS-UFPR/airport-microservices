@@ -37,8 +37,8 @@ app.use((req, res, next) => {
   
 app.use('/auth', authRoutes);
 app.use('/client', clientRoutes);
-app.use('/flight', flightRoutes);
-app.use('/employee', employeeRoutes);
+app.use('/voos', flightRoutes);
+app.use('/funcionarios', employeeRoutes);
 
 
 app.listen(PORT, () => {

@@ -1,6 +1,5 @@
 import express from 'express';
 import axios from 'axios';
-import { authenticateToken, authorize } from '../middleware/auth';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { SERVICE_CONFIG } from '../config/services';
 
@@ -14,7 +13,6 @@ router.get('/', createProxyMiddleware({
 
 router.post('/login', async (req, res) => {
   try {
-    console.log('url request:', `${SERVICE_CONFIG.AUTH.url}/login`);
     const response = await axios.post(`${SERVICE_CONFIG.AUTH.url}/login`, req.body);
     res.status(response.status).json(response.data);
   } catch (e:any) {
