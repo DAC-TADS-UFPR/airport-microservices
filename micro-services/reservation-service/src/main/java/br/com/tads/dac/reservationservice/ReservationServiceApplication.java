@@ -1,4 +1,4 @@
-package br.com.tads.dac.reservation_service;
+package br.com.tads.dac.reservationservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

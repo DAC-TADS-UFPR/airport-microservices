@@ -19,6 +19,8 @@
         <module>cliente-service</module>
         <module>employee-service</module>
         <module>flight-service</module>
+        <module>reservation-service</module>
+
     </modules>
 
     <properties>

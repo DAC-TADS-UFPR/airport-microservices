@@ -20,11 +20,11 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
+    @Enumerated(EnumType.STRING)
     private FlightState state;
     private LocalDateTime date;
-    private Long airportCodeOrigin;
-    private Long airportCodeDestination;
+    private String airportCodeOrigin;
+    private String airportCodeDestination;
     private BigDecimal price;
     private String airlineCode;
 
