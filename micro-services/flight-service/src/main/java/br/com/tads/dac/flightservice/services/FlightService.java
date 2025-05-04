@@ -49,12 +49,12 @@ public class FlightService {
                 .body(dto);
     }
 
-    public FlightDTO getFlightById(Long id) {
+    public FlightDTO getFlightById(String id) {
         Flight f = findEntityById(id);
         return flightMapper.fromEntity(f, ZoneOffset.of("-03:00"));
     }
 
-    public FlightDTO updateFlight(Long id, Flight flight) {
+    public FlightDTO updateFlight(String id, Flight flight) {
         Flight existing = findEntityById(id);
         existing.setState(flight.getState());
         existing.setDate(flight.getDate());
@@ -75,19 +75,19 @@ public class FlightService {
             .collect(Collectors.toList());
     }
 
-    public FlightDTO updateFlightState(Long id, UpdateStateRequest req) {
+    public FlightDTO updateFlightState(String id, UpdateStateRequest req) {
         Flight existing = findEntityById(id);
         existing.setState(req.state());
         Flight saved = flightRepository.save(existing);
         return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
     }
 
-    public void deleteFlight(Long id) {
+    public void deleteFlight(String id) {
         Flight f = findEntityById(id);
         flightRepository.delete(f);
     }
 
-    private Flight findEntityById(Long id) {
+    private Flight findEntityById(String id) {
         return flightRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(id));
     }
