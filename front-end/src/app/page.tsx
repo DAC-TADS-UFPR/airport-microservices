@@ -3,13 +3,13 @@ import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
 import { login } from "@/data/config/auth";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPassword from "@/components/Inputs/InputPassword/InputPassword";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();

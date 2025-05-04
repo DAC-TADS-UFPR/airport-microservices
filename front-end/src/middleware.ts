@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
 
   try {
     const { payload }: any = await jwtVerify(token, new TextEncoder().encode(process.env.NEXT_PUBLIC_ENCRYPT));
-    // accommodate payloads where role is either at root or under user
+    console.log("Payload:", payload);
     const role = payload.role ?? payload.user?.role;
 
     if (pathname.startsWith("/admin") && role === "EMPLOYEE") {
