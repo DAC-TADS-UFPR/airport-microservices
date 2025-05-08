@@ -2,6 +2,10 @@ import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import "./AvailableFlightsModal.scss";
 import { FC } from "react";
+import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
+import AvailableFlights from "../AvailableFlights/AvailableFlights"; // i
+import { useRouter } from "next/navigation";
+
 
 type Status = "Next" | "Completed" | "Canceled";
 
@@ -11,6 +15,8 @@ interface AvailableFlightsModalProps {
 }
 
 const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status }) => {
+  const closeModal = useModal;
+  
   return (
     <div className="availableFlightsModal">
       {/* Header */}
@@ -62,8 +68,6 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status })
           <span className="availableFlightsModal__price">{1200 * 0.2}</span>
         </div>
       </div>
-
-      {/* Footer */}
       <div className="availableFlightsModal__footer">
         <ButtonDefault
           onClick={() => {
@@ -75,6 +79,7 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status })
         <ButtonDefault
           color="red"
           onClick={() => {
+            closeModal();
             console.log("Button clicked");
           }}
         >
@@ -85,4 +90,5 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status })
   );
 };
 
-export default AvailableFlightsModalProps;
+export default AvailableFlightsModal;
+
