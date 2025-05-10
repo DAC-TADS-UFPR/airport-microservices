@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "flight")
 @AllArgsConstructor
@@ -15,6 +17,9 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String flightCode;
+
+    @Column(name = "starts_at", nullable = false)
+    private LocalDateTime startsAt;
 
     @Column(nullable = false)
     private String departureAirport;
@@ -29,7 +34,7 @@ public class Flight {
     private int totalNumberOfSeats;
 
     @Column(nullable = false)
-    private int numberOfSeatsOccupied;
+    private int numberOfSeatsOccupied = 0;
 
     @Column(nullable = false)
     private FlightState flightState;

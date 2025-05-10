@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="facfdd89-b969-4da6-82cc-7c9208ce9424" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/Flight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/FlightState.java" beforeDir="false" afterPath="$PROJECT_DIR$/flight-service/src/main/java/br/com/tads/dac/flightservice/entities/FlightState.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2v2YN21Z1Y5KQg8hqtPDmtwgpy3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ClienteServiceApplication.executor": "Run",
+    "Application.EmployeeServiceApplication.executor": "Run",
+    "Docker.docker-compose.yml.postgres-employee: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "Maven.incode [clean,install,-DskipTests].executor": "Run",
+    "Maven.incode [clean,install].executor": "Run",
+    "Maven.incode [clean,package].executor": "Run",
+    "Maven.incode [clean].executor": "Run",
+    "Maven.incode [install].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/rafae/OneDrive/Documentos/UFPR/TADS_UFPR/5_Semestre/Desenvolvimento_de_Aplicacoes_Corporativas/airport-microservices",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.keymap"
+  }
+}]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean package" />
+      <command value="mvn clean install" />
+      <command value="mvn clean" />
+      <command value="mvn install" />
+      <command value="mvn clean install -DskipTests" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.postgres-employee: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="postgres-employee" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml.postgres-employee: Compose Deployment" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="facfdd89-b969-4da6-82cc-7c9208ce9424" name="Changes" comment="" />
+      <created>1743344592659</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743344592659</updated>
+    </task>
+    <servers />
+  </component>
+</project>

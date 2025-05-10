@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.2",
+    "@sendgrid/mail": "^8.1.5",
     "@tanstack/react-query": "^5.74.4",
     "@types/he": "^1.2.3",
     "@types/jsonwebtoken": "^9.0.9",

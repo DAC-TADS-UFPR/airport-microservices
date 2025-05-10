@@ -52,7 +52,7 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
 
   return (
     <div className="modalAddStaff">
-      <span className="modalAddStaff__description">Digite o código de reserva para confirmar o embarque no voo.</span>
+      <span className="modalAddStaff__description">Preencha as informações abaixo para cadastrar o novo usuário.</span>
       <form onSubmit={onSubmit}>
         <InputText
           disabled={loading}

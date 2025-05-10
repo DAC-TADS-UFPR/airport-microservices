@@ -17,7 +17,7 @@ export class ClientSagaOrchestatorator {
             }
             const authRequest:IAuth = new IAuth(clientData.email, '1234' , clientData.name , clientId, UserType.CLIENT);
             console.log('auth create request:', authRequest);
-            const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/create`, authRequest);
+            const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
             if(authResponse.status !== 201) {
                 await axios.delete(`${SERVICE_CONFIG.CLIENT.url}/${clientId}`);
                 return authResponse;
