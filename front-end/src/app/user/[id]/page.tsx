@@ -1,6 +1,7 @@
 "use client";
 import "./page.scss";
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import MainDefault from "@/components/Main/Main";
 import UserMilesCard from "@/modules/User/UserMilesCard/UserMilesCard";
 import UserHistoryCard from "@/modules/User/UserHistoryCard/UserHistoryCard";
@@ -9,6 +10,27 @@ import UserHistory from "@/modules/User/UserHistory/UserHistory";
 import AvailableFlights from "@/modules/User/AvailableFlights/AvailableFlights";
 
 export default function Page() {
+  const router = useRouter();
+  const { id } = useParams();
+
+  const cleanupLocalStorage = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("accessToken");
+  };
+
+  const storedId = localStorage.getItem("userId");
+  const storedRole = localStorage.getItem("userType");
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (!storedId || !storedRole || !accessToken) {
+    cleanupLocalStorage();
+    return router.replace("/");
+  }
+  if (storedRole !== "CLIENT" || storedId !== id) {
+    return router.back();
+  }
+
   const [navbar, setNavbar] = useState("reservas");
 
   return (

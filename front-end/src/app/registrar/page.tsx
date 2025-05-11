@@ -65,7 +65,7 @@ export default function Page() {
     message: string;
   }
 
-  const { mutateAsync, isPending } = useMutation<CreateUserResponse, Error>({
+  const { mutateAsync, isPending } = useMutation<CreateUserResponse, Error, { payload: { form: typeof form; password: string } }>({
     mutationKey: ["createUser"],
     mutationFn: createUser,
     onSuccess: (data: CreateUserResponse) => {
@@ -124,15 +124,9 @@ export default function Page() {
     <MainDefault id="register">
       <section className="register">
         <form className="register__container" onSubmit={onSubmit}>
-          <ImgDefault
-            className="register__logo"
-            src={"/icons/logo.svg"}
-            alt="Air TADS logo"
-          />
+          <ImgDefault className="register__logo" src={"/icons/logo.svg"} alt="Air TADS logo" />
           <h1 className="register__title">Criar Conta</h1>
-          <p className="login__subtitle">
-            Junte-se à AirTADS para uma experiência de voo perfeita!
-          </p>
+          <p className="login__subtitle">Junte-se à AirTADS para uma experiência de voo perfeita!</p>
           <div className="register__grid">
             <InputText
               disabled={loading}
@@ -213,9 +207,7 @@ export default function Page() {
               value={form.complement.value}
               erroMsg={form.complement.errorLabel}
               invalid={form.complement.invalid}
-              onChange={(e) =>
-                changeState("complement", "value", e.target.value)
-              }
+              onChange={(e) => changeState("complement", "value", e.target.value)}
             />
             <InputText
               disabled
@@ -226,9 +218,7 @@ export default function Page() {
               value={form.neighborhood.value}
               erroMsg={form.neighborhood.errorLabel}
               invalid={form.neighborhood.invalid}
-              onChange={(e) =>
-                changeState("neighborhood", "value", e.target.value)
-              }
+              onChange={(e) => changeState("neighborhood", "value", e.target.value)}
             />
             <InputText
               disabled
@@ -253,11 +243,7 @@ export default function Page() {
               onChange={(e) => changeState("state", "value", e.target.value)}
             />
           </div>
-          <ButtonDefault
-            children={isPending ? "Carregando..." : "Criar Conta"}
-            type="submit"
-            disabled={loading || isPending}
-          />
+          <ButtonDefault children={isPending ? "Carregando..." : "Criar Conta"} type="submit" disabled={loading || isPending} />
         </form>
       </section>
     </MainDefault>

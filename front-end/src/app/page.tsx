@@ -24,10 +24,18 @@ export default function Page() {
     mutationFn: login,
     onSuccess: (data: any) => {
       console.log("Login success:", data);
-      const { userId, role } = data.user;
-      if (role === "EMPLOYEE") {
+      const { userId } = data.user;
+      const userType = data.userType;
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("userType", userType);
+
+      console.log(data.accessToken, userId, userType);
+
+      if (userType === "EMPLOYEE") {
         router.push(`/admin/${userId}`);
-      } else if (role === "CLIENT") {
+      }
+      if (userType === "CLIENT") {
         router.push(`/user/${userId}`);
       }
     },
