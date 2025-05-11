@@ -42,31 +42,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         jwt = authHeader.substring(7);
         
-        try {
-            User user = tokenService.getUser(jwt);
-            if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
-                if (tokenService.isTokenValid(jwt)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-                    
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
+        User user = tokenService.getUser(jwt);
+        if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
+            if (tokenService.isTokenValid(jwt)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            
-            filterChain.doFilter(request, response);
-            
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token inválido ou expirado");
-            response.getWriter().flush();
         }
+        
+        filterChain.doFilter(request, response);
+            
+        
     }
     
 

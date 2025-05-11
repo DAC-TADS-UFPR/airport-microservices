@@ -8,6 +8,6 @@ public record UserDTO (
     String id,
     String email,
     String name,
-    Long userId,
+    String userId,
     UserRole role
 ){}

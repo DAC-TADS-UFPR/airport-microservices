@@ -16,7 +16,6 @@ public class UserMapper {
         
         return User.builder()
                 .email(dto.getEmail())
-                .password( new BCryptPasswordEncoder().encode(dto.getPassword()))
                 .status(true)
                 .userType(dto.getUserType())
                 .createdAt(LocalDateTime.now())
@@ -28,6 +27,7 @@ public class UserMapper {
 
     public UserDTO toDTO(User user) {
         return UserDTO.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .userId(user.getUserId())
                 .name(user.getName())

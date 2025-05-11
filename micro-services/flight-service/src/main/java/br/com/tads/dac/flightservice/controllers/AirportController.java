@@ -1,7 +1,7 @@
 package br.com.tads.dac.flightservice.controllers;
 
 
-import br.com.tads.dac.flightservice.entities.Airport;
+import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.services.AirportService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

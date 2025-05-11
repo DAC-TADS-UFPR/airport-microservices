@@ -29,7 +29,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     }
   } catch (error) {
     console.error('Erro ao validar token:', error);
-    if (axios.isAxiosError(error) && error.response?.status === 403) {
+    if (axios.isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 401)) {
       return res.status(403).json({ error: 'Token rejeitado pelo serviço de autenticação' });
     }
     return res.status(500).json({ error: 'Erro interno na autenticação' });
@@ -55,7 +55,7 @@ export function authorize(...allowedTypes: string[]) {
   };
 }
 
-function extractToken(req: Request): string | null {
+export function extractToken(req: Request): string | null {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return null;
   const parts = authHeader.split(' ');

@@ -4,7 +4,8 @@ volumes:
   postgres-cliente-data:
   postgres-flight-data:
   postgres-employee-data:
-  postgres-reservation-data:
+  postgres-reservation-query-data:
+  postgres-reservation-command-data:
 
 
 services:
@@ -63,17 +64,31 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U employee_user -d employee_db"]
 
-  postgres-reservation:
+  postgres-reservation-command:
     image: postgres:15
-    container_name: postgres-reservation
+    container_name: postgres-reservation-command
     environment:
       POSTGRES_DB: reservation_db
       POSTGRES_USER: reservation_user
       POSTGRES_PASSWORD: reservation_pass
     ports:
-      - "5436:5432"
+      - "5437:5432"
     volumes:
-      - postgres-reservation-data:/var/lib/postgresql/data
+      - postgres-reservation-command-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
+
+  postgres-reservation-query:
+    image: postgres:15
+    container_name: postgres-reservation-query
+    environment:
+      POSTGRES_DB: reservation_db
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: reservation_pass
+    ports:
+      - "5438:5432"
+    volumes:
+      - postgres-reservation-query-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
 
@@ -163,13 +178,12 @@ services:
     ports:
       - "8084:8084"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/reservation_db
-      SPRING_DATASOURCE_USERNAME: reservation_user
-      SPRING_DATASOURCE_PASSWORD: reservation_pass
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: rabbit_pass
     depends_on:
-      postgres-reservation:
+      postgres-reservation-query:
+        condition: service_healthy
+      postgres-reservation-command:
         condition: service_healthy

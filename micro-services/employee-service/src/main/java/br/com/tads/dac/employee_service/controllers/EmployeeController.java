@@ -1,6 +1,7 @@
 package br.com.tads.dac.employee_service.controllers;
 
 import br.com.tads.dac.employee_service.models.dto.EmployeeCreateDTO;
+import br.com.tads.dac.employee_service.models.dto.EmployeeDTO;
 import br.com.tads.dac.employee_service.models.dto.EmployeeUpdateDTO;
 import br.com.tads.dac.employee_service.models.entities.Employee;
 import br.com.tads.dac.employee_service.services.EmployeeService;
@@ -34,10 +35,8 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Employee> create(@RequestBody @Valid EmployeeCreateDTO employeeCreateDTO) {
-            Employee employee_created = new Employee(employeeCreateDTO);
-            this.employeeService.create(employee_created);
-            return ResponseEntity.status(HttpStatus.CREATED).body(employee_created);
+    public ResponseEntity<EmployeeDTO> create(@RequestBody @Valid EmployeeCreateDTO employeeCreateDTO) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.employeeService.create(employeeCreateDTO));
     }
 
     @PutMapping(value = "/{id}")
@@ -52,14 +51,9 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<EmployeeUpdateDTO> update(@PathVariable Long id,@RequestBody @Valid EmployeeUpdateDTO employeeUpdateDTO) {
-        Employee employee_updated = employeeService.update(id,employeeUpdateDTO);
-        EmployeeUpdateDTO responseDTO = new EmployeeUpdateDTO(
-                employee_updated.getName(),
-                employee_updated.getEmail(),
-                employee_updated.getPhone()
-        );
-        return ResponseEntity.ok().body(responseDTO);
+    public ResponseEntity<EmployeeDTO> update(@PathVariable String id,@RequestBody @Valid EmployeeUpdateDTO employeeUpdateDTO) {
+        EmployeeDTO employee_updated = employeeService.update(id,employeeUpdateDTO);
+        return ResponseEntity.ok().body(employee_updated);
     }
 
     @DeleteMapping("/{id}")
@@ -71,7 +65,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         employeeService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -84,7 +78,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<List<Employee>> getAll() {
+    public ResponseEntity<List<EmployeeDTO>> getAll() {
         return ResponseEntity.ok(employeeService.getAll());
     }
 
@@ -98,8 +92,8 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Employee> getById(@PathVariable Long id) {
-        return employeeService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<EmployeeDTO> getById(@PathVariable String id) {
+        return ResponseEntity.ok(employeeService.getById(id));
     }
 
 

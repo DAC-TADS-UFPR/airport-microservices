@@ -2,6 +2,9 @@ package br.com.tads.dac.employee_service.services;
 
 import br.com.tads.dac.employee_service.exceptions.CpfAlreadyExistsException;
 import br.com.tads.dac.employee_service.exceptions.ResourceNotFoundException;
+import br.com.tads.dac.employee_service.mappers.EmployeeMapper;
+import br.com.tads.dac.employee_service.models.dto.EmployeeCreateDTO;
+import br.com.tads.dac.employee_service.models.dto.EmployeeDTO;
 import br.com.tads.dac.employee_service.models.dto.EmployeeUpdateDTO;
 import br.com.tads.dac.employee_service.models.entities.Employee;
 import br.com.tads.dac.employee_service.repositories.EmployeeRepository;
@@ -16,20 +19,24 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    
+    @Autowired 
+    private EmployeeMapper mapper;
 
-    public Employee create(Employee employee) {
-        Optional<Employee> existingEmployee = employeeRepository.findByCpf(employee.getCpf());
+    public EmployeeDTO create(EmployeeCreateDTO dto) {
+        Employee employee_created = new Employee(dto);
+        Optional<Employee> existingEmployee = employeeRepository.findByCpf(dto.cpf());
         if (existingEmployee.isPresent()) {
             throw new CpfAlreadyExistsException("CPF já cadastrado.");
         }
-        return employeeRepository.save(employee);
+        return mapper.toDto(employeeRepository.save(employee_created));
     }
 
-    public Employee update(Long id, EmployeeUpdateDTO employeeUpdateDTO) {
+    public EmployeeDTO update(String id, EmployeeUpdateDTO employeeUpdateDTO) {
         try {
             Employee entity = employeeRepository.getReferenceById(id);
             updateData(entity,employeeUpdateDTO);
-            return employeeRepository.save(entity);
+            return mapper.toDto(employeeRepository.save(entity));
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
@@ -42,18 +49,21 @@ public class EmployeeService {
         entity.setPhone(obj.phone());
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionario nao encontrado"));
         employee.setActive(false);
         employeeRepository.save(employee);
     }
 
-    public List<Employee> getAll() {
-        return employeeRepository.findAll();
+    public List<EmployeeDTO> getAll() {
+        return employeeRepository.findAll().stream()
+                .map(employee -> mapper.toDto(employee))
+                .toList();
     }
 
-    public Optional<Employee> getById(Long id) {
-        return employeeRepository.findById(id);
+    public EmployeeDTO getById(String id) {
+        return employeeRepository.findById(id).map(employee -> mapper.toDto(employee))
+                .orElseThrow(() -> new ResourceNotFoundException(id));  
     }
 
 }

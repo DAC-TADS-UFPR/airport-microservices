@@ -1,7 +1,8 @@
 package br.com.tads.dac.flightservice.repositories;
 
-import br.com.tads.dac.flightservice.entities.Airport;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.com.tads.dac.flightservice.models.entities.Airport;
 
 import java.util.Optional;
 

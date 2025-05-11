@@ -7,8 +7,8 @@ import br.com.tads.dac.employee_service.models.entities.Employee;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmployeeRepository extends JpaRepository<Employee,Long> {
+public interface EmployeeRepository extends JpaRepository<Employee,String> {
     Optional<Employee> findByCpf(String cpf);
     List<Employee> findAllByActiveTrue();
-    Optional<Employee> findByIdAndActiveTrue(Long id);
+    Optional<Employee> findByIdAndActiveTrue(String id);
 }

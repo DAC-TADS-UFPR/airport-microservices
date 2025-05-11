@@ -1,8 +1,8 @@
 package br.com.tads.dac.flightservice.services;
 
-import br.com.tads.dac.flightservice.entities.Airport;
 import br.com.tads.dac.flightservice.exceptions.AirportCodeAlreadyExistsException;
 import br.com.tads.dac.flightservice.exceptions.ResourceNotFoundException;
+import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.repositories.AirportRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

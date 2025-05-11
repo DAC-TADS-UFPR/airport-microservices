@@ -29,7 +29,7 @@ public class FlightService {
     @Autowired
     private FlightMapper flightMapper;
 
-    public ResponseEntity<FlightDTO> create(@RequestBody CreateFlightRequest req) {
+    public FlightDTO create(@RequestBody CreateFlightRequest req) {
         LocalDateTime localDate = req.date().toLocalDateTime();
 
         Flight flight = Flight.builder()
@@ -37,16 +37,14 @@ public class FlightService {
             .price(req.price())                                         
             .totalSeats(req.totalSeats())                                
             .occupiedSeats(req.occupiedSeats())                          
-            .airportCodeOrigin(Long.valueOf(req.originAirportCode())) 
-            .airportCodeDestination(Long.valueOf(req.destinationAirportCode())) 
+            .airportCodeOrigin(req.originAirportCode()) 
+            .airportCodeDestination(req.destinationAirportCode())
             .state(FlightState.CRIADO)                                
             .airlineCode("TADS0001")                                  
             .build();
 
         FlightDTO dto = flightMapper.fromEntity(flightRepository.save(flight), ZoneOffset.of("-03:00"));
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(dto);
+        return dto;
     }
 
     public FlightDTO getFlightById(String id) {

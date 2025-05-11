@@ -33,7 +33,7 @@ public class User implements UserDetails{
     private LocalDateTime updatedAt;
     private Boolean status;
     private String name;
-    private Long userId;
+    private String userId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

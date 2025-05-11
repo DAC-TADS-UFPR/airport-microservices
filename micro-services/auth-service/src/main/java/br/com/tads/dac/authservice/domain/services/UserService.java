@@ -1,6 +1,9 @@
 package br.com.tads.dac.authservice.domain.services;
 
+import java.security.SecureRandom;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.dac.authservice.domain.models.dto.CreateUserRequest;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private static final SecureRandom random = new SecureRandom();
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -30,8 +34,15 @@ public class UserService {
         if (userRepository.existsByEmail(createUserDTO.getEmail())) {
             throw new UserAlredyExistsException("Já existe um usuário com o email: " + createUserDTO.getEmail());
         }
-        
         User user = userMapper.toEntity(createUserDTO);
+        user.setPassword(new BCryptPasswordEncoder().encode(gerarSenha4Digitos()));
         return userMapper.toDTO(userRepository.save(user));
     }
+
+    public static String gerarSenha4Digitos() {
+        int numero = random.nextInt(10_000); 
+        return "1234";
+        //return String.format("%04d", numero);
+    }
+
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping
 public class ClienteController {
 
     @Autowired
@@ -63,7 +63,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         clienteService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -90,14 +90,12 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
-        return clienteService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ClientDTO> getById(@PathVariable String id) {
+        return ResponseEntity.ok(clienteService.getById(id));
     }
 
     @PostMapping("/{id}/transacoes")
-    public ResponseEntity<TransacaoMilhas> adicionarTransacao(@PathVariable Long id, @RequestBody TransacaoMilhas transacao) {
+    public ResponseEntity<TransacaoMilhas> adicionarTransacao(@PathVariable String id, @RequestBody TransacaoMilhas transacao) {
         return ResponseEntity.ok(clienteService.adicionarTransacao(id, transacao));
     }
 }

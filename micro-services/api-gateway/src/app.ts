@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 });
   
 app.use('/auth', authRoutes);
-app.use('/client', clientRoutes);
+app.use('/clientes', clientRoutes);
 app.use('/voos', flightRoutes);
 app.use('/funcionarios', employeeRoutes);
 

@@ -15,9 +15,9 @@ export class ClientSagaOrchestatorator {
             if(clientResponse.status !== 201) {
                 return clientResponse;
             }
-            const authRequest:IAuth = new IAuth(clientData.email, '1234' , clientData.name , clientId, UserType.CLIENT);
+            const authRequest:IAuth = new IAuth(clientData.email , clientData.name , clientId, UserType.CLIENT);
             console.log('auth create request:', authRequest);
-            const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
+            const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest);
             if(authResponse.status !== 201) {
                 await axios.delete(`${SERVICE_CONFIG.CLIENT.url}/${clientId}`);
                 return authResponse;
@@ -37,5 +37,19 @@ export class ClientSagaOrchestatorator {
             
         }
         
+    }
+
+    public async findReservation(idClient: String) {
+        try {
+            const response = await axios.get(`${SERVICE_CONFIG.RESERVATION.url}/${idClient}`);
+            return response;
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.error('Error fetching reservations:', axiosError.response?.data || axiosError.message);
+            return {
+                status: axiosError.response?.status || 500,
+                data: axiosError.response?.data || { message: "Erro interno ao buscar reservar" },
+            };
+        }
     }
 }

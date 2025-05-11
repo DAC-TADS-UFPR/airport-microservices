@@ -19,17 +19,11 @@ public class CreateUserRequest {
     @Email(message = "Formato de email inválido")
     private String email;
     
-    @NotBlank(message = "A senha é obrigatória")
-    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
-    @Size(max = 20, message = "A senha deve ter no máximo 20 caracteres")
-    private String password;
-    
     @NotNull(message = "User type é obrigatório")
     private UserRole userType;
 
     @NotBlank(message = "O nome é obrigatório")
     private String name;
 
-    @NotBlank(message = "O id é obrigatório")
-    private Long userId;
+    private String userId;
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.tads.dac.clienteservice.model.Cliente;
 import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
+import br.com.tads.dac.clienteservice.model.dto.EnderecoDTO;
 import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 
 @Component
@@ -25,9 +26,17 @@ public class ClientMapper {
 
     
     public ClientDTO toDto(Cliente cliente) {
-        return new ClientDTO(cliente.getId(), cliente.getName(), cliente.getEmail(), cliente.getCpf(), cliente.getCep(),
-                cliente.getStreet(), cliente.getNumber(), cliente.getComplement(), cliente.getNeighborhood(),
-                cliente.getCity(), cliente.getState());
+        EnderecoDTO enderecoDTO = EnderecoDTO.builder()
+                .cep(cliente.getCep())
+                .uf(cliente.getState())
+                .cidade(cliente.getCity())
+                .bairro(cliente.getNeighborhood())
+                .rua(cliente.getStreet())
+                .numero(cliente.getNumber())
+                .complemento(cliente.getComplement())
+                .build();
+        return new ClientDTO(cliente.getId(), cliente.getName(), cliente.getEmail(), cliente.getCpf(), cliente.getMilhas(), enderecoDTO);
+       
     }
 
 }

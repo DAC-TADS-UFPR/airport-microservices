@@ -40,7 +40,7 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         clienteRepository.deleteById(id);
     }
 
@@ -48,11 +48,11 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Optional<Cliente> getById(Long id) {
-        return clienteRepository.findById(id);
+    public ClientDTO getById(String id) {
+        return clienteRepository.findById(id).map(t -> mapper.toDto(t)).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 
-    public TransacaoMilhas adicionarTransacao(Long clienteId, TransacaoMilhas transacao) {
+    public TransacaoMilhas adicionarTransacao(String clienteId, TransacaoMilhas transacao) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 

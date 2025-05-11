@@ -13,8 +13,8 @@ import java.util.List;
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String cpf;
     private String name;
@@ -27,7 +27,7 @@ public class Cliente {
     private String street;
     private String neighborhood;
     private String state;
-    private Integer milhas;
+    private Long milhas;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
