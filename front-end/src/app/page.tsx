@@ -3,13 +3,13 @@ import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
 import { login } from "@/data/config/auth";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import MainDefault from "@/components/Main/Main";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPassword from "@/components/Inputs/InputPassword/InputPassword";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
@@ -23,17 +23,22 @@ export default function Page() {
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: (data: any) => {
-      console.log("Login success:", data);
-      const { userId, role } = data.user;
-      if (role === "EMPLOYEE") {
+      const { userId, name } = data.user;
+      const userType = data.userType;
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("name", name);
+      localStorage.setItem("userType", userType);
+
+      if (userType === "EMPLOYEE") {
         router.push(`/admin/${userId}`);
-      } else if (role === "CLIENT") {
+      }
+      if (userType === "CLIENT") {
         router.push(`/user/${userId}`);
       }
     },
     onError: (error: any) => {
       console.error("Error login:", error);
-      const apiErrors = error?.response?.data?.errors;
     },
   });
 

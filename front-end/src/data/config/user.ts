@@ -5,7 +5,7 @@ import api from "./api";
 export async function createUser({ payload }: { payload: { form: TForm } }) {
   const { name, email, cpf, complement, cep, city, street, neighborhood, number, state } = payload.form;
   try {
-    const { data } = await api.post(`/client/create`, {
+    const { data } = await api.post(`/clientes`, {
       name: name.value,
       email: email.value,
       cpf: cpf.value,

@@ -1,15 +1,48 @@
 "use client";
 import "./page.scss";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCliente } from "@/data/config/client";
+import { useParams, useRouter } from "next/navigation";
 import MainDefault from "@/components/Main/Main";
+import UserHistory from "@/modules/User/UserHistory/UserHistory";
 import UserMilesCard from "@/modules/User/UserMilesCard/UserMilesCard";
 import UserHistoryCard from "@/modules/User/UserHistoryCard/UserHistoryCard";
 import UserReservations from "@/modules/User/UserReservations/UserReservations";
-import UserHistory from "@/modules/User/UserHistory/UserHistory";
 import AvailableFlights from "@/modules/User/AvailableFlights/AvailableFlights";
 
 export default function Page() {
+  const router = useRouter();
+  const { id } = useParams();
+
+  const cleanupLocalStorage = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("accessToken");
+  };
+
+  const storedId = localStorage.getItem("userId");
+  const storedRole = localStorage.getItem("userType");
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (!storedId || !storedRole || !accessToken) {
+    cleanupLocalStorage();
+    return router.replace("/");
+  }
+  if (storedRole !== "CLIENT" || storedId !== id) {
+    return router.back();
+  }
+
   const [navbar, setNavbar] = useState("reservas");
+
+  const { data, isLoading } = useQuery({
+    queryKey: [`cliente-${id}`, id],
+    queryFn: getCliente,
+
+    refetchOnWindowFocus: false,
+  });
+
+  // console.log(data);
 
   return (
     <MainDefault id="user">

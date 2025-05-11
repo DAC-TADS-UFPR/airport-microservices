@@ -1,7 +1,7 @@
 "use client";
 import "./Header.scss";
 import { FC } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ImgDefault from "../ImgDefault/ImgDefault";
 import LinkDefault from "../LinkDefault/LinkDefault";
 
@@ -9,26 +9,37 @@ interface HeaderNavProps {}
 
 const Header: FC<HeaderNavProps> = ({}) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const name = localStorage.getItem("name");
+
+  const loggout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("name");
+    localStorage.removeItem("userType");
+    router.replace("/");
+  };
 
   const options = pathname.includes("/admin") ? (
     <div className="header__nav">
       <div className="header__navLink header__navLink--mod">
-        <span className="header__navLinkText">Olá, {`{admin}`}</span>
+        <span className="header__navLinkText">Olá, {name}</span>
       </div>
-      <LinkDefault href="/" className="header__navLink">
+      <button onClick={() => loggout()} className="header__navLink" type="button">
         <span className="header__navLinkText header__navLinkText--mod">Sair</span>
         <ImgDefault className="header__logo header__logo--mod" src={"/icons/exit.svg"} alt="Sair" />
-      </LinkDefault>
+      </button>
     </div>
   ) : pathname.includes("/user") ? (
     <div className="header__nav header__nav--mod">
       <div className="header__navLink">
-        <span className="header__navLinkText">Olá, {`{user}`}</span>
+        <span className="header__navLinkText">Olá, {name}</span>
       </div>
-      <LinkDefault href="/" className="header__navLink">
+      <button onClick={() => loggout()} className="header__navLink" type="button">
         <span className="header__navLinkText header__navLinkText--mod">Sair</span>
         <ImgDefault className="header__logo header__logo--mod" src={"/icons/exit.svg"} alt="Sair" />
-      </LinkDefault>
+      </button>
     </div>
   ) : (
     <div className="header__nav">

@@ -1,12 +1,34 @@
 "use client";
 import "./page.scss";
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import MainDefault from "@/components/Main/Main";
 import NextFlights from "@/modules/Admin/NextFlights/NextFlights";
 import ManageStaff from "@/modules/Admin/ManageStaff/ManageStaff";
 import ManageFlights from "@/modules/Admin/ManageFlights/ManageFlights";
 
 export default function Page() {
+  const router = useRouter();
+  const { id } = useParams();
+
+  const cleanupLocalStorage = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("accessToken");
+  };
+
+  const storedId = localStorage.getItem("userId");
+  const storedRole = localStorage.getItem("userType");
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (!storedId || !storedRole || !accessToken) {
+    cleanupLocalStorage();
+    return router.replace("/");
+  }
+  if (storedRole !== "EMPLOYEE" || storedId !== id) {
+    return router.back();
+  }
+
   const [navbar, setNavbar] = useState("proximos");
 
   return (
