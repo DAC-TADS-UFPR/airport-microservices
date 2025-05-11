@@ -15,8 +15,8 @@ export async function login({ payload, tokenFCM }: { payload: { form: TForm }; t
       requestBody.tokenFCM = tokenFCM;
     }
     const { data } = await api.post("/auth/login", requestBody);
-    const { access_token, expire_in } = data;
-    setCookieToken({ access_token, expire_in });
+    const { accessToken, expire_in } = data;
+    setCookieToken({ accessToken, expire_in });
     return data;
   } catch (error: any) {
     throw error?.response?.data?.message || error?.message;

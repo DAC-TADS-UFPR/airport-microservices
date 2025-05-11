@@ -2,6 +2,7 @@
 import "./page.scss";
 import { FormEvent } from "react";
 import { useForm } from "@/hooks/useForm";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "@/data/config/user";
 import MainDefault from "@/components/Main/Main";
@@ -10,7 +11,6 @@ import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputMasks from "@/components/Inputs/InputMasks/InputMasks";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();

@@ -1,12 +1,14 @@
 "use client";
 import "./page.scss";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getCliente } from "@/data/config/client";
 import { useParams, useRouter } from "next/navigation";
 import MainDefault from "@/components/Main/Main";
+import UserHistory from "@/modules/User/UserHistory/UserHistory";
 import UserMilesCard from "@/modules/User/UserMilesCard/UserMilesCard";
 import UserHistoryCard from "@/modules/User/UserHistoryCard/UserHistoryCard";
 import UserReservations from "@/modules/User/UserReservations/UserReservations";
-import UserHistory from "@/modules/User/UserHistory/UserHistory";
 import AvailableFlights from "@/modules/User/AvailableFlights/AvailableFlights";
 
 export default function Page() {
@@ -32,6 +34,15 @@ export default function Page() {
   }
 
   const [navbar, setNavbar] = useState("reservas");
+
+  const { data, isLoading } = useQuery({
+    queryKey: [`cliente-${id}`, id],
+    queryFn: getCliente,
+
+    refetchOnWindowFocus: false,
+  });
+
+  // console.log(data);
 
   return (
     <MainDefault id="user">

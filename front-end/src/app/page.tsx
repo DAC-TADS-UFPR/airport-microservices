@@ -23,14 +23,12 @@ export default function Page() {
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: (data: any) => {
-      console.log("Login success:", data);
-      const { userId } = data.user;
+      const { userId, name } = data.user;
       const userType = data.userType;
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("name", name);
       localStorage.setItem("userType", userType);
-
-      console.log(data.accessToken, userId, userType);
 
       if (userType === "EMPLOYEE") {
         router.push(`/admin/${userId}`);
@@ -41,7 +39,6 @@ export default function Page() {
     },
     onError: (error: any) => {
       console.error("Error login:", error);
-      const apiErrors = error?.response?.data?.errors;
     },
   });
 

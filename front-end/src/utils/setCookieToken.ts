@@ -7,8 +7,8 @@ import { cookies } from "next/headers";
  * @param tokenParams.access_token - JWT string returned from login.
  * @param tokenParams.expire_in - Lifetime in seconds.
  */
-const setCookieToken = ({ access_token, expire_in }: { access_token: string; expire_in: number }) => {
-  cookies().set("access_token", access_token, {
+const setCookieToken = ({ accessToken, expire_in }: { accessToken: string; expire_in: number }) => {
+  cookies().set("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
