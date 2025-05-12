@@ -2,12 +2,15 @@ package br.com.tads.dac.clienteservice.service;
 
 import br.com.tads.dac.clienteservice.exceptions.ClientRegisterException;
 import br.com.tads.dac.clienteservice.exceptions.FieldError;
+import br.com.tads.dac.clienteservice.exceptions.ResourceNotFoundException;
 import br.com.tads.dac.clienteservice.infraestructure.mappers.ClientMapper;
 import br.com.tads.dac.clienteservice.model.*;
 import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
+import br.com.tads.dac.clienteservice.model.dto.ClientUpdateDTO;
 import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 import br.com.tads.dac.clienteservice.repository.ClienteRepository;
 import br.com.tads.dac.clienteservice.repository.TransacaoMilhasRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +39,31 @@ public class ClienteService {
         return mapper.toDto(clienteRepository.save(mapper.toEntity(dto)));
     }
 
-    public Cliente update(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public ClientDTO update(String id, ClientUpdateDTO cliente) {
+        try {
+            Cliente entity = clienteRepository.getReferenceById(id);
+            updateData(entity,cliente);
+            return mapper.toDto(clienteRepository.save(entity));
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Cliente entity, ClientUpdateDTO obj) {
+        entity.setName(obj.name());
+        entity.setEmail(obj.email());
+        entity.setCep(obj.endereco().cep());
+        entity.setUf(obj.endereco().uf());
+        entity.setCity(obj.endereco().cidade());
+        entity.setNeighborhood(obj.endereco().bairro());
+        entity.setStreet(obj.endereco().rua());
+        entity.setNumber(obj.endereco().numero());
+        entity.setComplement(obj.endereco().complemento());
     }
 
     public void delete(String id) {
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente nao encontrado"));
         clienteRepository.deleteById(id);
     }
 
