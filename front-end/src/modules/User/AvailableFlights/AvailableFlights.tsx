@@ -1,5 +1,5 @@
 import "./AvailableFlights.scss";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import AvailableFlightsModal from "../AvailableFlightsModal/AvailableFlightsModal";
@@ -7,112 +7,100 @@ import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import InputText from "@/components/Inputs/InputText/InputText";
 import { useForm } from "@/hooks/useForm";
 import AvailableFlightCard from "./AvailableFlightCard";
+import ModalCenter from "@/components/Modal/ModalCenter/ModalCenter";
 
-type Status = "Next" | "Completed" | "Canceled";
+type Flight = {
+  id: string;
+  origemCodigo: string;
+  origem: string;
+  destinoCodigo: string;
+  destino: string;
+  data: string;
+  horaSaida: string;
+  preco: number;
+};
 
-interface AvailableFlightsProps {
-  data?: any;
-  status?: Status;
-}
+const flights: Flight[] = [
+  {
+    id: "CGH123",
+    origemCodigo: "CGH",
+    origem: "São Paulo",
+    destinoCodigo: "CWB",
+    destino: "Curitiba",
+    data: "2025-03-29",
+    horaSaida: "12:00",
+    preco: 300,
+  },
+  {
+    id: "GUA456",
+    origemCodigo: "GRU",
+    origem: "Guarulhos",
+    destinoCodigo: "SDU",
+    destino: "Rio de Janeiro",
+    data: "2025-03-30",
+    horaSaida: "10:00",
+    preco: 250,
+  },
+  {
+    id: "POA789",
+    origemCodigo: "POA",
+    origem: "Porto Alegre",
+    destinoCodigo: "BSB",
+    destino: "Brasília",
+    data: "2025-03-31",
+    horaSaida: "14:00",
+    preco: 400,
+  },
+];
 
-const AvailableFlights: FC<AvailableFlightsProps> = ({ data, status }) => {
-  const { openModal } = useModal();
+const AvailableFlights: FC = () => {
+  const [modalActive, setModalActive] = useState(false);
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
-  const { form, loading, setLoading, changeState, validation } = useForm({
-    origem: { invalid: false, errorLabel: "Origem", value: "" },
-    destino: { invalid: false, errorLabel: "Destino", value: "" },
-  });
-
-  const handleSearch = () => {
-    console.log("Buscar voos!");
+  const openDetailsModal = (flight: Flight) => {
+    setSelectedFlight(flight);
+    setModalActive(true);
   };
 
-  const detailsModal = (flightCode: string) => {
-    openModal({
-      headerName: "Detalhes da reserva",
-      children: <AvailableFlightsModal data={data} status={status} />,
-    });
+  const closeDetailsModal = () => {
+    setModalActive(false);
+    setSelectedFlight(null);
   };
 
   return (
     <div className="availableFlights">
-      {/* Filtros */}
-      <div className="availableFlights__filter">
-        <div className="availableFlights__fieldGroup">
-          <div className="availableFlights__inputWrapper">
-            <InputText id="origem" label="Origem" name="origem" type="text" />
-            <button
-              type="button"
-              className="availableFlights__searchBtn"
-              onClick={handleSearch}
-            >
-              <ImgDefault
-                src="/icons/search.svg"
-                alt="Ícone Lupa"
-                className="availableFlights__search"
-              />
-            </button>
-          </div>
-        </div>
-
-        <div className="availableFlights__fieldGroup">
-          <div className="availableFlights__inputWrapper">
-            <InputText
-              id="destino"
-              label="Destino"
-              name="destino"
-              type="text"
-            />
-            <button
-              type="button"
-              className="availableFlights__searchBtn"
-              onClick={handleSearch}
-            >
-              <ImgDefault
-                src="/icons/search.svg"
-                alt="Ícone Lupa"
-                className="availableFlights__search"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Cards de voos disponíveis */}
       <div className="availableFlights__cards">
-        <AvailableFlightCard
-          flightCode="CGH123"
-          originCode="CGH"
-          originCity="São Paulo"
-          destinationCode="CWB"
-          destinationCity="Curitiba"
-          date="Mar 29, 2025"
-          time="12:00 - 13:50"
-          onDetailsClick={() => detailsModal("XYZ123")}
-        />
-
-        <AvailableFlightCard
-          flightCode="GUA456"
-          originCode="GRU"
-          originCity="Guarulhos"
-          destinationCode="SDU"
-          destinationCity="Rio de Janeiro"
-          date="Mar 30, 2025"
-          time="10:00 - 11:30"
-          onDetailsClick={() => detailsModal("GUA456")}
-        />
-
-        <AvailableFlightCard
-          flightCode="POA789"
-          originCode="POA"
-          originCity="Porto Alegre"
-          destinationCode="BSB"
-          destinationCity="Brasília"
-          date="Mar 31, 2025"
-          time="14:00 - 16:10"
-          onDetailsClick={() => detailsModal("POA789")}
-        />
+        {flights.map((flight) => (
+          <AvailableFlightCard
+            key={flight.id}
+            flightCode={flight.id}
+            originCode={flight.origemCodigo}
+            originCity={flight.origem}
+            destinationCode={flight.destinoCodigo}
+            destinationCity={flight.destino}
+            date={new Date(flight.data).toLocaleDateString("pt-BR", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+            time={`${flight.horaSaida} - 2h`}
+            onDetailsClick={() => openDetailsModal(flight)}
+          />
+        ))}
       </div>
+
+      {selectedFlight && (
+        <ModalCenter
+          active={modalActive}
+          headerName="Detalhes da reserva"
+          onClose={closeDetailsModal}
+        >
+          <AvailableFlightsModal
+            data={selectedFlight}
+            onClose={closeDetailsModal}
+          />
+        </ModalCenter>
+      )}
     </div>
   );
 };
