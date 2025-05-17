@@ -1,91 +1,93 @@
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import "./AvailableFlightsModal.scss";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
 import AvailableFlights from "../AvailableFlights/AvailableFlights"; // i
 import { useRouter } from "next/navigation";
 
 
-type Status = "Next" | "Completed" | "Canceled";
+type Flight = {
+  id: string;
+  origem: string;
+  destino: string;
+  data: string;
+  horaSaida: string;
+  preco: number;
+};
 
 interface AvailableFlightsModalProps {
-  data?: any;
-  status?: Status;
+  data: Flight;
+  onClose: () => void;
 }
 
-const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, status }) => {
-  const closeModal = useModal;
-  
+const gerarCodigoReserva = () => {
+  const letras = Array.from({ length: 3 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join("");
+  const numeros = Math.floor(100 + Math.random() * 900);
+  return `${letras}${numeros}`;
+};
+
+const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({ data, onClose }) => {
+  const [quantidade, setQuantidade] = useState(1);
+  const [milhasSaldo, setMilhasSaldo] = useState(1000);
+  const [milhasUsadas, setMilhasUsadas] = useState(0);
+  const milhasPorAssento = data.preco * 0.2;
+  const totalMilhas = milhasPorAssento * quantidade;
+  const valorTotal = data.preco * quantidade;
+  const valorComMilhas = Math.max(0, valorTotal - (milhasUsadas / 0.2));
+
+  const confirmarCompra = () => {
+    const novaReserva = {
+      codigo: gerarCodigoReserva(),
+      vooId: data.id,
+      quantidade,
+      milhasUsadas,
+      valorPago: valorComMilhas,
+      status: "CRIADA"
+    };
+    console.log("Reserva criada:", novaReserva);
+    setMilhasSaldo((prev) => prev - milhasUsadas);
+    alert(`Reserva criada com código ${novaReserva.codigo}`);
+    onClose();
+  };
+
   return (
     <div className="availableFlightsModal">
-      {/* Header */}
-      <div className="availableFlightsModal__header">
-        <div className="availableFlightsModal__headerInfo">
-          <ImgDefault src="/icons/logo.svg" alt="Logo AirTADS" className="availableFlightsModal__logo" />
-          <span className="availableFlightsModal__code">XYZ123</span>
-        </div>
-        <div className={`availableFlightsModal__status availableFlightsModal__status--${status?.toLowerCase()}`}>
-          <span className="availableFlightsModal__statusText">{status}</span>
-        </div>
-      </div>
-      {/* Body */}
-      <div className="availableFlightsModal__body">
-        <div className="availableFlightsModal__cityBlock">
-          <span className="availableFlightsModal__airport">CGH</span>
-          <span className="availableFlightsModal__city">São Paulo</span>
-        </div>
-        <div className="availableFlightsModal__line" />
-        <div className="availableFlightsModal__cityBlock">
-          <span className="availableFlightsModal__airport">CWB</span>
-          <span className="availableFlightsModal__city">Curitiba</span>
-        </div>
-      </div>
-      {/* Details */}
-      <div className="availableFlightsModal__details">
-        <div className="availableFlightsModal__detailsInfo">
-          <ImgDefault src="/icons/calendar.svg" alt="Logo AirTADS" className="availableFlightsModal__logo" />
-          <span className="availableFlightsModal__detailsText">Mar 29, 2025</span>
-        </div>
-        <div className="availableFlightsModal__detailsInfo">
-          <ImgDefault src="/icons/logo.svg" alt="Logo AirTADS" className="availableFlightsModal__logo" />
-          <span className="availableFlightsModal__detailsText">Saída 12:00</span>
-        </div>
-        <div className="availableFlightsModal__detailsInfo">
-          <ImgDefault src="/icons/logo.svg" alt="Logo AirTADS" className="availableFlightsModal__logo availableFlightsModal__logo--mod" />
-          <span className="availableFlightsModal__detailsText">Chegada 13:50</span>
-        </div>
-      </div>
+      <h3>Detalhes do Voo</h3>
+      <p><strong>Origem:</strong> {data.origem}</p>
+      <p><strong>Destino:</strong> {data.destino}</p>
+      <p><strong>Data:</strong> {data.data}</p>
+      <p><strong>Hora Saída:</strong> {data.horaSaida}</p>
+      <p><strong>Preço Unitário:</strong> R$ {data.preco.toFixed(2)}</p>
+      <p><strong>Saldo de Milhas:</strong> {milhasSaldo}</p>
 
-      {/* Price */}
-      <div className="availableFlightsModal__header">
-        <div className="availableFlightsModal__headerInfo">
-          <span className="availableFlightsModal__priceText">Valor:</span>
-          <span className="availableFlightsModal__price">R$ 1.200,00</span>
-        </div>
-        <div className="availableFlightsModal__headerInfo">
-          <span className="availableFlightsModal__priceText">Milhas:</span>
-          <span className="availableFlightsModal__price">{1200 * 0.2}</span>
-        </div>
-      </div>
-      <div className="availableFlightsModal__footer">
-        <ButtonDefault
-          onClick={() => {
-            console.log("Button clicked");
-          }}
-        >
-          {status === "Next" ? "Check-in" : status === "Completed" ? "Download" : "Reembolsar"}
-        </ButtonDefault>
-        <ButtonDefault
-          color="red"
-          onClick={() => {
-            closeModal();
-            console.log("Button clicked");
-          }}
-        >
-          Cancelar reserva
-        </ButtonDefault>
-      </div>
+      <label>
+        Quantidade de passagens:
+        <input
+          type="number"
+          value={quantidade}
+          min={1}
+          onChange={(e) => setQuantidade(Number(e.target.value))}
+        />
+      </label>
+
+      <p><strong>Milhas necessárias:</strong> {totalMilhas}</p>
+
+      <label>
+        Milhas a usar:
+        <input
+          type="number"
+          value={milhasUsadas}
+          min={0}
+          max={milhasSaldo}
+          onChange={(e) => setMilhasUsadas(Number(e.target.value))}
+        />
+      </label>
+
+      <p><strong>Valor a pagar:</strong> R$ {valorComMilhas.toFixed(2)}</p>
+
+      <ButtonDefault onClick={confirmarCompra}>Confirmar Compra</ButtonDefault>
+      <ButtonDefault color="red" onClick={onClose}>Cancelar</ButtonDefault>
     </div>
   );
 };

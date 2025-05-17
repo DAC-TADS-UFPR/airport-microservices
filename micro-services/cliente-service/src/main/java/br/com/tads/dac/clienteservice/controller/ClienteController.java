@@ -3,6 +3,7 @@ package br.com.tads.dac.clienteservice.controller;
 import br.com.tads.dac.clienteservice.model.Cliente;
 import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
 import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
+import br.com.tads.dac.clienteservice.model.dto.ClientUpdateDTO;
 import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 import br.com.tads.dac.clienteservice.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,7 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.create(cliente));
     }
 
-    @PutMapping
+    @PutMapping(value = "/{id}")
     @Operation(summary = "Atualizar cliente por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso",
@@ -50,8 +52,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
-        return ResponseEntity.ok(clienteService.update(cliente));
+    public ResponseEntity<ClientDTO> update(@PathVariable String id, @RequestBody @Valid ClientUpdateDTO clientUpdateDTO) {
+        ClientDTO client_updated = clienteService.update(id,clientUpdateDTO);
+        return ResponseEntity.ok().body(client_updated);
     }
 
     @DeleteMapping("/{id}")

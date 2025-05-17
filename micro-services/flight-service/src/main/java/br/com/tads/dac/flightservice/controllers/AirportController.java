@@ -1,7 +1,9 @@
 package br.com.tads.dac.flightservice.controllers;
 
 
+
 import br.com.tads.dac.flightservice.models.dto.AirportRequestDTO;
+
 import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.services.AirportService;
 import jakarta.validation.Valid;
@@ -25,16 +27,18 @@ public class AirportController {
         return ResponseEntity.status(HttpStatus.CREATED).body(airportCreated);
     }
 
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<Airport> update(@PathVariable String id,@RequestBody AirportRequestDTO airport) {
         Airport airport_updated = airportService.update(id,airport);
         return ResponseEntity.ok().body(airport_updated);
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         airportService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build(); // 204 No Content
     }
 
     @GetMapping
@@ -44,7 +48,8 @@ public class AirportController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Airport> getById(@PathVariable String id) {
-        return airportService.getByAirportCode(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return airportService.getByAirportCode(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-
 }

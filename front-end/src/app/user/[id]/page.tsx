@@ -56,18 +56,39 @@ export default function Page() {
         </div>
         <div className="user__navigation">
           <div className="user__navbar">
-            <div className={`user__navbarButton ${navbar === "reservas" && "user__navbarButton--active"}`} onClick={() => setNavbar("reservas")}>
+            <div
+              className={`user__navbarButton ${
+                navbar === "reservas" && "user__navbarButton--active"
+              }`}
+              onClick={() => setNavbar("reservas")}
+            >
               Minhas reservas
             </div>
-            <div className={`user__navbarButton ${navbar === "voos" && "user__navbarButton--active"}`} onClick={() => setNavbar("voos")}>
+            <div
+              className={`user__navbarButton ${
+                navbar === "voos" && "user__navbarButton--active"
+              }`}
+              onClick={() => setNavbar("voos")}
+            >
               Voos disponíveis
             </div>
-            <div className={`user__navbarButton ${navbar === "historico" && "user__navbarButton--active"}`} onClick={() => setNavbar("historico")}>
+            <div
+              className={`user__navbarButton ${
+                navbar === "historico" && "user__navbarButton--active"
+              }`}
+              onClick={() => setNavbar("historico")}
+            >
               Histórico
             </div>
           </div>
 
-          {navbar === "voos" ? <AvailableFlights /> : navbar === "historico" ? <UserHistory /> : <UserReservations />}
+          {navbar === "voos" ? (
+            <AvailableFlights />
+          ) : navbar === "historico" ? (
+            <UserHistory />
+          ) : (
+            <UserReservations />
+          )}
         </div>
       </section>
     </MainDefault>

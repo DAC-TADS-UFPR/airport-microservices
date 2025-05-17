@@ -1,7 +1,19 @@
 package br.com.tads.dac.flightservice.exceptions;
 
-public class AirportCodeAlreadyExistsException extends RuntimeException{
-    public AirportCodeAlreadyExistsException(String message) {
-        super(message);
+/**
+ * Exceção lançada quando um código de aeroporto já existe no sistema.
+ */
+public class AirportCodeAlreadyExistsException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    private final String airportCode;
+
+    public AirportCodeAlreadyExistsException(String airportCode) {
+        super("Já existe um aeroporto cadastrado com o código: " + airportCode);
+        this.airportCode = airportCode;
+    }
+
+    public String getAirportCode() {
+        return airportCode;
     }
 }
