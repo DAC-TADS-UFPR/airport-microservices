@@ -17,10 +17,10 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String codigo;
 
     @Column(nullable = false)
-    private String name;
+    private String nome;
 
     @Column(nullable = false)
     private String email;
@@ -29,15 +29,15 @@ public class Employee {
     private String cpf;
 
     @Column(nullable = false)
-    private String phone;
+    private String telefone;
 
     @Column(nullable = false)
     private boolean active = true;
 
     public Employee(EmployeeCreateDTO employeeCreateDTO) {
-        this.name = employeeCreateDTO.name();
+        this.nome = employeeCreateDTO.nome();
         this.email = employeeCreateDTO.email();
         this.cpf = employeeCreateDTO.cpf();
-        this.phone = employeeCreateDTO.phone();
+        this.telefone = employeeCreateDTO.telefone();
     }
 }

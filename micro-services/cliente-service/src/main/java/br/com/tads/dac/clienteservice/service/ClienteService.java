@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class ClienteService {
@@ -83,9 +83,9 @@ public class ClienteService {
         transacao.setDataHora(LocalDateTime.now());
 
         if (transacao.getTipo() == TipoTransacao.ENTRADA) {
-            cliente.setMilhas(cliente.getMilhas() + transacao.getQuantidade());
+            cliente.setSaldoMilhas(cliente.getSaldoMilhas() + transacao.getQuantidade());
         } else if (transacao.getTipo() == TipoTransacao.SAIDA) {
-            cliente.setMilhas(cliente.getMilhas() - transacao.getQuantidade());
+            cliente.setSaldoMilhas(cliente.getSaldoMilhas() - transacao.getQuantidade());
         }
 
         clienteRepository.save(cliente);
@@ -104,7 +104,10 @@ public class ClienteService {
         }
 
         dto.cpf().replaceAll("[^0-9]", "");
-        dto.cep().replaceAll("[^0-9]", "");
+        
+        if(Objects.nonNull(dto.endereco()))
+            dto.endereco().getCep().replaceAll("[^0-9]", "");
+        
         return errors;
     }
 }

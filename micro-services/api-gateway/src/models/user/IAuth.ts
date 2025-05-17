@@ -1,19 +1,19 @@
 import { UserType } from "./UserType";
 
 export class IAuth {
-    email: string;
-    name: string;
+    login: string;
+    nome: string;
     userId: string;
-    userType:UserType;
+    tipo:UserType;
     constructor(
-        email: string,
-        name: string,
+        login: string,
+        nome: string,
         userId: string,
-        userType:UserType
+        tipo:UserType
     ) {
-        this.email = email;
-        this.name = name;
+        this.login = login;
+        this.nome = nome;
         this.userId = userId;
-        this.userType = userType;
+        this.tipo = tipo;
     }  
 }

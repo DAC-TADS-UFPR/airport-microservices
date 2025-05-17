@@ -2,13 +2,11 @@ package br.com.tads.dac.authservice.domain.services;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.dac.authservice.domain.models.dto.AuthRequest;
 import br.com.tads.dac.authservice.domain.models.dto.AuthResponse;
 import br.com.tads.dac.authservice.domain.models.dto.UserDTO;
-import br.com.tads.dac.authservice.domain.models.entities.User;
 import br.com.tads.dac.authservice.domain.repositories.UserRepository;
 import br.com.tads.dac.authservice.infraestructure.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +22,12 @@ public class AuthService {
     public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
+                request.login(),
+                request.senha()
             )
         );
         
-        var user = userRepository.findByEmail(request.email())
+        var user = userRepository.findByEmail(request.login())
             .orElseThrow();
         
         var jwtToken = tokenService.generateToken(user);
@@ -39,8 +37,8 @@ public class AuthService {
         return AuthResponse.builder()
             .accessToken(jwtToken)
             .tokenType("Bearer")
-            .userType(user.getUserType())
-            .user(userDto)
+            .tipo(user.getUserType())
+            .usuario(userDto)
             .isAuthenticated(true)
             .build();
     }
@@ -51,16 +49,16 @@ public class AuthService {
             return AuthResponse.builder()
                             .accessToken(token)
                             .tokenType("Bearer")
-                            .userType(user.role())
+                            .tipo(user.getRole())
                             .isAuthenticated(true)
-                            .user(user)
+                            .usuario(user)
                             .build();
         }
         return AuthResponse.builder()
                             .accessToken(token)
                             .tokenType("Bearer")
-                            .userType(null)
-                            .user(null)
+                            .tipo(null)
+                            .usuario(null)
                             .isAuthenticated(false)
                             .build();
     }

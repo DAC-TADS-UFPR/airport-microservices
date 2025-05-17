@@ -1,25 +1,22 @@
 export class IEmployee {
-    id: string;
-    name: string;
+    codigo: string;
+    nome: string;
     email: string;
-    password: string;
-    phone: string;
+    telefone: string;
     cpf: string;
     
 
     constructor(
-        id: string,
-        name: string,
+        codigo: string,
+        nome: string,
         email: string,
-        password: string,
-        phone: string,
+        telefone: string,
         cpf: string,
     ) {
-        this.id = id;
-        this.name = name;
+        this.codigo = codigo;
+        this.nome = nome;
         this.email = email;
-        this.password = password;
-        this.phone = phone;
+        this.telefone = telefone;
         this.cpf = cpf;
     }
 }

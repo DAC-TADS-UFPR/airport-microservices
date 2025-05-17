@@ -16,18 +16,18 @@ export class EmployeeSagaOrchestatorator {
                 }
             }      
             const employeeResponse = await axios.post(`${SERVICE_CONFIG.EMPLOYEE.url}`, employeeData);
-            var employeeId = employeeResponse.data?.id;
+            var employeeId = employeeResponse.data?.codigo;
             if(employeeResponse.status !== 201) {
                 return employeeResponse;
             }
-            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.name ,employeeId, UserType.EMPLOYEE);
+            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.EMPLOYEE);
             console.log('authRequest', authRequest);
             const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest , options);
             if(authResponse.status !== 201) {
                 await axios.delete(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeId}/`);
                 return authResponse;
             }  
-            return authResponse;
+            return employeeResponse;
         }catch (error) {
             console.log('error', error);    
             if (employeeId) {
@@ -46,15 +46,17 @@ export class EmployeeSagaOrchestatorator {
 
     public async updateEmployee(employeeData: IEmployee): Promise<any> {
         try {
-            const employeeResponse = await axios.put(`${SERVICE_CONFIG.EMPLOYEE.url}/funcionarios`, employeeData);
-            const employeeId = employeeResponse.data?.id;
+            const employeeResponse = await axios.put(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeData.codigo}`, employeeData);
+            const employeeId = employeeResponse.data?.codigo;
+            console.log('employeeId', employeeId);
+            console.log('data', employeeResponse.data);
             if(employeeResponse.status !== 200) {
                 return employeeResponse;
             }
-            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.name ,employeeId, UserType.EMPLOYEE);
+            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.EMPLOYEE);
             const authResponse = await axios.put(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
             
-            return authResponse;
+            return employeeResponse;
         }catch (error) {
             const axiosError = error as AxiosError;
             console.error('Error during employee update:', axiosError.response?.data || axiosError.message);

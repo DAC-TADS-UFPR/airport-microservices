@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record EmployeeCreateDTO(
         @NotBlank(message = "Nome é obrigatório")
-        String name,
+        String nome,
 
         @NotBlank(message = "E-mail é obrigatório")
         @Email(message = "E-mail inválido")
@@ -15,6 +15,6 @@ public record EmployeeCreateDTO(
         String cpf,
 
         @NotBlank(message = "Telefone é obrigatório")
-        String phone
+        String telefone
 ) {
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,13 @@ public class AuthController {
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody CreateUserRequest createUserDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.createUser(createUserDTO));
+        
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody CreateUserRequest createUserDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updateUser(createUserDTO));
         
     }
 }

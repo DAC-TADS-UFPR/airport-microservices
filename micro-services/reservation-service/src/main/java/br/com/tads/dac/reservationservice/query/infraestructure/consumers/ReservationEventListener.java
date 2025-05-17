@@ -20,16 +20,16 @@ public class ReservationEventListener {
     @RabbitListener(queues = RabbitMQConfig.QUERY_QUEUE)
     public void onReservationCreated(ReservationDTO dto) {
         ReservationView view = ReservationView.builder()
-        .id(dto.id())
-        .flightId(dto.flightId())
-        .clientId(dto.clientId())
-        .estado(dto.estado())
-        .pricePaid(dto.pricePaid())
-        .milesUsed(dto.milesUsed())
-        .origin(dto.origin())
-        .destiny(dto.destiny())
-        .createdAt(dto.createdAt())
-        .updatedAt(dto.updatedAt())
+        .id(dto.getId())
+        .flightId(dto.getFlightId())
+        .clientId(dto.getClientId())
+        .estado(dto.getEstado())
+        .pricePaid(dto.getPricePaid())
+        .milesUsed(dto.getMilesUsed())
+        .origin(dto.getOrigin())
+        .destiny(dto.getDestiny())
+        .createdAt(dto.getCreatedAt())
+        .updatedAt(dto.getUpdatedAt())
         .build();
         viewRepository.save(view);
     }

@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 
 public record EmployeeUpdateDTO(
         @NotBlank(message = "Nome é obrigatório")
-        String name,
+        String nome,
 
         @NotBlank(message = "E-mail é obrigatório")
         @Email(message = "E-mail inválido")
         String email,
 
         @NotBlank(message = "Telefone é obrigatório")
-        String phone
+        String telefone
 ) {
 
 }
