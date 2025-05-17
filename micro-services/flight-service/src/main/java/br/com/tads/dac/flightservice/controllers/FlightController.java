@@ -1,5 +1,9 @@
 package br.com.tads.dac.flightservice.controllers;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +17,9 @@ import br.com.tads.dac.flightservice.models.dto.FlightDTO;
 import br.com.tads.dac.flightservice.models.dto.UpdateStateRequest;
 import br.com.tads.dac.flightservice.services.FlightService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RequestMapping
 @RestController
@@ -21,13 +28,27 @@ public class FlightController {
     @Autowired
     private FlightService flightService;
 
-    @PostMapping("/{id}/estado")
+    @PostMapping("/voos")
     public ResponseEntity<FlightDTO> createFlight(@Valid @RequestBody CreateFlightRequest request) {
         return ResponseEntity.ok(flightService.create(request));
     }
 
-    @PatchMapping("/{id}/estado")
+    @PatchMapping("/voos/{id}/estado")
     public ResponseEntity<FlightDTO> updateFlightState(@PathVariable String id , @Valid @RequestBody UpdateStateRequest request) {
         return ResponseEntity.ok(flightService.updateFlightState(id, request));
     }
+
+    @GetMapping("/voo/{id}")
+    public ResponseEntity<FlightDTO> getFlightById(@RequestParam String id) {
+       return ResponseEntity.ok(flightService.getFlightById(id));
+    }
+
+    @GetMapping("/voos")
+    public ResponseEntity<List<FlightDTO>> getFlights(
+        @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataFinal,
+		@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataInicial
+    ) {
+       return ResponseEntity.ok(flightService.getFlights(dataInicial, dataFinal));
+    }
+    
 }

@@ -14,22 +14,22 @@ public class FlightMapper {
 
     public FlightDTO fromEntity(Flight f, ZoneOffset offset) {
         return FlightDTO.builder()
-            .code(f.getAirlineCode())
-            .date(f.getDate().atOffset(offset))
-            .price(f.getPrice())
-            .totalSeats(f.getTotalSeats())
-            .occupiedSeats(f.getOccupiedSeats())
-            .state(f.getState())
-            .originAirportCode(f.getAirportCodeOrigin().toString())
-            .destinationAirportCode(f.getAirportCodeDestination().toString())
+            .codigo(f.getCodigo())
+            .data(f.getData().atOffset(offset))
+            .valorPassagem(f.getValorPassagem())
+            .quantidadePoltronasTotal(f.getQuantidadePoltronasTotal())
+            .quantidadePoltronasOcupadas(f.getQuantidadePoltronasOcupadas())
+            .estado(f.getEstado())
+            .codigoAeroportoOrigem(f.getCodigoAeroPortoOrigem())
+            .codigoAeroportoDestino(f.getCodigoAeroPortoDestino())
             .build();
     }
 
 
     public Flight toEntity(FlightDTO flightDTO) {
         Flight flight = new Flight();
-        flight.setId(flightDTO.code());
-        flight.setState(flightDTO.state());
+        flight.setCodigo(flightDTO.getCodigo());
+        flight.setEstado(flightDTO.getEstado());
         return flight;
     }
 }

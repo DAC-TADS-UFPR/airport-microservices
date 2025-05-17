@@ -44,9 +44,9 @@ public class EmployeeService {
     }
 
     private void updateData(Employee entity, EmployeeUpdateDTO obj) {
-        entity.setName(obj.name());
+        entity.setNome(obj.nome());
         entity.setEmail(obj.email());
-        entity.setPhone(obj.phone());
+        entity.setTelefone(obj.telefone());
     }
 
     public void delete(String id) {

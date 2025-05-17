@@ -1,13 +1,14 @@
 package br.com.tads.dac.employee_service.models.dto;
 
 import lombok.Builder;
+import lombok.Data;
 
+@Data
 @Builder
-public record EmployeeDTO(
-    String id,
-    String name,
-    String email,
-    String cpf,
-    String phone,
-    boolean active
-) {}
+public class EmployeeDTO {
+    private final String codigo;
+    private final String nome;
+    private final String email;
+    private final String cpf;
+    private final String telefone;
+}

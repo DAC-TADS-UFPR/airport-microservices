@@ -6,22 +6,22 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Builder
+@Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record FlightDTO(
-    String code,
-    
+public class FlightDTO {
+    private String codigo;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    OffsetDateTime date,
-    
-    BigDecimal price,
-    int totalSeats,
-    int occupiedSeats,
-    FlightState state,
-    String originAirportCode,
-    String destinationAirportCode
-) {}
+    private OffsetDateTime data;
+    private BigDecimal valorPassagem;
+    private int quantidadePoltronasTotal;
+    private int quantidadePoltronasOcupadas;
+    private FlightState estado;
+    private String codigoAeroportoOrigem;
+    private String codigoAeroportoDestino;
+}

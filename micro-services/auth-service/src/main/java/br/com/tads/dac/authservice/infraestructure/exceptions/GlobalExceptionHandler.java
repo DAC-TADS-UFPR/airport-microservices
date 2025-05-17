@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +61,19 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(UserAlredyExistsException.class)
     public ResponseEntity<ExceptionResponse> handleUserAlredyExistsException(UserAlredyExistsException ex, HttpServletRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                request.getRequestURI(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                List.of()
+        );
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleUserNotFound(UsernameNotFoundException ex, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 request.getRequestURI(),
                 ex.getMessage(),

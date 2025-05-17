@@ -10,12 +10,13 @@ export class ClientSagaOrchestatorator {
     public async createClient(clientData: IClient) {
         var clientId = null;
         try {
+            console.log('url', `${SERVICE_CONFIG.CLIENT.url}/`);
             const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/`, clientData);
             clientId = clientResponse.data?.id;
             if(clientResponse.status !== 201) {
                 return clientResponse;
             }
-            const authRequest:IAuth = new IAuth(clientData.email , clientData.name , clientId, UserType.CLIENT);
+            const authRequest:IAuth = new IAuth(clientData.email , clientData.nome , clientId, UserType.CLIENT);
             console.log('auth create request:', authRequest);
             const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest);
             if(authResponse.status !== 201) {

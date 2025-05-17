@@ -31,11 +31,21 @@ public class UserService {
     }
 
     public UserDTO createUser(CreateUserRequest createUserDTO) {
-        if (userRepository.existsByEmail(createUserDTO.getEmail())) {
-            throw new UserAlredyExistsException("Já existe um usuário com o email: " + createUserDTO.getEmail());
+        if (userRepository.existsByEmail(createUserDTO.getLogin())) {
+            throw new UserAlredyExistsException("Já existe um usuário com o email: " + createUserDTO.getLogin());
         }
         User user = userMapper.toEntity(createUserDTO);
         user.setPassword(new BCryptPasswordEncoder().encode(gerarSenha4Digitos()));
+        return userMapper.toDTO(userRepository.save(user));
+    }
+
+    public UserDTO updateUser(CreateUserRequest createUserDTO) {
+        if (userRepository.existsByEmailAndUserIdNot(createUserDTO.getLogin(),createUserDTO.getUserId())) {
+            throw new UserAlredyExistsException("Já existe um usuário com o email: " + createUserDTO.getLogin());
+        }
+        User user = userRepository.getByUserId(createUserDTO.getUserId()).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com id: " + createUserDTO.getUserId()));
+        user.setEmail(createUserDTO.getLogin());
+        user.setName(createUserDTO.getNome());
         return userMapper.toDTO(userRepository.save(user));
     }
 

@@ -45,6 +45,8 @@ services:
       POSTGRES_DB: flight_db
       POSTGRES_USER: flight_user
       POSTGRES_PASSWORD: flight_pass
+    ports:
+      - "5439:5432"  
     volumes:
       - postgres-flight-data:/var/lib/postgresql/data
     healthcheck:

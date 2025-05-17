@@ -11,36 +11,17 @@ router.post(
   authorize('EMPLOYEE'),
   async (req, res) => {
     try {
-      console.log('url', `${SERVICE_CONFIG.FLIGHTS.url}/voos`);
-      const response = await axios.post(`${SERVICE_CONFIG.FLIGHTS.url}/voos`, req.body);
+      const response = await axios.post(`${SERVICE_CONFIG.FLIGHTS.url}/aeroportos`, req.body);
       res.status(response.status).json(response.data);
     } catch (e:any) {
-      console.error('Error creating flight:', e.response?.data || e.message);
+      console.error('Error creating airport:', e.response?.data || e.message);
       res
         .status(e.response?.status || 500)
-        .json({ message: e.response?.data || 'Create flight failed' });
+        .json({ message: e.response?.data || 'Create airport failed' });
     }
   }
 );
 
-
-
-router.patch(
-  '/:id/estado',
-  authenticateToken,
-  authorize('EMPLOYEE'),
-  async (req, res) => {
-    try {
-      const response = await axios.patch(`${SERVICE_CONFIG.FLIGHTS.url}/${req.params.id}/estado`, req.body);      
-      res.status(response.status).json(response.data);
-    } catch (e:any) {
-      console.error('Error updating flight state:', e.response?.data || e.message);
-      res
-        .status(e.response?.status || 500)
-        .json({ message: e.response?.data?.message || 'Update state failed' });
-    }
-  }
-);
 
 router.get(
   '/:id',

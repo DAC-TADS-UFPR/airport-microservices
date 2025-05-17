@@ -1,5 +1,6 @@
 package br.com.tads.dac.flightservice.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -30,17 +31,16 @@ public class FlightService {
     private FlightMapper flightMapper;
 
     public FlightDTO create(@RequestBody CreateFlightRequest req) {
-        LocalDateTime localDate = req.date().toLocalDateTime();
+        LocalDateTime localDate = req.getData().toLocalDateTime();
 
         Flight flight = Flight.builder()
-            .date(localDate)                                          
-            .price(req.price())                                         
-            .totalSeats(req.totalSeats())                                
-            .occupiedSeats(req.occupiedSeats())                          
-            .airportCodeOrigin(req.originAirportCode()) 
-            .airportCodeDestination(req.destinationAirportCode())
-            .state(FlightState.CRIADO)                                
-            .airlineCode("TADS0001")                                  
+            .data(localDate)                                          
+            .valorPassagem(req.getValorPassagem())                                         
+            .quantidadePoltronasTotal(req.getQuantidadePoltronasTotal())                                
+            .quantidadePoltronasOcupadas(req.getQuantidadePoltronasOcupadas())                          
+            .codigoAeroPortoOrigem(req.getCodigoAeroportoOrigem()) 
+            .codigoAeroPortoDestino(req.getCodigoAeroportoDestino())
+            .estado(FlightState.CRIADO)                                
             .build();
 
         FlightDTO dto = flightMapper.fromEntity(flightRepository.save(flight), ZoneOffset.of("-03:00"));
@@ -52,16 +52,25 @@ public class FlightService {
         return flightMapper.fromEntity(f, ZoneOffset.of("-03:00"));
     }
 
+    public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal) {
+        List<Flight> flights = flightRepository.findAllByDataBetween(dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
+        return flights.stream()
+            .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+            .collect(Collectors.toList());        
+    }
+
     public FlightDTO updateFlight(String id, Flight flight) {
         Flight existing = findEntityById(id);
-        existing.setState(flight.getState());
-        existing.setDate(flight.getDate());
-        existing.setPrice(flight.getPrice());
-        existing.setAirportCodeOrigin(flight.getAirportCodeOrigin());
-        existing.setAirportCodeDestination(flight.getAirportCodeDestination());
-        existing.setAirlineCode(flight.getAirlineCode());
-        existing.setTotalSeats(flight.getTotalSeats());
-        existing.setOccupiedSeats(flight.getOccupiedSeats());
+        
+        // Ajuste para usar os setters do seu Entity em português
+        existing.setEstado(flight.getEstado());
+        existing.setData(flight.getData());
+        existing.setValorPassagem(flight.getValorPassagem());
+        existing.setQuantidadePoltronasTotal(flight.getQuantidadePoltronasTotal());
+        existing.setQuantidadePoltronasOcupadas(flight.getQuantidadePoltronasOcupadas());
+        existing.setCodigoAeroPortoOrigem(flight.getCodigoAeroPortoOrigem());
+        existing.setCodigoAeroPortoDestino(flight.getCodigoAeroPortoDestino());
+        
         Flight saved = flightRepository.save(existing);
         return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
     }
@@ -75,7 +84,7 @@ public class FlightService {
 
     public FlightDTO updateFlightState(String id, UpdateStateRequest req) {
         Flight existing = findEntityById(id);
-        existing.setState(req.state());
+        existing.setEstado(req.estado());
         Flight saved = flightRepository.save(existing);
         return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
     }

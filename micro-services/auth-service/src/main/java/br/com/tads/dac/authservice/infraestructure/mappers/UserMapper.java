@@ -15,12 +15,12 @@ public class UserMapper {
     public User toEntity(CreateUserRequest dto) {
         
         return User.builder()
-                .email(dto.getEmail())
+                .email(dto.getLogin())
                 .status(true)
-                .userType(dto.getUserType())
+                .userType(dto.getTipo())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .name(dto.getName())
+                .name(dto.getNome())
                 .userId(dto.getUserId())
                 .build();
     }

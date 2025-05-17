@@ -14,12 +14,11 @@ public class EmployeeMapper {
 
     public EmployeeDTO toDto(Employee entity) {
         return EmployeeDTO.builder()
-            .id(entity.getId())
-            .name(entity.getName())
+            .codigo(entity.getCodigo())
+            .nome(entity.getNome())
             .email(entity.getEmail())
             .cpf(entity.getCpf())
-            .phone(entity.getPhone())
-            .active(entity.isActive())
+            .telefone(entity.getTelefone())
             .build();
     }
 }

@@ -20,6 +20,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
         }
       }
     );
+    console.log('response', response.data);
     if (response.data.authenticated) {
       const decoded = jwt.decode(token);
       response.data.user = decoded;

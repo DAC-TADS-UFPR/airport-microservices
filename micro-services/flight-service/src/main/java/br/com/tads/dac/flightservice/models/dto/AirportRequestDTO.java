@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AirportRequestDTO {
-
-    private String airportCode;
-    private String airportName;
-    private String city;
+    private String codigo;
+    private String nome;
+    private String cidade;
     private String uf;
 }
