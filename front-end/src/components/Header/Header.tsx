@@ -11,13 +11,13 @@ const Header: FC<HeaderNavProps> = ({}) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const name = localStorage.getItem("name");
+  const name = localStorage.getItem("nome");
 
   const loggout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("userId");
-    localStorage.removeItem("name");
-    localStorage.removeItem("userType");
+    localStorage.removeItem("nome");
+    localStorage.removeItem("tipo");
     router.replace("/");
   };
 

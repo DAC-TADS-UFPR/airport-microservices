@@ -27,6 +27,18 @@
     @include resize(letter-spacing, $h3-ls);
   }
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    @include resize(gap, 16);
+    @include resize(padding-inline, 16);
+    @include resize(padding-block, 16);
+    background-color: $color-white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -36,57 +48,34 @@
       thead {
         border-bottom: 1px solid rgba($color-gray-10, 0.05);
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        @include resize(gap, 16);
-        @include resize(padding-inline, 16);
-        @include resize(padding-block, 16);
-        background-color: $color-white;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        th {
+          font-weight: 600;
+          @include resize(padding, 8);
+          @include resize(font-size, $l1-fs);
+          @include resize(line-height, $l1-lh);
+          @include resize(letter-spacing, $l1-ls);
+        }
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-
-            thead {
-                border-bottom: 1px solid rgba($color-gray-10, 0.05);
-
-                th {
-                    font-weight: 600;
-                    @include resize(padding, 8);
-                    @include resize(font-size, $l1-fs);
-                    @include resize(line-height, $l1-lh);
-                    @include resize(letter-spacing, $l1-ls);
-                }
-            }
-
-            tbody {
-                tr {
-                    @include resize(height, 56);
-                    &:nth-child(even) {
-                        background-color: rgba($color-gray-10, 0.025);
-                    }
-                    td {
-                        text-align: center;
-                        @include resize(padding, 8);
-                        @include resize(font-size, $l1-fs);
-                        @include resize(line-height, $l1-lh);
-                        @include resize(letter-spacing, $l1-ls);
-                    }
-                    .manageStaff__actions {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: center;
-                        @include resize(gap, 8);
-                    }
-                }
-            }
+      tbody {
+        tr {
+          @include resize(height, 56);
+          &:nth-child(even) {
+            background-color: rgba($color-gray-10, 0.025);
+          }
+          td {
+            text-align: center;
+            @include resize(padding, 8);
+            @include resize(font-size, $l1-fs);
+            @include resize(line-height, $l1-lh);
+            @include resize(letter-spacing, $l1-ls);
+          }
+          .manageStaff__actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            @include resize(gap, 8);
+          }
         }
       }
 

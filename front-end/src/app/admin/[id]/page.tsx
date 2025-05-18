@@ -13,13 +13,13 @@ export default function Page() {
 
   const cleanupLocalStorage = () => {
     localStorage.removeItem("userId");
-    localStorage.removeItem("userType");
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("tipo");
+    localStorage.removeItem("access_token");
   };
 
   const storedId = localStorage.getItem("userId");
-  const storedRole = localStorage.getItem("userType");
-  const accessToken = localStorage.getItem("accessToken");
+  const storedRole = localStorage.getItem("tipo");
+  const accessToken = localStorage.getItem("access_token");
 
   if (!storedId || !storedRole || !accessToken) {
     cleanupLocalStorage();

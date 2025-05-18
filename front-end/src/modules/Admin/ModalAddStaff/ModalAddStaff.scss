@@ -10,4 +10,8 @@
         @include resize(line-height, $b1-lh);
         @include resize(letter-spacing, $b1-ls);
     }
+
+    .buttonDefault {
+        @include resize(margin-top, 8);
+    }
 }
