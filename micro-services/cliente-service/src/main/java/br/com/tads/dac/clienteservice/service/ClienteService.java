@@ -51,15 +51,21 @@ public class ClienteService {
     }
 
     private void updateData(Cliente entity, ClientUpdateDTO obj) {
-        entity.setName(obj.name());
+        entity.setNome(obj.name());
         entity.setEmail(obj.email());
-        entity.setCep(obj.endereco().cep());
-        entity.setUf(obj.endereco().uf());
-        entity.setCity(obj.endereco().cidade());
-        entity.setNeighborhood(obj.endereco().bairro());
-        entity.setStreet(obj.endereco().rua());
-        entity.setNumber(obj.endereco().numero());
-        entity.setComplement(obj.endereco().complemento());
+
+        if (obj.endereco() != null) {
+            if (entity.getEndereco() == null) {
+                entity.setEndereco(new Endereco());
+            }
+            entity.getEndereco().setCep(obj.endereco().getCep());
+            entity.getEndereco().setUf(obj.endereco().getUf());
+            entity.getEndereco().setCidade(obj.endereco().getCidade());
+            entity.getEndereco().setBairro(obj.endereco().getBairro());
+            entity.getEndereco().setRua(obj.endereco().getRua());
+            entity.getEndereco().setNumero(obj.endereco().getNumero());
+            entity.getEndereco().setComplemento(obj.endereco().getComplemento());
+        }
     }
 
     public void delete(String id) {

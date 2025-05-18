@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Annotation profile for incode" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -12,8 +13,8 @@
         <module name="cliente-service" />
         <module name="auth-service" />
         <module name="flight-service" />
-        <module name="reservation-service" />
         <module name="employee-service" />
+        <module name="reservation-service" />
       </profile>
     </annotationProcessing>
   </component>
