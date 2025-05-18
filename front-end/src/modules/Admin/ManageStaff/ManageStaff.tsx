@@ -3,6 +3,8 @@ import { FC, useState } from "react";
 import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ModalAddStaff from "../ModalAddStaff/ModalAddStaff";
+import { useQuery } from "@tanstack/react-query";
+import { getEmployee } from "@/data/config/employee";
 
 interface StaffMember {
   name: string;
@@ -63,7 +65,6 @@ const mockedData: StaffMember[] = [
 
 const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
   const { openModal } = useModal();
-  const [showActive, setShowActive] = useState(true);
 
   // Initialize state with incoming prop or fallback to mockedData
   const [staff, setStaff] = useState<StaffMember[]>(data ?? mockedData);
@@ -77,10 +78,16 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
 
   // Toggle a member’s active flag by CPF
   const handleToggleActive = (cpf: string) => {
-    setStaff((prev) =>
-      prev.map((m) => (m.cpf === cpf ? { ...m, active: !m.active } : m))
-    );
+    setStaff((prev) => prev.map((m) => (m.cpf === cpf ? { ...m, active: !m.active } : m)));
   };
+
+  const { data: funcionarios, isLoading } = useQuery({
+    queryKey: ["staffMembers"],
+    queryFn: getEmployee,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log("Funcionários:", funcionarios);
 
   // Filter into two arrays
   const activeMembers = staff.filter((m) => m.active);
@@ -92,25 +99,12 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
       <div className="manageStaff__header">
         <div className="manageStaff__title">Gerenciar equipe</div>
         <div className="manageStaff__headerActions">
-          <ButtonDefault
-            children="Adicionar funcionário"
-            style={{ width: "auto" }}
-            onClick={handleNewMember}
-          />
-          <ButtonDefault
-            children={showActive ? "Ver inativos" : "Ver ativos"}
-            style={{
-              width: "auto",
-              backgroundColor: "#E0E0E0",
-              color: "#000",
-            }}
-            onClick={() => setShowActive((prev) => !prev)}
-          />
+          <ButtonDefault children="Adicionar funcionário" style={{ width: "auto" }} onClick={handleNewMember} />
         </div>
       </div>
       <div className="manageStaff__content">
         {activeMembers.length > 0 ? (
-          <table className="manageStaff__table">
+          <table>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -128,17 +122,8 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
                   <td>{member.email}</td>
                   <td>{member.telefone}</td>
                   <td className="manageStaff__actions">
-                    <ButtonDefault
-                      children="Editar"
-                      style={{ width: "auto" }}
-                      onClick={handleNewMember}
-                    />
-                    <ButtonDefault
-                      children="Inativar"
-                      style={{ width: "auto" }}
-                      color="red"
-                      onClick={() => handleToggleActive(member.cpf)}
-                    />
+                    <ButtonDefault children="Editar" style={{ width: "auto" }} onClick={handleNewMember} />
+                    <ButtonDefault children="Inativar" style={{ width: "auto" }} color="red" onClick={() => handleToggleActive(member.cpf)} />
                   </td>
                 </tr>
               ))}
@@ -173,20 +158,14 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
                   <td>{member.email}</td>
                   <td>{member.telefone}</td>
                   <td className="manageStaff__actions">
-                    <ButtonDefault
-                      children="Ativar"
-                      style={{ width: "auto" }}
-                      onClick={() => handleToggleActive(member.cpf)}
-                    />
+                    <ButtonDefault children="Ativar" style={{ width: "auto" }} onClick={() => handleToggleActive(member.cpf)} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <p>
-            Nenhum funcionário {showActive ? "ativo" : "inativo"} encontrado.
-          </p>
+          <p>Nenhum funcionário encontrado.</p>
         )}
       </div>
     </div>

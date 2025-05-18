@@ -62,6 +62,7 @@
   }
 
   &__navLink {
+    cursor: pointer;
     display: flex;
     align-items: center;
     @include resize(gap, 4);

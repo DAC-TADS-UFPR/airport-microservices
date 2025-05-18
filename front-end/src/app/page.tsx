@@ -15,25 +15,26 @@ export default function Page() {
   const router = useRouter();
 
   const { form, changeState, validation } = useForm({
-    email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
-    password: { invalid: false, errorLabel: "Digite sua senha", value: "", required: false },
+    login: { invalid: false, errorLabel: "Digite seu usuário", value: "" },
+    senha: { invalid: false, errorLabel: "Digite sua senha", value: "", required: false },
   });
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: (data: any) => {
-      const { userId, name } = data.user;
-      const userType = data.userType;
-      localStorage.setItem("accessToken", data.accessToken);
+      console.log(data);
+      const { userId, nome } = data.usuario;
+      const tipo = data.tipo;
+      localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("name", name);
-      localStorage.setItem("userType", userType);
+      localStorage.setItem("name", nome);
+      localStorage.setItem("tipo", tipo);
 
-      if (userType === "EMPLOYEE") {
+      if (tipo === "EMPLOYEE") {
         router.push(`/admin/${userId}`);
       }
-      if (userType === "CLIENT") {
+      if (tipo === "CLIENT") {
         router.push(`/user/${userId}`);
       }
     },
@@ -56,25 +57,25 @@ export default function Page() {
           <h1 className="login__title">Bem-vindo!</h1>
           <p className="login__subtitle">Faça login para continuar</p>
           <InputText
-            id="email"
-            label="E-mail"
-            name="email"
-            type="email"
-            placeholder="email@exemplo.com"
-            value={form.email.value}
-            erroMsg={form.email.errorLabel}
-            invalid={form.email.invalid}
-            onChange={(e) => changeState("email", "value", e.target.value)}
+            id="login"
+            label="Login"
+            name="login"
+            type="login"
+            placeholder="Username"
+            value={form.login.value}
+            erroMsg={form.login.errorLabel}
+            invalid={form.login.invalid}
+            onChange={(e) => changeState("login", "value", e.target.value)}
           />
           <InputPassword
-            id="password"
+            id="senha"
             label="Senha"
-            name="password"
+            name="senha"
             placeholder="****"
-            value={form.password.value}
-            erroMsg={form.password.errorLabel}
-            invalid={form.password.invalid}
-            onChange={(e) => changeState("password", "value", e.target.value)}
+            value={form.senha.value}
+            erroMsg={form.senha.errorLabel}
+            invalid={form.senha.invalid}
+            onChange={(e) => changeState("senha", "value", e.target.value)}
           />
           <ButtonDefault children={isPending ? "Carregando..." : "Login"} type="submit" disabled={isPending} />
         </form>

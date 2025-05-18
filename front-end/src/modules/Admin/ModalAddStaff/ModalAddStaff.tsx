@@ -2,12 +2,12 @@ import "./ModalAddStaff.scss";
 import { FC } from "react";
 import { useForm } from "@/hooks/useForm";
 import { useModalCenter } from "@/components/Modal/ModalCenter/ModalCenter";
+import { useMutation } from "@tanstack/react-query";
+import { createEmployee } from "@/data/config/employee";
 import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPhone from "@/components/Inputs/InputPhone/InputPhone";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import { useMutation } from "@tanstack/react-query";
-import { createEmployee } from "@/data/config/employee";
 
 interface ModalAddStaffProps {
   data?: any;
@@ -27,16 +27,17 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
     mutationKey: ["createEmployee"],
     mutationFn: createEmployee,
     onSuccess: (data: any) => {
+      setLoading(false);
       console.log("Funcionário criado com sucesso:", data);
       closeModal();
     },
     onError: (error: any) => {
-      console.error("Erro ao criar funcionário:", error);
+      setLoading(false);
       const apiErrors = error?.response?.data?.errors;
       if (apiErrors) {
         apiErrors.forEach((err: any) => {
           const field = err.field;
-          const message = err.defaultMessage;
+          const message = err.message;
           changeState(field, "invalid", true);
           changeState(field, "errorLabel", message);
         });
@@ -47,7 +48,14 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validation()) return;
-    await mutateAsync({ payload: { form } });
+    setLoading(true);
+    const payload = {
+      nome: form.name.value,
+      email: form.email.value,
+      cpf: form.cpf.value,
+      telefone: form.phone.value,
+    };
+    await mutateAsync({ payload });
   };
 
   return (

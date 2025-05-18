@@ -1,17 +1,21 @@
 import { TForm } from "@/hooks/useForm";
 import api from "./api";
 
-export async function createEmployee({ payload }: { payload: { form: TForm } }) {
-  const { name, email, cpf, phone } = payload.form;
+export async function createEmployee({ payload }: { payload: TForm }) {
   try {
-    const { data } = await api.post(`/funcionarios`, {
-      name: name.value,
-      email: email.value,
-      cpf: cpf.value,
-      phone: phone.value,
-    });
+    const { data } = await api.post(`/funcionarios`, { ...payload });
     return data;
   } catch (error: any) {
     throw error;
+  }
+}
+
+export async function getEmployee({ _, queryKey }: any) {
+  const [key, id] = queryKey;
+  try {
+    const { data } = await api.get(`/funcionarios`);
+    return data;
+  } catch (error: any) {
+    throw error?.response?.data?.message || error?.message;
   }
 }

@@ -25,12 +25,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const auth = await getCookieToken();
-    if (auth?.accessToken) {
-      config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
+    // const auth = await getCookieToken();
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      config.headers["Authorization"] = `Bearer ${access_token}`;
       config.headers["Accept"] = "*/*";
-      // config.headers["Accept-Encoding"] = "gzip, deflate, br";
-      // config.headers["Connection"] = "keep-alive";
     }
     return config;
   },

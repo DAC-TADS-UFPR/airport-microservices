@@ -4,12 +4,12 @@ import setCookieToken from "@/utils/setCookieToken";
 import deleteCookieToken from "@/utils/deleteCookieToken";
 
 export async function login({ payload, tokenFCM }: { payload: { form: TForm }; tokenFCM?: string }) {
-  const { email, password } = payload.form;
+  const { login, senha } = payload.form;
   try {
     deleteCookieToken();
     const requestBody: Record<string, string> = {
-      email: email.value,
-      password: password.value,
+      login: login.value,
+      senha: senha.value,
     };
     if (tokenFCM) {
       requestBody.tokenFCM = tokenFCM;
