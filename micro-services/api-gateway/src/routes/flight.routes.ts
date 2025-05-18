@@ -73,10 +73,10 @@ router.get(
       const { dataInicial, dataFinal } = req.query;
 
       const params = new URLSearchParams();
-      if (dataInicial) params.append('dataInicial', dataInicial as string);
-      if (dataFinal) params.append('dataFinal', dataFinal as string);
+      if (dataInicial) params.append('data', dataInicial as string);
+      if (dataFinal) params.append('data-fim', dataFinal as string);
 
-      const url = `${SERVICE_CONFIG.FLIGHTS.url}?${params.toString()}`;
+      const url = `${SERVICE_CONFIG.FLIGHTS.url}/voos?${params.toString()}`;
       
       const response = await axios.get(url, {
         headers: {
@@ -90,7 +90,7 @@ router.get(
       console.error('Error fetching flights:', e.response?.data || e.message);
       res
         .status(e.response?.status || 500)
-        .json({ message: e.response?.data?.message || 'Fetch flights failed' });
+        .json({ message: e.response?.data || 'Fetch flights failed' });
     }
   }
 );

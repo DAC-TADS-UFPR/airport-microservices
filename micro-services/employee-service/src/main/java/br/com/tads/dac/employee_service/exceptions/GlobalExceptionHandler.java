@@ -32,6 +32,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CpfAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleCpfAlreadyExistsException(CpfAlreadyExistsException ex, HttpServletRequest request) {
+        List<ExceptionResponse.FieldError> fieldErrors = List.of(
+                new ExceptionResponse.FieldError("cpf", ex.getMessage())
+        );
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                request.getRequestURI(),
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now(),
+                fieldErrors
+        );
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {

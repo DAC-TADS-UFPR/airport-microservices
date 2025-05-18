@@ -30,8 +30,8 @@ public class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .userId(user.getUserId())
-                .name(user.getName())
-                .role(user.getUserType())
+                .nome(user.getName())
+                .tipo(user.getUserType())
                 .build();
     }
 }

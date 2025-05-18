@@ -49,7 +49,7 @@ public class AuthService {
             return AuthResponse.builder()
                             .accessToken(token)
                             .tokenType("Bearer")
-                            .tipo(user.getRole())
+                            .tipo(user.getTipo())
                             .isAuthenticated(true)
                             .usuario(user)
                             .build();

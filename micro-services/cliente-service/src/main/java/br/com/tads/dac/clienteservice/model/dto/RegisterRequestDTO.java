@@ -14,7 +14,7 @@ public record RegisterRequestDTO(
     
     @NotBlank(message = "Digite seu CPF")
     String cpf,
-
+    
     Long saldoMilhas,
     
     EnderecoDTO endereco

@@ -45,8 +45,8 @@ public class FlightController {
 
     @GetMapping("/voos")
     public ResponseEntity<List<FlightDTO>> getFlights(
-        @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataFinal,
-		@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataInicial
+        @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = true,name = "data") LocalDate dataFinal,
+		@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = true,name = "data-fim") LocalDate dataInicial
     ) {
        return ResponseEntity.ok(flightService.getFlights(dataInicial, dataFinal));
     }
