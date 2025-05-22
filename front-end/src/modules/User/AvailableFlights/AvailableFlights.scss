@@ -6,9 +6,18 @@
   @include resize(gap, 16);
   @include resize(padding-inline, 32);
   @include resize(padding-block, 24);
-  background-color: $color-white;
+  background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+.flightCardWrapper {
+  border: 1px solid $color-secundary;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
   &__filter {
     display: flex;
@@ -19,38 +28,37 @@
 
   &__fieldGroup {
     display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    width: 50%;
-    flex: 1; // ocupa metade do espaço se forem 2 inputs
-    min-width: 0; // evita quebra forçada
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  &__search {
-    position: absolute;
-    right: 10px; // distância da borda direita do input
-    top: 65%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
+  &__withButton {
+    flex: 1; // faz o campo crescer junto com o botão
+  }
+
+  &__input {
+    flex: 1; // faz o input ocupar o máximo possível do espaço
   }
 
   &__searchBtn {
-    position: absolute;
-    right: 10px;
-    top: 65%;
-    transform: translateY(-50%);
-    background: none;
+    background-color: $color-primary; // mesma cor do botão "Detalhes"
     border: none;
-    padding: 0;
+    padding: 0.5rem;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.2s ease;
 
-    // opcional: se quiser feedback visual
+    img {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1); // deixa a lupa branca como ícone do botão
+    }
+
     &:hover {
-      opacity: 0.7;
+      background-color: $color-secundary; // tom mais escuro para o hover
     }
   }
 
