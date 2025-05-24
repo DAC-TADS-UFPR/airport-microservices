@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import br.com.tads.dac.flightservice.exceptions.ExceptionResponse.FieldError;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+        
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
@@ -117,4 +119,26 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+public ResponseEntity<ExceptionResponse> handleValidationExceptions(
+        MethodArgumentNotValidException ex,
+        HttpServletRequest request) {
+
+    List<FieldError> errors = ex.getBindingResult().getFieldErrors().stream()
+        .map(err -> new FieldError(err.getField(), err.getDefaultMessage()))
+        .collect(Collectors.toList());
+
+    ExceptionResponse resp = new ExceptionResponse(
+        request.getRequestURI(),
+        "Dados inválidos",
+        HttpStatus.BAD_REQUEST.value(),
+        LocalDateTime.now(),
+        errors
+    );
+
+    return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(resp);
+}
 }
