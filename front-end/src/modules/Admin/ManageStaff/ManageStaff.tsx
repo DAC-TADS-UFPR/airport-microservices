@@ -1,10 +1,10 @@
 import "./ManageStaff.scss";
 import { FC, useState } from "react";
-import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
-import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import ModalAddStaff from "../ModalAddStaff/ModalAddStaff";
 import { useQuery } from "@tanstack/react-query";
 import { getEmployee } from "@/data/config/employee";
+import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
+import ModalAddStaff from "../ModalAddStaff/ModalAddStaff";
+import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 
 interface StaffMember {
   name: string;
@@ -69,10 +69,10 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
   // Initialize state with incoming prop or fallback to mockedData
   const [staff, setStaff] = useState<StaffMember[]>(data ?? mockedData);
 
-  const handleNewMember = () => {
+  const handleNewMember = (funcionario?: any ) => {
     openModal({
       headerName: "Adicionar novo funcionário",
-      children: <ModalAddStaff />,
+      children: <ModalAddStaff data={funcionario} />,
     });
   };
 
@@ -86,8 +86,6 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
     queryFn: getEmployee,
     refetchOnWindowFocus: false,
   });
-
-  console.log("Funcionários:", funcionarios);
 
   // Filter into two arrays
   const activeMembers = staff.filter((m) => m.active);
@@ -103,7 +101,7 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
         </div>
       </div>
       <div className="manageStaff__content">
-        {activeMembers.length > 0 ? (
+        {funcionarios?.length ? (
           <table>
             <thead>
               <tr>
@@ -115,14 +113,14 @@ const ManageStaff: FC<ManageStaffProps> = ({ data }) => {
               </tr>
             </thead>
             <tbody>
-              {activeMembers.map((member) => (
+              {funcionarios.map((member: any) => (
                 <tr key={member.cpf}>
-                  <td>{member.name}</td>
+                  <td>{member.nome}</td>
                   <td>{member.cpf}</td>
                   <td>{member.email}</td>
                   <td>{member.telefone}</td>
                   <td className="manageStaff__actions">
-                    <ButtonDefault children="Editar" style={{ width: "auto" }} onClick={handleNewMember} />
+                    <ButtonDefault children="Editar" style={{ width: "auto" }} onClick={() => handleNewMember(member)} />
                     <ButtonDefault children="Inativar" style={{ width: "auto" }} color="red" onClick={() => handleToggleActive(member.cpf)} />
                   </td>
                 </tr>

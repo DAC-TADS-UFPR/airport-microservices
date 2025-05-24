@@ -51,15 +51,8 @@ public class ClienteService {
     }
 
     private void updateData(Cliente entity, ClientUpdateDTO obj) {
-        entity.setName(obj.name());
+        entity.setNome(obj.name());
         entity.setEmail(obj.email());
-        entity.setCep(obj.endereco().cep());
-        entity.setUf(obj.endereco().uf());
-        entity.setCity(obj.endereco().cidade());
-        entity.setNeighborhood(obj.endereco().bairro());
-        entity.setStreet(obj.endereco().rua());
-        entity.setNumber(obj.endereco().numero());
-        entity.setComplement(obj.endereco().complemento());
     }
 
     public void delete(String id) {

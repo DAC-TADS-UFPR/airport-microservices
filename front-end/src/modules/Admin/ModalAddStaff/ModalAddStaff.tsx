@@ -1,9 +1,10 @@
 import "./ModalAddStaff.scss";
 import { FC } from "react";
 import { useForm } from "@/hooks/useForm";
-import { useModalCenter } from "@/components/Modal/ModalCenter/ModalCenter";
 import { useMutation } from "@tanstack/react-query";
-import { createEmployee } from "@/data/config/employee";
+import { invalidateCache } from "@/utils/invalidateCache";
+import { createEmployee, updateEmployee } from "@/data/config/employee";
+import { useModalCenter } from "@/components/Modal/ModalCenter/ModalCenter";
 import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPhone from "@/components/Inputs/InputPhone/InputPhone";
@@ -17,17 +18,18 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
   const { closeModal } = useModalCenter();
 
   const { form, loading, setLoading, changeState, validation } = useForm({
-    name: { invalid: false, errorLabel: "Digite seu nome", value: "" },
-    email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
-    cpf: { invalid: false, errorLabel: "Digite seu CPF", value: "" },
-    phone: { invalid: false, errorLabel: "Digite seu telefone", value: "" },
+    name: { invalid: false, errorLabel: "Digite seu nome", value: data?.nome || "" },
+    email: { invalid: false, errorLabel: "Digite seu e-mail", value: data?.email || "" },
+    cpf: { invalid: false, errorLabel: "Digite seu CPF", value: data?.cpf || "" },
+    phone: { invalid: false, errorLabel: "Digite seu telefone", value: data?.telefone || "" },
   });
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ["createEmployee"],
-    mutationFn: createEmployee,
+    mutationFn: !!data?.cpf ? updateEmployee : createEmployee,
     onSuccess: (data: any) => {
       setLoading(false);
+      invalidateCache(`staffMembers`);
       console.log("Funcionário criado com sucesso:", data);
       closeModal();
     },
@@ -54,6 +56,7 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
       email: form.email.value,
       cpf: form.cpf.value,
       telefone: form.phone.value,
+      ...(data?.cpf && { codigo: data.codigo }),
     };
     await mutateAsync({ payload });
   };

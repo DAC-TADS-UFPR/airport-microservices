@@ -1,5 +1,7 @@
 package br.com.tads.dac.reservationservice.config;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 
 import org.springframework.transaction.PlatformTransactionManager;
@@ -17,9 +20,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
-@EnableTransactionManagement
 public class DataSourceConfig {
-
+/*
   @Bean
   @ConfigurationProperties("spring.datasource.command")
   public DataSource commandDataSource() { 
@@ -63,4 +65,17 @@ public class DataSourceConfig {
       queryTransactionManager(EntityManagerFactory emf) {
     return new JpaTransactionManager(emf);
   }
+
+
+  @Bean
+  public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+    return new JpaTransactionManager(emf);
+  }
+
+  @Bean
+  public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+      return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+  }
+*/
+  
 }
