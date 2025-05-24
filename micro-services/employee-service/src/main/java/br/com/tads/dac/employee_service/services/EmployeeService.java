@@ -33,14 +33,9 @@ public class EmployeeService {
     }
 
     public EmployeeDTO update(String id, EmployeeUpdateDTO employeeUpdateDTO) {
-        try {
-            Employee entity = employeeRepository.getReferenceById(id);
-            updateData(entity,employeeUpdateDTO);
-            return mapper.toDto(employeeRepository.save(entity));
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
-        }
+        Employee entity = employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionario nao encontrado"));
+        updateData(entity,employeeUpdateDTO);
+        return mapper.toDto(employeeRepository.save(entity));
     }
 
     private void updateData(Employee entity, EmployeeUpdateDTO obj) {

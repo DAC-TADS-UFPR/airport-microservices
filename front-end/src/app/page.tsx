@@ -28,7 +28,7 @@ export default function Page() {
       const tipo = data.tipo;
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("name", nome);
+      localStorage.setItem("nome", nome);
       localStorage.setItem("tipo", tipo);
 
       if (tipo === "EMPLOYEE") {

@@ -54,6 +54,7 @@ public class ClienteService {
         entity.setNome(obj.name());
         entity.setEmail(obj.email());
 
+
         if (obj.endereco() != null) {
             if (entity.getEndereco() == null) {
                 entity.setEndereco(new Endereco());
@@ -66,6 +67,7 @@ public class ClienteService {
             entity.getEndereco().setNumero(obj.endereco().getNumero());
             entity.getEndereco().setComplemento(obj.endereco().getComplemento());
         }
+
     }
 
     public void delete(String id) {

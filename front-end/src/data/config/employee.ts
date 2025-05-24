@@ -19,3 +19,13 @@ export async function getEmployee({ _, queryKey }: any) {
     throw error?.response?.data?.message || error?.message;
   }
 }
+
+export async function updateEmployee({ payload }: { payload: TForm }) {
+  try {
+    const { data } = await api.put(`/funcionarios/${payload.codigo}`, { ...payload });
+    return data;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
