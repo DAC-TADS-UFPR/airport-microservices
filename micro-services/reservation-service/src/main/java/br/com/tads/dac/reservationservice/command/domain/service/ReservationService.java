@@ -1,6 +1,7 @@
 package br.com.tads.dac.reservationservice.command.domain.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.tads.dac.reservationservice.command.domain.model.*;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.CreateReservationRequest;
+import br.com.tads.dac.reservationservice.command.domain.model.dto.FlightSeatsUpdateEvent;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.ReservationDTO;
+import br.com.tads.dac.reservationservice.command.domain.model.dto.ReservationMilesUpdateEvent;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.UpdateReservationRequest;
 import br.com.tads.dac.reservationservice.command.domain.repository.*;
 import br.com.tads.dac.reservationservice.command.infraestructure.mappers.ReservationMapper;
@@ -18,33 +21,35 @@ import br.com.tads.dac.reservationservice.config.RabbitMQConfig;
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationRepository reservaRepository;
-    private final HistoryReservationRepository historicoRepository;
-    private final ReservationMapper reservationMapper;
-    private final RabbitTemplate rabbitTemplate;
+    @Autowired    
+    private  ReservationRepository reservaRepository;
+    @Autowired    
+    private  HistoryReservationRepository historicoRepository;
+    @Autowired    
+    private  ReservationMapper reservationMapper;
+    @Autowired    
+    private  RabbitTemplate rabbitTemplate;
 
+    @Transactional
     public ReservationDTO criarReserva(CreateReservationRequest request) {
         Reservation reserva = Reservation.builder()
-                .flightId(request.flightId())
-                .clientId(request.clientId())
+                .codigoVoo(request.codigoVoo())
+                .codigoCliente(request.codigoCliente())
                 .estado(ReservationState.CREATED)
-                .pricePaid(request.price())
-                .milesUsed(request.miles())
-                .origin(request.origin())
-                .destiny(request.destiny())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .valor(request.valor())
+                .milhasUtilizadas(request.milhasUtilizadas())
+                .codigoAeroportoOrigem(request.codigoAeroportoOrigem())
+                .codigoAeroportoDestino(request.codigoAeroportoDestino())
                 .build();
 
         reservaRepository.save(reserva);
 
         HistoryReservationState historico = HistoryReservationState.builder()
-                .idReservation(reserva.getId())
-                .updatedAt(LocalDateTime.now())
-                .state(ReservationState.CREATED)
+                .codigoReserva(reserva.getCodigo())
+                .alteradoEm(LocalDateTime.now())
+                .estado(ReservationState.CREATED)
                 .build();
 
         historicoRepository.save(historico);
@@ -55,21 +60,40 @@ public class ReservationService {
                 reservationMapper.toDto(reserva)
         );
 
+        FlightSeatsUpdateEvent seatEvent = new FlightSeatsUpdateEvent();
+        seatEvent.setCodigoVoo(request.codigoVoo());
+        seatEvent.setQuantidadePoltronas(request.quantidadePoltronas());
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.FLIGHT_EXCHANGE,
+                RabbitMQConfig.FLIGHT_ROUTING_KEY,
+                seatEvent
+        );
+
+        ReservationMilesUpdateEvent event = new ReservationMilesUpdateEvent();
+        event.setCodigoCliente(request.codigoCliente());
+        event.setMilhas(request.milhasUtilizadas());
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.FLIGHT_EXCHANGE,
+                RabbitMQConfig.FLIGHT_ROUTING_KEY,
+                event
+        );
+
         return reservationMapper.toDto(reserva);
     }
 
-    public Reservation alterarEstado(String codigoReserva,
-                                     UpdateReservationRequest request) {
+    public Reservation alterarEstado(String codigoReserva, UpdateReservationRequest request) {
         Reservation reserva = reservaRepository.findById(codigoReserva)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada: " + codigoReserva));
 
         reserva.setEstado(request.estado());
-        reserva.setUpdatedAt(LocalDateTime.now());
+        reserva.setAtualizadoEm(LocalDateTime.now());
         reservaRepository.save(reserva);
 
         HistoryReservationState historico = new HistoryReservationState(
                 null,
-                reserva.getId(),
+                reserva.getCodigo(),
                 LocalDateTime.now(),
                 request.estado()
         );

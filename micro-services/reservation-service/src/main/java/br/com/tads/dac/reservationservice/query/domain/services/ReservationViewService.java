@@ -1,35 +1,32 @@
 package br.com.tads.dac.reservationservice.query.domain.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import br.com.tads.dac.reservationservice.query.domain.exceptions.ReservationNotFoundException;
 import br.com.tads.dac.reservationservice.query.domain.models.dto.ReservationDTO;
 import br.com.tads.dac.reservationservice.query.domain.repositories.ReservationViewRepository;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationViewService {
+    
     private final ReservationViewRepository reservationViewRepository;
 
-    public ReservationDTO getById(String id) {
-        return reservationViewRepository.findById(id)
+    public ReservationDTO getById(String codigo) {
+        return reservationViewRepository.findById(codigo)
                 .map(reservation -> ReservationDTO.builder()
-                        .id(reservation.getId())
-                        .flightId(reservation.getFlightId())
-                        .clientId(reservation.getClientId())
+                        .codigo(reservation.getCodigo())
+                        .codigoVoo(reservation.getCodigoVoo())
+                        .codigoCliente(reservation.getCodigoCliente())
                         .estado(reservation.getEstado())
-                        .pricePaid(reservation.getPricePaid())
-                        .milesUsed(reservation.getMilesUsed())
-                        .origin(reservation.getOrigin())
-                        .destiny(reservation.getDestiny())
-                        .createdAt(reservation.getCreatedAt())
-                        .updatedAt(reservation.getUpdatedAt())
+                        .valor(reservation.getValor())
+                        .milhasUtilizadas(reservation.getMilhasUtilizadas())
+                        .codigoAeroportoOrigem(reservation.getCodigoAeroportoOrigem())
+                        .codigoAeroPortoDestino(reservation.getCodigoAeroPortoDestino())
+                        .criadoEm(reservation.getCriadoEm())
+                        .atualizadoEm(reservation.getAtualizadoEm())
                         .build())
-                .orElseThrow(() -> new ReservationNotFoundException());
+                .orElseThrow(ReservationNotFoundException::new);
     }
-    
 }

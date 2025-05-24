@@ -19,18 +19,36 @@ public class ReservationEventListener {
 
     @RabbitListener(queues = RabbitMQConfig.QUERY_QUEUE)
     public void onReservationCreated(ReservationDTO dto) {
-        ReservationView view = ReservationView.builder()
-        .id(dto.getId())
-        .flightId(dto.getFlightId())
-        .clientId(dto.getClientId())
-        .estado(dto.getEstado())
-        .pricePaid(dto.getPricePaid())
-        .milesUsed(dto.getMilesUsed())
-        .origin(dto.getOrigin())
-        .destiny(dto.getDestiny())
-        .createdAt(dto.getCreatedAt())
-        .updatedAt(dto.getUpdatedAt())
-        .build();
+        try {
+            ReservationView view = viewRepository.findById(dto.getCodigo())
+            .map(existing -> {
+                // Atualiza os campos do existente
+                existing.setCodigoVoo(dto.getCodigoVoo());
+                existing.setCodigoCliente(dto.getCodigoCliente());
+                existing.setEstado(dto.getEstado());
+                existing.setValor(dto.getValor());
+                existing.setMilhasUtilizadas(dto.getMilhasUtilizadas());
+                existing.setCodigoAeroportoOrigem(dto.getCodigoAeroportoOrigem());
+                existing.setCodigoAeroPortoDestino(dto.getCodigoAeroPortoDestino());
+                return existing;
+            })
+            .orElseGet(() -> ReservationView.builder()
+                .codigo(dto.getCodigo())
+                .codigoVoo(dto.getCodigoVoo())
+                .codigoCliente(dto.getCodigoCliente())
+                .estado(dto.getEstado())
+                .valor(dto.getValor())
+                .milhasUtilizadas(dto.getMilhasUtilizadas())
+                .codigoAeroportoOrigem(dto.getCodigoAeroportoOrigem())
+                .codigoAeroPortoDestino(dto.getCodigoAeroPortoDestino())
+                .build()
+            );
+
         viewRepository.save(view);
+        } catch (Exception e) {
+            // Log the error or handle it as needed
+            System.err.println("Error processing reservation event: " + e.getMessage());
+        }
     }
+
 }

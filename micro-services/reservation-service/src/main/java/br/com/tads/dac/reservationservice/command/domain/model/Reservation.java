@@ -14,27 +14,26 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "reservation")
+@Table(name = "reserva")
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    private String flightId;
-    private String clientId;
-    private String clientName;
+    private String codigo;
+    private String codigoVoo;
+    private String codigoCliente;
 
     @Enumerated(EnumType.STRING)
     private ReservationState estado;
 
-    private BigDecimal pricePaid;
-    private Long milesUsed;
+    private BigDecimal valor;
+    private Long milhasUtilizadas;
     
-    private String origin;
-    private String destiny;
+    private String codigoAeroportoOrigem;
+    private String codigoAeroportoDestino;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime criadoEm;
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime atualizadoEm;
 }

@@ -10,16 +10,14 @@ public class ReservationMapper {
 
     public ReservationDTO toDto(Reservation entity) {
         return ReservationDTO.builder()
-            .id(entity.getId())
-            .flightId(entity.getFlightId())
-            .clientId(entity.getClientId())
+            .codigo(entity.getCodigo())
+            .codigoVoo(entity.getCodigoVoo())
+            .codigoCliente(entity.getCodigoCliente())
             .estado(entity.getEstado())
-            .pricePaid(entity.getPricePaid())
-            .milesUsed(entity.getMilesUsed())
-            .origin(entity.getOrigin())
-            .destiny(entity.getDestiny())
-            .createdAt(entity.getCreatedAt())
-            .updatedAt(entity.getUpdatedAt())
+            .valor(entity.getValor())
+            .milhasUtilizadas(entity.getMilhasUtilizadas())
+            .codigoAeroportoOrigem(entity.getCodigoAeroportoOrigem())
+            .codigoAeroPortoDestino(entity.getCodigoAeroportoDestino())
             .build();
     }
 }

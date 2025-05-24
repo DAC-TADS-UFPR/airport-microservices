@@ -20,7 +20,7 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    basePackages = "br.com.tads.dac.reservationservice.command.repository", // muda conforme seu projeto
+    basePackages = "br.com.tads.dac.reservationservice.command.domain.repository",
     entityManagerFactoryRef = "commandEntityManagerFactory",
     transactionManagerRef = "commandTransactionManager"
 )
@@ -40,7 +40,7 @@ public class CommandDataSourceConfig {
 
         return builder
             .dataSource(commandDataSource())
-            .packages("br.com.tads.dac.reservationservice.command.domain") // muda conforme seu projeto
+            .packages("br.com.tads.dac.reservationservice.command.domain")
             .persistenceUnit("commandPU")
             .build();
     }

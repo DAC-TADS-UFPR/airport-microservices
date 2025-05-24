@@ -1,21 +1,23 @@
 package br.com.tads.dac.reservationservice.query.domain.models.entities;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
+
 @Entity
-@Table(name = "reservation_view")
+@Table(name = "reservas_view")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,20 +25,20 @@ import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 public class ReservationView {
 
     @Id
-    private String id;
+    private String codigo;
 
-    private String flightId;
-    private String clientId;
+    private String codigoVoo;
+    private String codigoCliente;
 
     @Enumerated(EnumType.STRING)
     private ReservationState estado;
 
-    private BigDecimal pricePaid;
-    private Long milesUsed;
+    private BigDecimal valor;
+    private Long milhasUtilizadas;
 
-    private String origin;
-    private String destiny;
+    private String codigoAeroportoOrigem;
+    private String codigoAeroPortoDestino;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime criadoEm;
+    private LocalDateTime atualizadoEm;
 }

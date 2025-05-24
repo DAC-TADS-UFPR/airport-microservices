@@ -3,22 +3,22 @@ package br.com.tads.dac.reservationservice.command.domain.model.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 
 @Data
 @Builder
-public class ReservationDTO {
-    private String id;
-    private String flightId;
-    private String clientId;
+public class ReservationDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private String codigo;
+    private String codigoVoo;
+    private String codigoCliente;
     private ReservationState estado;
-    private BigDecimal pricePaid;
-    private Long milesUsed;
-    private String origin;
-    private String destiny;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private BigDecimal valor;
+    private Long milhasUtilizadas;
+    private String codigoAeroportoOrigem;
+    private String codigoAeroPortoDestino;
 }

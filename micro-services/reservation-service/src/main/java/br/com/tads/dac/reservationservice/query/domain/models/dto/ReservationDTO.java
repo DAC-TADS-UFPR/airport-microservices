@@ -6,17 +6,18 @@ import java.time.LocalDateTime;
 import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 import lombok.Builder;
 import lombok.Data;
+
 @Data
 @Builder
 public class ReservationDTO {
-    private String id;
-    private String flightId;
-    private String clientId;
+    private String codigo;
+    private String codigoVoo;
+    private String codigoCliente;
     private ReservationState estado;
-    private BigDecimal pricePaid;
-    private Long milesUsed;
-    private String origin;
-    private String destiny;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private BigDecimal valor;
+    private Long milhasUtilizadas;
+    private String codigoAeroportoOrigem;
+    private String codigoAeroPortoDestino;
+    private LocalDateTime criadoEm;
+    private LocalDateTime atualizadoEm;
 }

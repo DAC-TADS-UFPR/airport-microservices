@@ -1,0 +1,32 @@
+package br.com.tads.dac.flightservice.infraestructure.listeners;
+
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+import br.com.tads.dac.flightservice.infraestructure.config.RabbitMQConfig;
+import br.com.tads.dac.flightservice.repositories.FlightRepository;
+
+@Component
+public class FlightEventListener {
+
+    private final FlightRepository flightRepository;
+
+    public FlightEventListener(FlightRepository flightRepository) {
+        this.flightRepository = flightRepository;
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.UPDATE_SEATS_QUEUE)
+    public void onUpdateSeats(FlightSeatsUpdateEvent event) {
+        try {
+            flightRepository.findById(event.getCodigoVoo()).ifPresent(flight -> {
+                int ocupadas = flight.getQuantidadePoltronasOcupadas() == null ? 0 : flight.getQuantidadePoltronasOcupadas();
+                flight.setQuantidadePoltronasOcupadas(ocupadas + event.getQuantidadePoltronas());
+                flightRepository.save(flight);
+            });
+        } catch (Exception e) {
+            System.err.println("Error processing flight event: " + e.getMessage());
+        }
+        
+    }
+}

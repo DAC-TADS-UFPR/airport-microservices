@@ -19,7 +19,7 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    basePackages = "br.com.tads.dac.reservationservice.query.repository", // muda conforme seu projeto
+    basePackages = "br.com.tads.dac.reservationservice.query.domain.repositories",
     entityManagerFactoryRef = "queryEntityManagerFactory",
     transactionManagerRef = "queryTransactionManager"
 )

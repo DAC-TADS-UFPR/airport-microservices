@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "history_reservation_state")
+@Table(name = "historico_reserva")
 public class HistoryReservationState {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String idReservation;
-    private LocalDateTime updatedAt;
+    private Long codigo;
+    private String codigoReserva;
+    private LocalDateTime alteradoEm;
     @Enumerated(EnumType.STRING)
-    private ReservationState state;
+    private ReservationState estado;
 }   
