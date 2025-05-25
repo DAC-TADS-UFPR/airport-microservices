@@ -75,15 +75,15 @@ public class ReservationService {
         event.setMilhas(request.milhasUtilizadas());
 
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.FLIGHT_EXCHANGE,
-                RabbitMQConfig.FLIGHT_ROUTING_KEY,
+                RabbitMQConfig.CLIENT_EXCHANGE,
+                RabbitMQConfig.CLIENT_ROUTING_KEY,
                 event
         );
 
         return reservationMapper.toDto(reserva);
     }
 
-    public Reservation alterarEstado(String codigoReserva, UpdateReservationRequest request) {
+    public ReservationDTO alterarEstado(String codigoReserva, UpdateReservationRequest request) {
         Reservation reserva = reservaRepository.findById(codigoReserva)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada: " + codigoReserva));
 
@@ -99,6 +99,6 @@ public class ReservationService {
         );
         historicoRepository.save(historico);
 
-        return reserva;
+        return reservationMapper.toDto(reserva);
     }
 }

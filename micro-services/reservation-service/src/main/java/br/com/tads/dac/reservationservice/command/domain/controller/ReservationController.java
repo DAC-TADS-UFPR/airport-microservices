@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import br.com.tads.dac.reservationservice.command.domain.model.dto.CreateReservationRequest;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.ReservationDTO;
+import br.com.tads.dac.reservationservice.command.domain.model.dto.UpdateReservationRequest;
 import br.com.tads.dac.reservationservice.command.domain.service.ReservationService;
 
 @RestController
@@ -22,4 +23,10 @@ public class ReservationController {
     public ResponseEntity<ReservationDTO> criarReserva(@RequestBody @Valid CreateReservationRequest request) {
         return ResponseEntity.ok().body(reservaService.criarReserva(request));
     }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<ReservationDTO> updateFlightState(@PathVariable String id , @Valid @RequestBody UpdateReservationRequest request) {
+        return ResponseEntity.ok(reservaService.alterarEstado(id, request));
+    }
+
 }

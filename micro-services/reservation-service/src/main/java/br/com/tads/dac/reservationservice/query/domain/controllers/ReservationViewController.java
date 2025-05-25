@@ -1,5 +1,7 @@
 package br.com.tads.dac.reservationservice.query.domain.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +22,11 @@ public class ReservationViewController {
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
         ReservationDTO dto = reservationViewService.getById(id);
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/cliente/{codigoCliente}")
+    public ResponseEntity<List<ReservationDTO>> getReservationsByClient(@PathVariable String codigoCliente) {
+        List<ReservationDTO> reservas = reservationViewService.getByClientId(codigoCliente);
+        return ResponseEntity.ok(reservas);
     }
 }

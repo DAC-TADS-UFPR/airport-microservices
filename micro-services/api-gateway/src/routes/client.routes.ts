@@ -29,7 +29,25 @@ router.get(
       console.error('Error fetching client:', e.response?.data || e.message);
       res
         .status(e.response?.status || 500)
-        .json({ message: e.response?.data?.message || 'Falha ao buscar cliente' });
+        .json({ message: e.response?.data || 'Falha ao buscar cliente' });
+    }
+  }
+);
+
+router.get(
+  '/:id/reservas',
+  authenticateToken,
+  authorize('CLIENT'),
+  async (req, res) => {
+    try {
+      const result = await clientSagaOrchestrator.findReservationsByClient(req.params.id);
+      const data = result.data;      
+      res.status(result.status).json(data);
+    } catch (e:any) {
+      console.error('Error fetching reservations:', e.response?.data || e.message);
+      res
+        .status(e.response?.status || 500)
+        .json({ message: e.response?.data || 'Falha ao buscar reservas do cliente' });
     }
   }
 );

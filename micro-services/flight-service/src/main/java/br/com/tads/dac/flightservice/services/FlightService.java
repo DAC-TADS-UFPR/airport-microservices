@@ -50,7 +50,20 @@ public class FlightService {
         return flightMapper.fromEntity(f, ZoneOffset.of("-03:00"));
     }
 
-    public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal) {
+    public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDate data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
+        if (data != null) {
+            LocalDateTime dataHora = data.atStartOfDay();
+            List<Flight> flights = flightRepository.findAllByDataBetween(dataHora, dataHora.plusDays(1));
+            
+            return flights.stream()
+                .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+                .collect(Collectors.toList());
+        }
+
+        if (dataInicial == null || dataFinal == null) {
+            throw new IllegalArgumentException("Data inicial e data final são obrigatórias.");
+        }
+
         List<Flight> flights = flightRepository.findAllByDataBetween(dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
         return flights.stream()
             .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
@@ -60,7 +73,6 @@ public class FlightService {
     public FlightDTO updateFlight(String id, Flight flight) {
         Flight existing = findEntityById(id);
         
-        // Ajuste para usar os setters do seu Entity em português
         existing.setEstado(flight.getEstado());
         existing.setData(flight.getData());
         existing.setValorPassagem(flight.getValorPassagem());

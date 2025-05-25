@@ -4,7 +4,8 @@ package br.com.tads.dac.reservationservice.command.domain.model;
 public enum ReservationState {
     CREATED("CRIADO"),
     BOARDED("EMBARQUE"),
-    CHECK_IN("CHECK-IN");
+    CHECK_IN("CHECK-IN"),
+    CANCELED("CANCELADO");
 
     private String estado;
 

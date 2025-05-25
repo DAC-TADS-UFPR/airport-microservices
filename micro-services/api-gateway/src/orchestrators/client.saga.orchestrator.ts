@@ -3,6 +3,7 @@ import { SERVICE_CONFIG } from "../config/services";
 import { IClient } from "../models/client/IClient";
 import { IAuth } from "../models/user/IAuth";
 import { UserType } from "../models/user/UserType";
+import { ReservationFullResponse } from "../models/reservation/ReservationFull";
 
 export class ClientSagaOrchestatorator {    
     public constructor() {}
@@ -40,17 +41,61 @@ export class ClientSagaOrchestatorator {
         
     }
 
-    public async findReservation(idClient: String) {
-        try {
-            const response = await axios.get(`${SERVICE_CONFIG.RESERVATION.url}/${idClient}`);
-            return response;
-        } catch (error) {
-            const axiosError = error as AxiosError;
-            console.error('Error fetching reservations:', axiosError.response?.data || axiosError.message);
+     public async findReservationsByClient(idClient: string): Promise<{ status: number; data: ReservationFullResponse[] | any }> {
+    try {
+      const reservationsResponse = await axios.get(`${SERVICE_CONFIG.RESERVATION_VIEW.url}/cliente/${idClient}`);
+      const reservations = reservationsResponse.data;
+
+      const detailedReservations = await Promise.all(
+        reservations.map(async (reserva: any) => {
+          try {
+            const vooResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${reserva.codigoVoo}`);
+            const voo = vooResponse.data;
+
+            const [origemResponse, destinoResponse] = await Promise.all([
+              axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoOrigem}`),
+              axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoDestino}`),
+            ]);
+
             return {
-                status: axiosError.response?.status || 500,
-                data: axiosError.response?.data || { message: "Erro interno ao buscar reservar" },
-            };
-        }
+              codigo: reserva.codigo,
+              data: reserva.criadoEm,
+              valor: reserva.valor,
+              milhas_utilizadas: reserva.milhasUtilizadas,
+              quantidade_poltronas: 1,
+              codigo_cliente: reserva.codigoCliente,
+              estado: reserva.estado,
+              voo: {
+                codigo: voo.codigo,
+                data: voo.data,
+                valor_passagem: voo.valorPassagem,
+                quantidade_poltronas_total: voo.quantidadePoltronasTotal,
+                quantidade_poltronas_ocupadas: voo.quantidadePoltronasOcupadas,
+                estado: voo.estado,
+                aeroporto_origem: origemResponse.data,
+                aeroporto_destino: destinoResponse.data,
+              },
+            } as ReservationFullResponse;
+          } catch (innerError) {
+            console.error(`Erro ao buscar dados do voo ou aeroporto para reserva ${reserva.codigo}:`, innerError);
+            return null;
+          }
+        })
+      );
+
+      const filteredResults = detailedReservations.filter(r => r !== null);
+
+      return {
+        status: 200,
+        data: filteredResults,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Erro ao buscar reservas do cliente:", axiosError.response?.data || axiosError.message);
+      return {
+        status: axiosError.response?.status || 500,
+        data: axiosError.response?.data || { message: "Erro interno ao buscar reservas" },
+      };
     }
+  }
 }

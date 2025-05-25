@@ -101,47 +101,22 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
     @ExceptionHandler(ResourceNotFoundException.class)
-public ResponseEntity<ExceptionResponse> handleNotFound(
-        ResourceNotFoundException ex,
-        HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> handleNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request) {
 
-    ExceptionResponse resp = new ExceptionResponse(
-        request.getRequestURI(),
-        ex.getMessage(),                   // ou uma mensagem genérica
-        HttpStatus.NOT_FOUND.value(),
-        LocalDateTime.now(),
-        List.of()
-    );
+        ExceptionResponse resp = new ExceptionResponse(
+            request.getRequestURI(),
+            ex.getMessage(),                   // ou uma mensagem genérica
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now(),
+            List.of()
+        );
 
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
-}
-@ExceptionHandler(Exception.class)
-public ResponseEntity<ExceptionResponse> handleAll(Exception ex, HttpServletRequest request) {
-    // opcional: log.error("Erro inesperado", ex);
-    ExceptionResponse resp = new ExceptionResponse(
-        request.getRequestURI(),
-        "Erro interno do servidor.",
-        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        LocalDateTime.now(),
-        List.of()
-    );
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resp);
-}
-@ExceptionHandler(DataIntegrityViolationException.class)
-public ResponseEntity<ExceptionResponse> handleDataIntegrity(
-        DataIntegrityViolationException ex,
-        HttpServletRequest request) {
-
-    ExceptionResponse resp = new ExceptionResponse(
-        request.getRequestURI(),
-        "Recurso já existe ou violação de integridade.",
-        HttpStatus.CONFLICT.value(),
-        LocalDateTime.now(),
-        List.of()
-    );
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
-}
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
+    }
 
         
 
