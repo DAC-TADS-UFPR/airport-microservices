@@ -100,6 +100,86 @@ const flights: Flight[] = [
     horaSaida: "16:00",
     preco: 380,
   },
+  {
+    id: "FLN741",
+    origemCodigo: "FLN",
+    origem: "Florianópolis",
+    destinoCodigo: "CGH",
+    destino: "São Paulo",
+    data: "2025-04-06",
+    horaSaida: "08:10",
+    preco: 270,
+  },
+  {
+    id: "CNF852",
+    origemCodigo: "CNF",
+    origem: "Belo Horizonte",
+    destinoCodigo: "REC",
+    destino: "Recife",
+    data: "2025-04-07",
+    horaSaida: "12:50",
+    preco: 360,
+  },
+  {
+    id: "GIG963",
+    origemCodigo: "GIG",
+    origem: "Rio de Janeiro",
+    destinoCodigo: "GRU",
+    destino: "Guarulhos",
+    data: "2025-04-08",
+    horaSaida: "06:40",
+    preco: 230,
+  },
+  {
+    id: "NAT147",
+    origemCodigo: "NAT",
+    origem: "Natal",
+    destinoCodigo: "SSA",
+    destino: "Salvador",
+    data: "2025-04-09",
+    horaSaida: "17:30",
+    preco: 310,
+  },
+  {
+    id: "MAO258",
+    origemCodigo: "MAO",
+    origem: "Manaus",
+    destinoCodigo: "BSB",
+    destino: "Brasília",
+    data: "2025-04-10",
+    horaSaida: "11:00",
+    preco: 450,
+  },
+  {
+    id: "FOR369",
+    origemCodigo: "FOR",
+    origem: "Fortaleza",
+    destinoCodigo: "VIX",
+    destino: "Vitória",
+    data: "2025-04-11",
+    horaSaida: "14:20",
+    preco: 390,
+  },
+  {
+    id: "BSB963",
+    origemCodigo: "BSB",
+    origem: "Brasília",
+    destinoCodigo: "FLN",
+    destino: "Florianópolis",
+    data: "2025-04-12",
+    horaSaida: "13:00",
+    preco: 370,
+  },
+  {
+    id: "SLZ741",
+    origemCodigo: "SLZ",
+    origem: "São Luís",
+    destinoCodigo: "CNF",
+    destino: "Belo Horizonte",
+    data: "2025-04-13",
+    horaSaida: "10:40",
+    preco: 340,
+  },
 ];
 
 const AvailableFlights: FC = () => {
@@ -181,7 +261,6 @@ const AvailableFlights: FC = () => {
                 })}
                 time={`${flight.horaSaida} - 2h`}
                 onDetailsClick={() => openDetailsModal(flight)}
-                
               />
             </div>
           ))
