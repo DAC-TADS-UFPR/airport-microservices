@@ -70,14 +70,24 @@ router.get(
   authenticateToken,
   async (req, res) => {
     try {
-      const { dataInicial, dataFinal } = req.query;
+      const {
+        dataInicial,
+        dataFinal,
+        data,
+        codigoAeroportoOrigem,
+        codigoAeroportoDestino
+      } = req.query;
 
       const params = new URLSearchParams();
+
       if (dataInicial) params.append('dataInicial', dataInicial as string);
       if (dataFinal) params.append('dataFinal', dataFinal as string);
+      if (data) params.append('data', data as string);
+      if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem as string);
+      if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino as string);
 
       const url = `${SERVICE_CONFIG.FLIGHTS.url}?${params.toString()}`;
-      
+
       const response = await axios.get(url, {
         headers: {
           Authorization: req.headers.authorization || '',

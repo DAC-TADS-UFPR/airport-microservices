@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.CreateReservationRequest;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.ReservationDTO;
 import br.com.tads.dac.reservationservice.command.domain.model.dto.UpdateReservationRequest;
@@ -25,8 +26,13 @@ public class ReservationController {
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<ReservationDTO> updateFlightState(@PathVariable String id , @Valid @RequestBody UpdateReservationRequest request) {
+    public ResponseEntity<ReservationDTO> updateReservationState(@PathVariable String id , @Valid @RequestBody UpdateReservationRequest request) {
         return ResponseEntity.ok(reservaService.alterarEstado(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable String id) {
+        return ResponseEntity.ok(reservaService.alterarEstado(id, new UpdateReservationRequest(ReservationState.CANCELED)));
     }
 
 }
