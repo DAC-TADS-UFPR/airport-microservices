@@ -20,8 +20,8 @@ public class FlightMapper {
             .quantidadePoltronasTotal(f.getQuantidadePoltronasTotal())
             .quantidadePoltronasOcupadas(f.getQuantidadePoltronasOcupadas())
             .estado(f.getEstado())
-            .codigoAeroportoOrigem(f.getCodigoAeroPortoOrigem())
-            .codigoAeroportoDestino(f.getCodigoAeroPortoDestino())
+            .aeroportoOrigem(f.getAeroportoOrigem())
+            .aeroportoDestino(f.getAeroportoDestino())
             .build();
     }
 

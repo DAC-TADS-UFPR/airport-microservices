@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class ReservationMilesUpdateEvent {
     private String codigoCliente;
-    private Long milhas;
+    private Integer milhas;
+    private String codigoReserva;
 }

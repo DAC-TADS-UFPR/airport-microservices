@@ -86,7 +86,7 @@ router.get(
       if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem as string);
       if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino as string);
 
-      const url = `${SERVICE_CONFIG.FLIGHTS.url}?${params.toString()}`;
+      const url = `${SERVICE_CONFIG.FLIGHTS.url}/voos?${params.toString()}`;
 
       const response = await axios.get(url, {
         headers: {

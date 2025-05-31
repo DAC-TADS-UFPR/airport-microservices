@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ClientDTO(
-    String id, 
-    String name,
+    String codigo, 
+    String nome,
     String email,
     String cpf,
     Long saldoMilhas,

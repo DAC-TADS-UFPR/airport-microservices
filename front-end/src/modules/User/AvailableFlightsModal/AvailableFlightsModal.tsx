@@ -5,19 +5,36 @@ import { FC, useState } from "react";
 import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
 import AvailableFlights from "../AvailableFlights/AvailableFlights"; // i
 import { useRouter } from "next/navigation";
+import { IReserva } from "@/models/reserva.create";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createReservation } from "@/data/config/reservation";
+import router from "next/router";
 
 type Flight = {
-  id: string;
-  origem: string;
-  destino: string;
+   codigo: string;
+  aeroporto_origem: {
+    codigo: string;
+    nome: string;
+    cidade: string;
+    uf: string;
+  };
+  aeroporto_destino: {
+    codigo: string;
+    nome: string;
+    cidade: string;
+    uf: string;
+  };
   data: string;
   horaSaida: string;
-  preco: number;
+  valor_passagem: number;
 };
 
 interface AvailableFlightsModalProps {
   data: Flight;
   onClose: () => void;
+}
+interface CreateReservationResponse {
+  message: string;
 }
 
 const gerarCodigoReserva = () => {
@@ -35,23 +52,39 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
   const [quantidade, setQuantidade] = useState(1);
   const [milhasSaldo, setMilhasSaldo] = useState(1000);
   const [milhasUsadas, setMilhasUsadas] = useState(0);
-  const milhasPorAssento = data.preco * 0.2;
+  const milhasPorAssento = data.valor_passagem * 0.2;
   const totalMilhas = milhasPorAssento * quantidade;
-  const valorTotal = data.preco * quantidade;
+  const valorTotal = data.valor_passagem * quantidade;
   const valorComMilhas = Math.max(0, valorTotal - milhasUsadas / 0.2);
 
-  const confirmarCompra = () => {
-    const novaReserva = {
-      codigo: gerarCodigoReserva(),
-      vooId: data.id,
-      quantidade,
-      milhasUsadas,
-      valorPago: valorComMilhas,
-      status: "CRIADA",
+  const { mutateAsync, isPending } = useMutation<CreateReservationResponse, Error, IReserva>({
+    mutationKey: ["createReservation"],
+    mutationFn: createReservation,
+    onSuccess: (data: CreateReservationResponse) => {
+      console.log("User created successfully", data);
+      router.push("/");
+    },
+    onError: (error: any) => {
+      console.error("Error creating user", error);
+      const apiErrors = error?.response?.data?.errors;
+      if (Array.isArray(apiErrors)) {
+        apiErrors.forEach((err: { field: string; message: string }) => {
+        });
+      }
+    },
+  });
+
+  const confirmarCompra = async () => {
+    const novaReserva : IReserva = {
+      codigo_voo: data.codigo,
+      quantidade_poltronas:quantidade,
+      milhas_utilizadas:milhasUsadas,
+      valor: valorComMilhas,
+      codigo_aeroporto_origem: data.aeroporto_origem.codigo,
+      codigo_aeroporto_destino: data.aeroporto_destino.codigo,
     };
-    console.log("Reserva criada:", novaReserva);
+    await mutateAsync({ ...novaReserva });
     setMilhasSaldo((prev) => prev - milhasUsadas);
-    alert(`Reserva criada com código ${novaReserva.codigo}`);
     onClose();
   };
 
@@ -61,19 +94,26 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
 
       <div className="availableFlightsModal__section">
         <p>
-          <strong>Origem:</strong> {data.origem}
+          <strong>Origem:</strong> {data.aeroporto_origem?.codigo}
         </p>
         <p>
-          <strong>Destino:</strong> {data.destino}
+          <strong>Destino:</strong> {data.aeroporto_destino?.codigo}
         </p>
         <p>
-          <strong>Data:</strong> {data.data}
+          <strong>Data:</strong> {`${new Date(data.data).toLocaleDateString("pt-BR", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}`}
         </p>
         <p>
-          <strong>Hora Saída:</strong> {data.horaSaida}
+          <strong>Hora Saída:</strong> {`${new Date(data.data).toLocaleTimeString("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })} - 2h`}
         </p>
         <p>
-          <strong>Preço Unitário:</strong> R$ {data.preco.toFixed(2)}
+          <strong>Preço Unitário:</strong> R$ {data.valor_passagem.toFixed(2)}
         </p>
         <p>
           <strong>Saldo de Milhas:</strong> {milhasSaldo}

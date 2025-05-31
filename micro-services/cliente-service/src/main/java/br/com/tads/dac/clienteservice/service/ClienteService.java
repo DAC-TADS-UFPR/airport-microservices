@@ -7,17 +7,22 @@ import br.com.tads.dac.clienteservice.infraestructure.mappers.ClientMapper;
 import br.com.tads.dac.clienteservice.model.*;
 import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
 import br.com.tads.dac.clienteservice.model.dto.ClientUpdateDTO;
+import br.com.tads.dac.clienteservice.model.dto.ClienteTransacoesResponseDTO;
+import br.com.tads.dac.clienteservice.model.dto.MilesTranscationResponseDTO;
 import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
+import br.com.tads.dac.clienteservice.model.dto.TransacaoMilhasDTO;
 import br.com.tads.dac.clienteservice.repository.ClienteRepository;
 import br.com.tads.dac.clienteservice.repository.TransacaoMilhasRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -83,7 +88,7 @@ public class ClienteService {
         return clienteRepository.findById(id).map(t -> mapper.toDto(t)).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 
-    public TransacaoMilhas adicionarTransacao(String clienteId, TransacaoMilhas transacao) {
+    public MilesTranscationResponseDTO adicionarTransacao(String clienteId, TransacaoMilhas transacao) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
@@ -97,8 +102,46 @@ public class ClienteService {
         }
 
         clienteRepository.save(cliente);
-        return transacaoRepository.save(transacao);
+        TransacaoMilhas transacaoMilhas = transacaoRepository.save(transacao);
+        return MilesTranscationResponseDTO.builder().codigo(transacaoMilhas.getId())
+                .saldoMilhas(transacaoMilhas.getQuantidade())
+                .build();
     }
+
+    public ClienteTransacoesResponseDTO getTransacoes(String clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        List<TransacaoMilhas> entidades = transacaoRepository.findAllByClient(cliente);
+
+        List<TransacaoMilhasDTO> listaDTO = entidades.stream()
+                .map(e -> TransacaoMilhasDTO.builder()
+                        .data(e.getDataHora())
+                        .valorReais(e.getQuantidade() != null ?BigDecimal.valueOf(e.getQuantidade()*2) : BigDecimal.ZERO)
+                        .quantidadeMilhas(e.getQuantidade())
+                        .descricao(e.getDescricao())
+                        .codigoReserva(e.getCodigoReserva() != null ? e.getCodigoReserva() : "")
+                        .tipo(e.getTipo())
+                        .build())
+                .collect(Collectors.toList());
+
+        int saldo = listaDTO.stream()
+                .mapToInt(tx -> {
+                    if (tx.getTipo().name().equalsIgnoreCase("ENTRADA")) {
+                        return tx.getQuantidadeMilhas();
+                    } else {
+                        return -tx.getQuantidadeMilhas();
+                    }
+                })
+                .sum();
+
+        return ClienteTransacoesResponseDTO.builder()
+                .codigo(cliente.getId())
+                .saldoMilhas(saldo)
+                .transacoes(listaDTO)
+                .build();
+    }
+
 
     public List<FieldError> validate(RegisterRequestDTO dto) {
         var cliente = clienteRepository.findByCpf(dto.cpf());

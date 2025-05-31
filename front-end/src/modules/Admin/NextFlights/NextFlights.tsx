@@ -6,7 +6,9 @@ import ModalCancelFlight from "../ModalCancelFlight/ModalCancelFlight";
 import ModalConfirmFlight from "../ModalConfirmFlight/ModalConfirmFlight";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ModalConfirmBoarding from "../ModalConfirmBoarding/ModalConfirmBoarding";
-
+import { useQuery } from "@tanstack/react-query";
+import { getFlights } from "@/data/config/flight";
+import { addHours, format  } from 'date-fns';
 interface NextFlightsProps {
   data?: any;
 }
@@ -126,7 +128,7 @@ const mockedData = [
   },
 ];
 
-const NextFlights: FC<NextFlightsProps> = ({ data }) => {
+const NextFlights: FC<NextFlightsProps> = () => {
   const { openModal } = useModal();
 
   const confirmBording = () => {
@@ -150,6 +152,28 @@ const NextFlights: FC<NextFlightsProps> = ({ data }) => {
     });
   };
 
+  const agora = new Date();
+  const daqui48h = addHours(agora, 48);
+
+  const dataInicial = format(new Date(), 'yyyy-MM-dd');
+
+  const dataFinal = format(addHours(new Date(), 48), 'yyyy-MM-dd'); 
+
+   const { data, isLoading } = useQuery({
+    queryKey: [`_`, 
+      {
+      dataInicial,
+      dataFinal
+    }
+    ],
+    queryFn: getFlights,
+
+    refetchOnWindowFocus: false,
+    enabled: true,
+  });
+
+  console.log("Dados dos voos:", data);
+  
   return (
     <div className="nextFlights">
       <div className="nextFlights__title">Próximos voos (48H)</div>

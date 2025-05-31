@@ -13,7 +13,7 @@ export class ClientSagaOrchestatorator {
         try {
             console.log('url', `${SERVICE_CONFIG.CLIENT.url}/`);
             const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/`, clientData);
-            clientId = clientResponse.data?.id;
+            clientId = clientResponse.data?.codigo;
             if(clientResponse.status !== 201) {
                 return clientResponse;
             }
@@ -42,60 +42,58 @@ export class ClientSagaOrchestatorator {
     }
 
      public async findReservationsByClient(idClient: string): Promise<{ status: number; data: ReservationFullResponse[] | any }> {
-    try {
-      const reservationsResponse = await axios.get(`${SERVICE_CONFIG.RESERVATION_VIEW.url}/cliente/${idClient}`);
-      const reservations = reservationsResponse.data;
+      try {
+        const reservationsResponse = await axios.get(`${SERVICE_CONFIG.RESERVATION_VIEW.url}/cliente/${idClient}`);
 
-      const detailedReservations = await Promise.all(
-        reservations.map(async (reserva: any) => {
-          try {
-            const vooResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${reserva.codigoVoo}`);
-            const voo = vooResponse.data;
+        const reservations = reservationsResponse.data;
 
-            const [origemResponse, destinoResponse] = await Promise.all([
-              axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoOrigem}`),
-              axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoDestino}`),
-            ]);
+        const detailedReservations = await Promise.all(
+          reservations.map(async (reserva: any) => {
+            try {
+              const vooResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${reserva.codigo_voo}`);
+              const voo = vooResponse.data;
 
-            return {
-              codigo: reserva.codigo,
-              data: reserva.criadoEm,
-              valor: reserva.valor,
-              milhas_utilizadas: reserva.milhasUtilizadas,
-              quantidade_poltronas: 1,
-              codigo_cliente: reserva.codigoCliente,
-              estado: reserva.estado,
-              voo: {
-                codigo: voo.codigo,
-                data: voo.data,
-                valor_passagem: voo.valorPassagem,
-                quantidade_poltronas_total: voo.quantidadePoltronasTotal,
-                quantidade_poltronas_ocupadas: voo.quantidadePoltronasOcupadas,
-                estado: voo.estado,
-                aeroporto_origem: origemResponse.data,
-                aeroporto_destino: destinoResponse.data,
-              },
-            } as ReservationFullResponse;
-          } catch (innerError) {
-            console.error(`Erro ao buscar dados do voo ou aeroporto para reserva ${reserva.codigo}:`, innerError);
-            return null;
-          }
-        })
-      );
+              
 
-      const filteredResults = detailedReservations.filter(r => r !== null);
+              return {
+                codigo: reserva.codigo,
+                data: reserva.criadoEm,
+                valor: reserva.valor,
+                milhas_utilizadas: reserva.milhas_utilizadas,
+                quantidade_poltronas: 1,
+                codigo_cliente: reserva.codigo_cliente,
+                estado: reserva.estado,
+                voo: {
+                  codigo: voo.codigo,
+                  data: voo.data,
+                  valor_passagem: voo.valor_passagem,
+                  quantidade_poltronas_total: voo.quantidade_poltronas_total,
+                  quantidade_poltronas_ocupadas: voo.quantidade_poltronas_ocupadas,
+                  estado: voo.estado,
+                  aeroporto_origem: voo.aeroporto_origem,
+                  aeroporto_destino: voo.aeroporto_destino,
+                },
+              } as ReservationFullResponse;
+            } catch (innerError) {
+              console.error(`Erro ao buscar dados do voo ou aeroporto para reserva ${reserva.codigo}:`, innerError);
+              return null;
+            }
+          })
+        );
 
-      return {
-        status: 200,
-        data: filteredResults,
-      };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      console.error("Erro ao buscar reservas do cliente:", axiosError.response?.data || axiosError.message);
-      return {
-        status: axiosError.response?.status || 500,
-        data: axiosError.response?.data || { message: "Erro interno ao buscar reservas" },
-      };
+        const filteredResults = detailedReservations.filter(r => r !== null);
+
+        return {
+          status: 200,
+          data: filteredResults,
+        };
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        console.error("Erro ao buscar reservas do cliente:", axiosError.response?.data || axiosError.message);
+        return {
+          status: axiosError.response?.status || 500,
+          data: axiosError.response?.data || { message: "Erro interno ao buscar reservas" },
+        };
+      }
     }
-  }
 }

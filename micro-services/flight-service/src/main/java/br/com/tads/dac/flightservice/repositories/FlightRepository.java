@@ -9,7 +9,19 @@ import org.springframework.stereotype.Repository;
 import br.com.tads.dac.flightservice.models.entities.Flight;
 
 @Repository
-public interface FlightRepository extends JpaRepository<Flight,String> {
+public interface FlightRepository extends JpaRepository<Flight, String> {
 
-    List<Flight> findAllByDataBetween(LocalDateTime atStartOfDay, LocalDateTime atTime);
+    // Busca todos os voos cuja data (LocalDateTime) esteja entre dois instantes
+    List<Flight> findAllByDataBetween(LocalDateTime start, LocalDateTime end);
+
+    List<Flight> findAllByDataAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(
+        LocalDateTime dataHora,
+        String codigoAeroportoOrigem,
+        String codigoAeroportoDestino
+    );
+
+    List<Flight> findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(
+        String codigoAeroportoOrigem,
+        String codigoAeroportoDestino
+    );
 }

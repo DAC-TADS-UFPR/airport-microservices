@@ -22,8 +22,8 @@ export default function Page() {
   };
 
   const storedId = localStorage.getItem("userId");
-  const storedRole = localStorage.getItem("userType");
-  const accessToken = localStorage.getItem("accessToken");
+  const storedRole = localStorage.getItem("tipo");
+  const accessToken = localStorage.getItem("access_token");
 
   if (!storedId || !storedRole || !accessToken) {
     cleanupLocalStorage();
@@ -48,7 +48,7 @@ export default function Page() {
     <MainDefault id="user">
       <section className="user">
         <div className="user__infoContainer">
-          <UserMilesCard />
+          <UserMilesCard data={data?.saldo_milhas}/>
           <div className="user__infoContainer user__infoContainer--row">
             <UserHistoryCard info="Earned" />
             <UserHistoryCard info="Used" />

@@ -4,6 +4,6 @@ export const SERVICE_CONFIG = {
   FLIGHTS: { url: process.env.FLIGHT_SERVICE_URL || 'http://localhost:8083/api' },
   AIRPORTS: { url: process.env.FLIGHT_SERVICE_URL || 'http://localhost:8083/api/aeroportos' },
   EMPLOYEE: { url: process.env.RESERVATION_SERVICE_URL || 'http://localhost:8087/api/funcionarios' },
-  RESERVATION: { url: process.env.RESERVATION_SERVICE_URL || 'http://localhost:8089/api/reservation' },
-  RESERVATION_VIEW: { url: process.env.RESERVATION_SERVICE_URL || 'http://localhost:8089/api/reservation/view' }
+  RESERVATION: { url: process.env.RESERVATION_SERVICE_URL || 'http://localhost:8089/api/reservas' },
+  RESERVATION_VIEW: { url: process.env.RESERVATION_SERVICE_URL || 'http://localhost:8089/api/reservas/view' }
 };

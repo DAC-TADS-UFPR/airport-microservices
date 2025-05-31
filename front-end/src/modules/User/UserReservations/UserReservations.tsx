@@ -1,30 +1,90 @@
+"use client";
+
+import { FC, useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import ReservationCard from "../ReservationCard/ReservationCard";
+import { getReservationsByClient } from "@/data/config/reservation";
+import { ReservationDTO } from "@/models/reserva";
 import "./UserReservations.scss";
-import { FC, useState } from "react";
 
-interface UserReservationsProps {
-  data?: any;
-}
+type Status = "Next" | "Completed" | "Canceled";
 
-const UserReservations: FC<UserReservationsProps> = ({ data }) => {
-  const [navbar, setNavbar] = useState("Next");
+const UserReservations: FC = () => {
+  const { id } = useParams();
+  const [navbar, setNavbar] = useState<Status>("Next");
+  const now = useMemo(() => new Date(), []);
+
+  const {
+    data: reservations,
+    isLoading,
+    isError,
+  } = useQuery<ReservationDTO[], Error>({
+    queryKey: ["reservas-cliente", id],
+    queryFn: getReservationsByClient,
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
+
+  const filteredReservations = useMemo(() => {
+    if (!reservations) return [];
+
+    return reservations.filter((reserva) => {
+      if (
+        reserva.estado === "CANCELADO" ||
+        reserva.estado === "CANCELADO_PELO_CLIENTE"
+      ) {
+        return navbar === "Canceled";
+      }
+
+      const vooDate = new Date(reserva.voo.data);
+      if (vooDate > now && navbar === "Next") {
+        return true;
+      }
+      if (vooDate <= now && navbar === "Completed") {
+        return true;
+      }
+      return false;
+    });
+  }, [reservations, navbar, now]);
+
+  if (isLoading) {
+    return <p className="userReservations__status">Carregando reservas...</p>;
+  }
+  if (isError) {
+    return (
+      <p className="userReservations__status">
+        Erro ao carregar reservas. Tente novamente mais tarde.
+      </p>
+    );
+  }
 
   return (
     <div className="userReservations">
       <div className="userReservations__title">Minhas reservas</div>
+
       <div className="userReservations__navigation">
         <div className="userReservations__navbar">
-          <div className={`userReservations__navbarButton ${navbar === "Next" && "userReservations__navbarButton--active"}`} onClick={() => setNavbar("Next")}>
+          <div
+            className={`userReservations__navbarButton ${
+              navbar === "Next" && "userReservations__navbarButton--active"
+            }`}
+            onClick={() => setNavbar("Next")}
+          >
             Próximas
           </div>
           <div
-            className={`userReservations__navbarButton ${navbar === "Completed" && "userReservations__navbarButton--active"}`}
+            className={`userReservations__navbarButton ${
+              navbar === "Completed" && "userReservations__navbarButton--active"
+            }`}
             onClick={() => setNavbar("Completed")}
           >
             Completas
           </div>
           <div
-            className={`userReservations__navbarButton ${navbar === "Canceled" && "userReservations__navbarButton--active"}`}
+            className={`userReservations__navbarButton ${
+              navbar === "Canceled" && "userReservations__navbarButton--active"
+            }`}
             onClick={() => setNavbar("Canceled")}
           >
             Canceladas
@@ -33,9 +93,32 @@ const UserReservations: FC<UserReservationsProps> = ({ data }) => {
       </div>
 
       <div className="userReservations__content">
-        {navbar === "Next" && <ReservationCard status={navbar} />}
-        {navbar === "Completed" && <ReservationCard status={navbar} />}
-        {navbar === "Canceled" && <ReservationCard status={navbar} />}
+        {filteredReservations.length > 0 ? (
+          filteredReservations.map((reserva) => {
+            let status: Status;
+            if (
+              reserva.estado === "CANCELADO" ||
+              reserva.estado === "CANCELADO_PELO_CLIENTE"
+            ) {
+              status = "Canceled";
+            } else {
+              const vooDate = new Date(reserva.voo.data);
+              status = vooDate > now ? "Next" : "Completed";
+            }
+
+            return (
+              <ReservationCard
+                key={reserva.codigo}
+                data={reserva}
+                status={status}
+              />
+            );
+          })
+        ) : (
+          <p className="userReservations__empty">
+            Nenhuma reserva nesta categoria.
+          </p>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import flightRoutes from './routes/flight.routes';
 import clientRoutes from './routes/client.routes';
 import employeeRoutes from './routes/employee.routes';
 import airportRoutes from './routes/airport.routes';
+import reservationRoutes from './routes/reservation.routes';
 import { logApiRequest, logApiResponse } from './config/logger';
 import cors from 'cors';
 
@@ -41,6 +42,7 @@ app.use('/clientes', clientRoutes);
 app.use('/voos', flightRoutes);
 app.use('/funcionarios', employeeRoutes);
 app.use('/aeroportos', airportRoutes);
+app.use('/reservas', reservationRoutes);
 
 app.listen(PORT, () => {
     console.log(`API Gateway rodando na porta ${PORT}`);

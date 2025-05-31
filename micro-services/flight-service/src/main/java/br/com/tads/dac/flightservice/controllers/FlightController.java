@@ -39,7 +39,7 @@ public class FlightController {
     }
 
     @GetMapping("/voo/{id}")
-    public ResponseEntity<FlightDTO> getFlightById(@RequestParam String id) {
+    public ResponseEntity<FlightDTO> getFlightById(@PathVariable String id) {
        return ResponseEntity.ok(flightService.getFlightById(id));
     }
 

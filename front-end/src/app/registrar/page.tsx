@@ -16,20 +16,20 @@ export default function Page() {
   const router = useRouter();
 
   const { form, loading, setLoading, changeState, validation } = useForm({
-    name: { invalid: false, errorLabel: "Digite seu nome", value: "" },
+    nome: { invalid: false, errorLabel: "Digite seu nome", value: "" },
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: "" },
     cpf: { invalid: false, errorLabel: "Digite seu CPF", value: "" },
     cep: { invalid: false, errorLabel: "Digite seu CEP", value: "" },
-    street: { invalid: false, errorLabel: "Digite seu endereço", value: "" },
-    number: { invalid: false, errorLabel: "Digite o número", value: "" },
-    complement: {
+    rua: { invalid: false, errorLabel: "Digite seu endereço", value: "" },
+    numero: { invalid: false, errorLabel: "Digite o número", value: "" },
+    complemento: {
       invalid: false,
       errorLabel: "Digite o complemento",
       value: "",
     },
-    neighborhood: { invalid: false, errorLabel: "Digite o bairro", value: "" },
-    city: { invalid: false, errorLabel: "Digite a cidade", value: "" },
-    state: { invalid: false, errorLabel: "Digite o estado", value: "" },
+    bairro: { invalid: false, errorLabel: "Digite o bairro", value: "" },
+    cidade: { invalid: false, errorLabel: "Digite a cidade", value: "" },
+    uf: { invalid: false, errorLabel: "Digite o estado", value: "" },
   });
 
   const searchCep = async (value: string) => {
@@ -41,17 +41,17 @@ export default function Page() {
         const data = await response.json();
         if (data.erro) {
           console.error("CEP não encontrado");
-          changeState("street", "value", "");
-          changeState("neighborhood", "value", "");
-          changeState("city", "value", "");
-          changeState("state", "value", "");
+          changeState("rua", "value", "");
+          changeState("bairro", "value", "");
+          changeState("cidade", "value", "");
+          changeState("uf", "value", "");
           changeState("cep", "invalid", true);
           changeState("cep", "errorLabel", "CEP não encontrado");
         } else {
-          changeState("street", "value", data.logradouro || "");
-          changeState("neighborhood", "value", data.bairro || "");
-          changeState("city", "value", data.localidade || "");
-          changeState("state", "value", data.uf || "");
+          changeState("rua", "value", data.logradouro || "");
+          changeState("bairro", "value", data.bairro || "");
+          changeState("cidade", "value", data.localidade || "");
+          changeState("uf", "value", data.uf || "");
         }
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
@@ -132,12 +132,12 @@ export default function Page() {
               disabled={loading}
               id="name"
               label="Nome"
-              name="name"
+              name="nome"
               type="text"
-              value={form.name.value}
-              erroMsg={form.name.errorLabel}
-              invalid={form.name.invalid}
-              onChange={(e) => changeState("name", "value", e.target.value)}
+              value={form.nome.value}
+              erroMsg={form.nome.errorLabel}
+              invalid={form.nome.invalid}
+              onChange={(e) => changeState("nome", "value", e.target.value)}
             />
             <InputText
               disabled={loading}
@@ -180,67 +180,67 @@ export default function Page() {
               disabled
               id="street"
               label="Endereço"
-              name="street"
+              name="rua"
               type="text"
-              value={form.street.value}
-              erroMsg={form.street.errorLabel}
-              invalid={form.street.invalid}
-              onChange={(e) => changeState("street", "value", e.target.value)}
+              value={form.rua.value}
+              erroMsg={form.rua.errorLabel}
+              invalid={form.rua.invalid}
+              onChange={(e) => changeState("rua", "value", e.target.value)}
             />
             <InputText
               disabled={loading}
               id="number"
               label="Número"
-              name="number"
+              name="numero"
               type="text"
-              value={form.number.value}
-              erroMsg={form.number.errorLabel}
-              invalid={form.number.invalid}
-              onChange={(e) => changeState("number", "value", e.target.value)}
+              value={form.numero.value}
+              erroMsg={form.numero.errorLabel}
+              invalid={form.numero.invalid}
+              onChange={(e) => changeState("numero", "value", e.target.value)}
             />
             <InputText
               disabled={loading}
               id="complement"
               label="Complemento"
-              name="complement"
+              name="complemento"
               type="text"
-              value={form.complement.value}
-              erroMsg={form.complement.errorLabel}
-              invalid={form.complement.invalid}
-              onChange={(e) => changeState("complement", "value", e.target.value)}
+              value={form.complemento.value}
+              erroMsg={form.complemento.errorLabel}
+              invalid={form.complemento.invalid}
+              onChange={(e) => changeState("complemento", "value", e.target.value)}
             />
             <InputText
               disabled
               id="neighborhood"
               label="Bairro"
-              name="neighborhood"
+              name="bairro"
               type="text"
-              value={form.neighborhood.value}
-              erroMsg={form.neighborhood.errorLabel}
-              invalid={form.neighborhood.invalid}
-              onChange={(e) => changeState("neighborhood", "value", e.target.value)}
+              value={form.bairro.value}
+              erroMsg={form.bairro.errorLabel}
+              invalid={form.bairro.invalid}
+              onChange={(e) => changeState("bairro", "value", e.target.value)}
             />
             <InputText
               disabled
               id="city"
               label="Cidade"
-              name="city"
+              name="cidade"
               type="text"
-              value={form.city.value}
-              erroMsg={form.city.errorLabel}
-              invalid={form.city.invalid}
-              onChange={(e) => changeState("city", "value", e.target.value)}
+              value={form.cidade.value}
+              erroMsg={form.cidade.errorLabel}
+              invalid={form.cidade.invalid}
+              onChange={(e) => changeState("cidade", "value", e.target.value)}
             />
             <InputText
               disabled
               id="state"
               label="Estado"
-              name="state"
+              name="uf"
               type="text"
-              value={form.state.value}
-              erroMsg={form.state.errorLabel}
-              invalid={form.state.invalid}
-              onChange={(e) => changeState("state", "value", e.target.value)}
+              value={form.uf.value}
+              erroMsg={form.uf.errorLabel}
+              invalid={form.uf.invalid}
+              onChange={(e) => changeState("uf", "value", e.target.value)}
             />
           </div>
           <ButtonDefault children={isPending ? "Carregando..." : "Criar Conta"} type="submit" disabled={loading || isPending} />

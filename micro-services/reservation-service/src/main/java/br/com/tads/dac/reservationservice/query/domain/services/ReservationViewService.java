@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import br.com.tads.dac.reservationservice.command.domain.model.Reservation;
 import br.com.tads.dac.reservationservice.query.domain.exceptions.ReservationNotFoundException;
 import br.com.tads.dac.reservationservice.query.domain.models.dto.ReservationDTO;
+import br.com.tads.dac.reservationservice.query.domain.models.entities.ReservationView;
 import br.com.tads.dac.reservationservice.query.domain.repositories.ReservationViewRepository;
 
 @Service
@@ -34,14 +35,14 @@ public class ReservationViewService {
     }
 
     public List<ReservationDTO> getByClientId(String codigoCliente) {
-        List<Reservation> reservas = reservationViewRepository.findByCodigoCliente(codigoCliente);
+        List<ReservationView> reservas = reservationViewRepository.findByCodigoCliente(codigoCliente);
 
         return reservas.stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    private ReservationDTO mapToDTO(Reservation r) {
+    private ReservationDTO mapToDTO(ReservationView r) {
         return ReservationDTO.builder()
                 .codigo(r.getCodigo())
                 .codigoVoo(r.getCodigoVoo())
@@ -50,7 +51,7 @@ public class ReservationViewService {
                 .valor(r.getValor())
                 .milhasUtilizadas(r.getMilhasUtilizadas())
                 .codigoAeroportoOrigem(r.getCodigoAeroportoOrigem())
-                .codigoAeroPortoDestino(r.getCodigoAeroportoDestino())
+                .codigoAeroPortoDestino(r.getCodigoAeroPortoDestino())
                 .criadoEm(r.getCriadoEm())
                 .atualizadoEm(r.getAtualizadoEm())
                 .build();

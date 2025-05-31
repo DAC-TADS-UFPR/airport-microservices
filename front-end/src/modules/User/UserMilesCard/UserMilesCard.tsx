@@ -26,7 +26,7 @@ const UserMilesCard: FC<UserMilesCardProps> = ({ data }) => {
           <ImgDefault className="userMilesCard__logo" src={"/icons/wallet.svg"} alt="Carteira de Milhas" />
           <span className="userMilesCard__title">Minhas Milhas</span>
         </div>
-        <span className="userMilesCard__miles">15,000</span>
+        <span className="userMilesCard__miles">{data?.toLocaleString("pt-BR") || "0"}</span>
       </div>
       <ButtonDefault children={"Comprar milhas"} onClick={buyMiles} />
     </div>

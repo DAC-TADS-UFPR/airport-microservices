@@ -3,19 +3,21 @@ import { TForm } from "@/hooks/useForm";
 import api from "./api";
 
 export async function createUser({ payload }: { payload: { form: TForm } }) {
-  const { name, email, cpf, complement, cep, city, street, neighborhood, number, state } = payload.form;
+  const { nome, email, cpf, complemento, cep, cidade, rua, bairro, numero, uf } = payload.form;
   try {
     const { data } = await api.post(`/clientes`, {
-      name: name.value,
+      nome: nome.value,
       email: email.value,
-      cpf: cpf.value,
-      complement: complement.value,
-      cep: cep.value,
-      city: city.value,
-      street: street.value,
-      neighborhood: neighborhood.value,
-      number: number.value,
-      state: state.value,
+      cpf: cpf.value.replace(/\D/g, ""),
+      endereco: {
+        rua: rua.value,
+        bairro: bairro.value,
+        cidade: cidade.value,
+        uf: uf.value,
+        numero: numero.value,
+        complemento: complemento.value,
+        cep: cep.value.replace(/\D/g, "")
+      }
     });
     return data;
   } catch (error: any) {

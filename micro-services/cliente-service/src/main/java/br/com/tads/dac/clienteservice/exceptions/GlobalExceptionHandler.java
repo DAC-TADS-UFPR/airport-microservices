@@ -117,31 +117,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
     }
-    @ExceptionHandler(DataIntegrityViolationException.class)
-public ResponseEntity<ExceptionResponse> handleDataIntegrity(
-        DataIntegrityViolationException ex,
-        HttpServletRequest req) {
-
-    String detalhe = ex.getMostSpecificCause().getMessage();
-
-    ExceptionResponse exceptionResponse = new ExceptionResponse(
-        req.getRequestURI(),
-        "Violação de integridade: " + detalhe,
-        HttpStatus.CONFLICT.value(),        // note: .value() aqui
-        LocalDateTime.now(),
-        List.of()                           // List.of() funciona pra List<FieldError> vazia
-    );
-
-    return ResponseEntity
-            .status(HttpStatus.CONFLICT)
-            .body(exceptionResponse);
-}
-
-    
-
-        
-
-
 
 
 }

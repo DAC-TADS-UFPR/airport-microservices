@@ -16,6 +16,19 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.post('/:id/milhas', async (req, res) => {
+    try {
+      const response = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/${req.params.id}/milhas`, req.body);      
+      res.status(response.status).json(response.data);
+
+    } catch (e:any) {
+      console.error('Error fetching client:', e.response?.data || e.message);
+      res
+        .status(e.response?.status || 500)
+        .json({ message: e.response?.data || 'Falha ao buscar cliente' });
+    }
+});
+
 router.get(
   '/:id',
   authenticateToken,
@@ -30,6 +43,24 @@ router.get(
       res
         .status(e.response?.status || 500)
         .json({ message: e.response?.data || 'Falha ao buscar cliente' });
+    }
+  }
+);
+
+router.get(
+  '/:id/milhas',
+  authenticateToken,
+  authorize('CLIENT'),
+  async (req, res) => {
+    try {
+      const response = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${req.params.id}/milhas`);      
+      res.status(response.status).json(response.data);
+
+    } catch (e:any) {
+      console.error('Error fetching client miles:', e.response?.data || e.message);
+      res
+        .status(e.response?.status || 500)
+        .json({ message: e.response?.data || 'Falha ao buscar milhas do cliente' });
     }
   }
 );

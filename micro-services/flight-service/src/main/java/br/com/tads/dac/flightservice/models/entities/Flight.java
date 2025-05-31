@@ -24,31 +24,37 @@ public class Flight {
     @Column(nullable = false)
     private String codigo;
 
+    @Column(nullable = false)
+    private LocalDateTime data;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FlightState estado;
 
-    @Column(nullable = false)
-    private LocalDateTime data;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(
+        name = "codigo_aero_porto_origem",       
+        referencedColumnName = "codigo",     
+        nullable = false
+    )
+    private Airport aeroportoOrigem;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(
+        name = "codigo_aero_porto_destino", 
+        referencedColumnName = "codigo", 
+        nullable = false
+    )
+    private Airport aeroportoDestino;
+
 
     @Column(nullable = false)
-    @Size(min = 3, max = 3, message = "Codigo deve ter 3 caracteres")
-    @NotBlank(message = "Código do aeroporto de origem não pode ser vazio")
-    private String codigoAeroPortoOrigem;
-
-    @Column(nullable = false)
-    @Size(min = 3, max = 3, message = "Codigo deve ter 3 caracteres")
-    @NotBlank(message = "Código do aeroporto de destino não pode ser vazio")
-    private String codigoAeroPortoDestino;
-
-    @Column(nullable = false)
-    @NotBlank(message = "Valor da passagem não pode ser vazio")
     private BigDecimal valorPassagem;
 
     @Column(nullable = false)
-    private Integer quantidadePoltronasTotal;
+    private int quantidadePoltronasTotal;
 
     @Column(nullable = false)
-    private Integer quantidadePoltronasOcupadas;
+    private int quantidadePoltronasOcupadas;
 
 }

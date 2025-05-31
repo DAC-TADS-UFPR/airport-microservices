@@ -24,18 +24,18 @@ export default function Page() {
     mutationFn: login,
     onSuccess: (data: any) => {
       console.log(data);
-      const { userId, nome } = data.usuario;
+      const { codigo, nome } = data.usuario;
       const tipo = data.tipo;
       localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("userId", userId);
+      localStorage.setItem("userId", codigo);
       localStorage.setItem("nome", nome);
       localStorage.setItem("tipo", tipo);
 
       if (tipo === "EMPLOYEE") {
-        router.push(`/admin/${userId}`);
+        router.push(`/admin/${codigo}`);
       }
       if (tipo === "CLIENT") {
-        router.push(`/user/${userId}`);
+        router.push(`/user/${codigo}`);
       }
     },
     onError: (error: any) => {

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import br.com.tads.dac.flightservice.mappers.FlightMapper;
 import br.com.tads.dac.flightservice.models.dto.CreateFlightRequest;
 import br.com.tads.dac.flightservice.models.dto.FlightDTO;
 import br.com.tads.dac.flightservice.models.dto.UpdateStateRequest;
+import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.models.entities.Flight;
 import br.com.tads.dac.flightservice.models.entities.FlightState;
 import br.com.tads.dac.flightservice.repositories.FlightRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class FlightService {
@@ -28,21 +31,22 @@ public class FlightService {
     @Autowired
     private FlightMapper flightMapper;
 
-    public FlightDTO create(@RequestBody CreateFlightRequest req) {
+    @Transactional(rollbackOn = Exception.class)
+    public FlightDTO create(CreateFlightRequest req) {
         LocalDateTime localDate = req.getData().toLocalDateTime();
 
         Flight flight = Flight.builder()
             .data(localDate)                                          
             .valorPassagem(req.getValorPassagem())                                         
-            .quantidadePoltronasTotal(req.getQuantidadePoltronasTotal())                                
-            .quantidadePoltronasOcupadas(req.getQuantidadePoltronasOcupadas())                          
-            .codigoAeroPortoOrigem(req.getCodigoAeroportoOrigem()) 
-            .codigoAeroPortoDestino(req.getCodigoAeroportoDestino())
+            .quantidadePoltronasTotal(Objects.nonNull(req.getQuantidadePoltronasTotal()) ? req.getQuantidadePoltronasTotal() : 0)                            
+            .quantidadePoltronasOcupadas(Objects.nonNull(req.getQuantidadePoltronasOcupadas()) ? req.getQuantidadePoltronasOcupadas() : 0)                      
+            .aeroportoOrigem(new Airport(req.getCodigoAeroportoOrigem())) 
+            .aeroportoDestino(new Airport(req.getCodigoAeroportoDestino()))
             .estado(FlightState.CRIADO)                                
             .build();
 
-        FlightDTO dto = flightMapper.fromEntity(flightRepository.save(flight), ZoneOffset.of("-03:00"));
-        return dto;
+        Flight savedFlight = flightRepository.save(flight);    
+        return flightMapper.fromEntity(savedFlight, ZoneOffset.of("-03:00"));
     }
 
     public FlightDTO getFlightById(String id) {
@@ -53,7 +57,15 @@ public class FlightService {
     public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDate data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
         if (data != null) {
             LocalDateTime dataHora = data.atStartOfDay();
-            List<Flight> flights = flightRepository.findAllByDataBetween(dataHora, dataHora.plusDays(1));
+            List<Flight> flights = flightRepository.findAllByDataAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(dataHora, codigoAeroportoOrigem , codigoAeroportoDestino);
+            
+            return flights.stream()
+                .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+                .collect(Collectors.toList());
+        }
+
+        if (codigoAeroportoOrigem != null && codigoAeroportoDestino != null) {
+            List<Flight> flights = flightRepository.findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(codigoAeroportoOrigem , codigoAeroportoDestino);
             
             return flights.stream()
                 .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
@@ -78,9 +90,9 @@ public class FlightService {
         existing.setValorPassagem(flight.getValorPassagem());
         existing.setQuantidadePoltronasTotal(flight.getQuantidadePoltronasTotal());
         existing.setQuantidadePoltronasOcupadas(flight.getQuantidadePoltronasOcupadas());
-        existing.setCodigoAeroPortoOrigem(flight.getCodigoAeroPortoOrigem());
-        existing.setCodigoAeroPortoDestino(flight.getCodigoAeroPortoDestino());
-        
+        existing.setAeroportoOrigem(flight.getAeroportoOrigem());
+        existing.setAeroportoDestino(flight.getAeroportoDestino());
+
         Flight saved = flightRepository.save(existing);
         return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
     }

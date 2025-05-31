@@ -28,6 +28,7 @@ public class TransacaoMilhas {
 
     private LocalDateTime dataHora;
     private Integer quantidade;
+    private String codigoReserva;
 
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;

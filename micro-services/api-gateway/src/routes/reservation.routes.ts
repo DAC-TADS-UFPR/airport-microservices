@@ -7,13 +7,14 @@ import { ReservationSagaOrchestatorator } from '../orchestrators/reservation.sag
 
 const router = express.Router();
 const reservationSagaOrchestatorator = new ReservationSagaOrchestatorator();
+
 router.post(
   '/',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('CLIENT'),
   async (req, res) => {
     try {
-      const response = await axios.post(`${SERVICE_CONFIG.RESERVATION.url}`, req.body);
+      const response = await axios.post(`${SERVICE_CONFIG.RESERVATION.url}/`, req.body);
       res.status(response.status).json(response.data);
     } catch (e:any) {
       console.error('Error creating reservation:', e.response?.data || e.message);

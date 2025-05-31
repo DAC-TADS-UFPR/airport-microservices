@@ -73,7 +73,7 @@ public class ReservationService {
         ReservationMilesUpdateEvent event = new ReservationMilesUpdateEvent();
         event.setCodigoCliente(request.codigoCliente());
         event.setMilhas(request.milhasUtilizadas());
-
+        event.setCodigoReserva(reserva.getCodigo());
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.CLIENT_EXCHANGE,
                 RabbitMQConfig.CLIENT_ROUTING_KEY,

@@ -1,5 +1,6 @@
 package br.com.tads.dac.flightservice.models.dto;
 
+import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.models.entities.FlightState;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -22,6 +23,6 @@ public class FlightDTO {
     private int quantidadePoltronasTotal;
     private int quantidadePoltronasOcupadas;
     private FlightState estado;
-    private String codigoAeroportoOrigem;
-    private String codigoAeroportoDestino;
+    private Airport aeroportoOrigem;
+    private Airport aeroportoDestino;
 }

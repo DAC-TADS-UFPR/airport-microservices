@@ -1,9 +1,12 @@
 package br.com.tads.dac.clienteservice.controller;
 
 import br.com.tads.dac.clienteservice.model.Cliente;
+import br.com.tads.dac.clienteservice.model.TipoTransacao;
 import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
 import br.com.tads.dac.clienteservice.model.dto.ClientDTO;
 import br.com.tads.dac.clienteservice.model.dto.ClientUpdateDTO;
+import br.com.tads.dac.clienteservice.model.dto.ClienteTransacoesResponseDTO;
+import br.com.tads.dac.clienteservice.model.dto.MilesTranscationResponseDTO;
 import br.com.tads.dac.clienteservice.model.dto.RegisterRequestDTO;
 import br.com.tads.dac.clienteservice.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +39,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<ClientDTO> create(@RequestBody RegisterRequestDTO cliente) {
+    public ResponseEntity<ClientDTO> create(@RequestBody @Valid RegisterRequestDTO cliente) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.create(cliente));
     }
 
@@ -98,7 +101,20 @@ public class ClienteController {
     }
 
     @PostMapping("/{id}/transacoes")
-    public ResponseEntity<TransacaoMilhas> adicionarTransacao(@PathVariable String id, @RequestBody TransacaoMilhas transacao) {
+    public ResponseEntity<MilesTranscationResponseDTO> adicionarTransacao(@PathVariable String id, @RequestBody TransacaoMilhas transacao) {
         return ResponseEntity.ok(clienteService.adicionarTransacao(id, transacao));
     }
+
+    @PostMapping("/{id}/milhas")
+    public ResponseEntity<MilesTranscationResponseDTO> adicionarMilhas(@PathVariable String id, @RequestBody TransacaoMilhas transacao) {
+        transacao.setTipo(TipoTransacao.ENTRADA);
+        return ResponseEntity.ok(clienteService.adicionarTransacao(id, transacao));
+    }
+
+    @GetMapping("/{id}/milhas")
+    public ResponseEntity<ClienteTransacoesResponseDTO> buscarMilhas(@PathVariable String id) {
+        return ResponseEntity.ok(clienteService.getTransacoes(id));
+    }
+
+    
 }

@@ -1,23 +1,47 @@
 import express from 'express';
 import axios from 'axios';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { SERVICE_CONFIG } from '../config/services';
+import { UserType } from '../models/user/UserType';
 
 const router = express.Router();
 
-router.get('/', createProxyMiddleware({
-  target: SERVICE_CONFIG.AUTH.url,
-  pathRewrite: { '^/auth': '/auth' },
-  changeOrigin: true
-}));
-
 router.post('/login', async (req, res) => {
   try {
-    const response = await axios.post(`${SERVICE_CONFIG.AUTH.url}/login`, req.body);
-    res.status(response.status).json(response.data);
-  } catch (e:any) {
-    console.error('Error during login:', e.response?.data || e.message);
-    res.status(e.response?.status).json(e.response?.data);
+    const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/login`, req.body);
+    
+    const { token, tipo } = authResponse.data;
+    const {userId} = authResponse.data?.usuario;
+
+    let userResponse;
+    const options = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    };
+
+    if (tipo === UserType.CLIENT) {
+      userResponse = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${userId}`, options);
+    } else if (tipo === UserType.EMPLOYEE) {
+      userResponse = await axios.get(`${SERVICE_CONFIG.EMPLOYEE.url}/${userId}`, options);
+    } else {
+      return res.status(400).json({ message: 'Tipo de usuário inválido.' });
+    }
+    
+    if (userResponse.status !== 200) {
+      return res.status(userResponse.status).json(userResponse.data);
+    }
+    
+    authResponse.data.usuario = userResponse.data;
+
+    return res.status(200).json({
+      ...authResponse.data,
+    });
+
+  } catch (e: any) {
+    console.error('Erro no login:', e.response?.data || e.message);
+    return res.status(e.response?.status || 500).json(
+      e.response?.data || { message: 'Erro interno durante o login.' }
+    );
   }
 });
 

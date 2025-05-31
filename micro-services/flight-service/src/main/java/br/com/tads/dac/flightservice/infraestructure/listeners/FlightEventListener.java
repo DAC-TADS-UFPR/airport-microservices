@@ -20,7 +20,7 @@ public class FlightEventListener {
     public void onUpdateSeats(FlightSeatsUpdateEvent event) {
         try {
             flightRepository.findById(event.getCodigoVoo()).ifPresent(flight -> {
-                int ocupadas = flight.getQuantidadePoltronasOcupadas() == null ? 0 : flight.getQuantidadePoltronasOcupadas();
+                int ocupadas = flight.getQuantidadePoltronasOcupadas();
                 flight.setQuantidadePoltronasOcupadas(ocupadas + event.getQuantidadePoltronas());
                 flightRepository.save(flight);
             });

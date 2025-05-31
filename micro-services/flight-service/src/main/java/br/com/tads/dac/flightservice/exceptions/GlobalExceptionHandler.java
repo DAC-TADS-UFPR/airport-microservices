@@ -118,20 +118,5 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @ExceptionHandler(Exception.class)
-public ResponseEntity<ExceptionResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-    ExceptionResponse exceptionResponse = new ExceptionResponse(
-        request.getRequestURI(),
-        "Erro interno no servidor.",
-        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        LocalDateTime.now(),
-        List.of()  // lista vazia de fieldErrors
-    );
 
-    return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(exceptionResponse);
-}
-
-    
 }

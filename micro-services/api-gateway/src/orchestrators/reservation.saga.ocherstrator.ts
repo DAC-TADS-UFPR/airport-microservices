@@ -10,34 +10,28 @@ export class ReservationSagaOrchestatorator {
       const reservaResponse = await axios.get(`${SERVICE_CONFIG.RESERVATION_VIEW.url}/${idReserva}`);
       const reserva = reservaResponse.data;
 
-      const vooResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voos/${reserva.codigoVoo}`);
+      const vooResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${reserva.codigo_voo}`);
       const voo = vooResponse.data;
 
-      const [origemResponse, destinoResponse] = await Promise.all([
-        axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoOrigem}`),
-        axios.get(`${SERVICE_CONFIG.AIRPORTS.url}/${voo.codigoAeroportoDestino}`),
-      ]);
-
-      const aeroportoOrigem = origemResponse.data;
-      const aeroportoDestino = destinoResponse.data;
+     
 
       const respostaFinal = {
         codigo: reserva.codigo,
-        data: reserva.criadoEm, 
+        data: reserva.criado_em, 
         valor: reserva.valor,
-        milhas_utilizadas: reserva.milhasUtilizadas,
+        milhas_utilizadas: reserva.milhas_utilizadas,
         quantidade_poltronas: 1,
-        codigo_cliente: reserva.codigoCliente,
+        codigo_cliente: reserva.codigo_cliente,
         estado: reserva.estado,
         voo: {
           codigo: voo.codigo,
           data: voo.data,
-          valor_passagem: voo.valorPassagem,
-          quantidade_poltronas_total: voo.quantidadePoltronasTotal,
-          quantidade_poltronas_ocupadas: voo.quantidadePoltronasOcupadas,
+          valor_passagem: voo.valor_passagem,
+          quantidade_poltronas_total: voo.quantidade_poltronas_total,
+          quantidade_poltronas_ocupadas: voo.quantidade_poltronas_ocupadas,
           estado: voo.estado,
-          aeroporto_origem: aeroportoOrigem,
-          aeroporto_destino: aeroportoDestino,
+          aeroporto_origem: voo.aeroporto_origem,
+          aeroporto_destino: voo.aeroporto_destino,
         },
       };
 
