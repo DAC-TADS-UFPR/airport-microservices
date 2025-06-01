@@ -18,9 +18,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Reservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String codigo;
-    private String codigoVoo;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long codigo;
+    private Long codigoVoo;
     private String codigoCliente;
 
     @Enumerated(EnumType.STRING)
@@ -28,6 +28,7 @@ public class Reservation {
 
     private BigDecimal valor;
     private Long milhasUtilizadas;
+    private Integer quantidadePoltronas;
     
     private String codigoAeroportoOrigem;
     private String codigoAeroportoDestino;

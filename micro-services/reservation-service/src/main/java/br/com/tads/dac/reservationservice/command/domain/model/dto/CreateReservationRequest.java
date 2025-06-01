@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public record CreateReservationRequest (
     String codigoAeroportoDestino,
     String codigoAeroportoOrigem,
-    String codigoVoo,
+    Long codigoVoo,
     BigDecimal valor,
     Long milhasUtilizadas,
     String codigoCliente,

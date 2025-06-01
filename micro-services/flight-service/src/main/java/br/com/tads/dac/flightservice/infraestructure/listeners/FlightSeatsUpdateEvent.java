@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class FlightSeatsUpdateEvent {
-    private String codigoVoo;
+    private Long codigoVoo;
     private Integer quantidadePoltronas;
+    private ReservationState estado;
 }

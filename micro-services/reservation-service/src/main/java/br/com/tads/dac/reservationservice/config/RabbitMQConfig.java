@@ -18,11 +18,19 @@ public class RabbitMQConfig {
     public static final String EXCHANGE = "reservation.exchange";
     public static final String FLIGHT_EXCHANGE = "flight.exchange";
     public static final String CLIENT_EXCHANGE = "client.exchange";
+
     public static final String COMMAND_QUEUE = "reservation.command.queue";
+    
     public static final String QUERY_QUEUE = "reservation.query.queue";
     public static final String ROUTING_KEY = "reservation.created";
+    
     public static final String FLIGHT_ROUTING_KEY = "flight.update.poltronas";
     public static final String CLIENT_ROUTING_KEY = "client.update.miles";
+    
+    public static final String RESERVATION_STATE_ROUTING_KEY = "reservation.update.state";
+    public static final String RESERVATION_STATE_QUEUE = "reservation.update.state.queue";
+
+
         
     @Bean
     public TopicExchange reservationExchange() {
@@ -37,6 +45,19 @@ public class RabbitMQConfig {
     @Bean
     public Queue queryQueue() {
         return QueueBuilder.durable(QUERY_QUEUE).build();
+    }
+
+    @Bean
+    public Queue updateReservationStateQueue() {
+        return QueueBuilder.durable(RESERVATION_STATE_QUEUE).build();
+    }
+
+    @Bean
+    public Binding updateReservationStateBinding() {
+        return BindingBuilder
+            .bind(updateReservationStateQueue())
+            .to(reservationExchange())
+            .with(RESERVATION_STATE_ROUTING_KEY);
     }
 
     @Bean

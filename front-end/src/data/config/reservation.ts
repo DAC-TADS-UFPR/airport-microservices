@@ -2,6 +2,7 @@ import { TForm } from "@/hooks/useForm";
 import api from "./api";
 import { IReserva } from "@/models/reserva.create";
 import { ReservationDTO } from "@/models/reserva";
+import { ReservaState } from "@/models/reserva.state";
 
 
 export async function createReservation(payload : IReserva) {
@@ -38,3 +39,11 @@ export async function updateReservatioon({ payload }: { payload: TForm }) {
   }
 }
 
+export async function updateReservationState(payload: ReservaState) {
+  try {
+    const { data } = await api.patch(`/reservas/${payload.id_reserva}/estado`, { ...payload });
+    return data;
+  } catch (error: any) {
+    throw error;
+  }
+}

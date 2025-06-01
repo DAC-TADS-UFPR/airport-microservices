@@ -17,7 +17,7 @@ public class ReservationViewService {
     
     private final ReservationViewRepository reservationViewRepository;
 
-    public ReservationDTO getById(String codigo) {
+    public ReservationDTO getById(Long codigo) {
         return reservationViewRepository.findById(codigo)
                 .map(reservation -> ReservationDTO.builder()
                         .codigo(reservation.getCodigo())

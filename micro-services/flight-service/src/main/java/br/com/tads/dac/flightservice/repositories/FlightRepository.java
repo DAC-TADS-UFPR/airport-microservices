@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import br.com.tads.dac.flightservice.models.entities.Flight;
 
 @Repository
-public interface FlightRepository extends JpaRepository<Flight, String> {
+public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     // Busca todos os voos cuja data (LocalDateTime) esteja entre dois instantes
     List<Flight> findAllByDataBetween(LocalDateTime start, LocalDateTime end);

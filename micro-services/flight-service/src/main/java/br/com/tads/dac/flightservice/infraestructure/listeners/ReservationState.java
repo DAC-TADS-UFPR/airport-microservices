@@ -1,5 +1,4 @@
-package br.com.tads.dac.reservationservice.command.domain.model;
-
+package br.com.tads.dac.flightservice.infraestructure.listeners;
 
 public enum ReservationState {
     CRIADA("CRIADA"),

@@ -21,7 +21,12 @@ public class FlightEventListener {
         try {
             flightRepository.findById(event.getCodigoVoo()).ifPresent(flight -> {
                 int ocupadas = flight.getQuantidadePoltronasOcupadas();
-                flight.setQuantidadePoltronasOcupadas(ocupadas + event.getQuantidadePoltronas());
+                if(event.getEstado() == ReservationState.CANCELADA || event.getEstado() == ReservationState.CANCELADA_VOO) {
+                    ocupadas -= event.getQuantidadePoltronas();
+                } else {
+                    ocupadas += event.getQuantidadePoltronas();
+                }
+                flight.setQuantidadePoltronasOcupadas(ocupadas);
                 flightRepository.save(flight);
             });
         } catch (Exception e) {

@@ -5,7 +5,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +24,9 @@ import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 public class ReservationView {
 
     @Id
-    private String codigo;
+    private Long codigo;
 
-    private String codigoVoo;
+    private Long codigoVoo;
     private String codigoCliente;
 
     @Enumerated(EnumType.STRING)

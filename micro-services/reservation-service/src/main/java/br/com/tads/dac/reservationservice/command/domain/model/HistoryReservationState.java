@@ -16,7 +16,7 @@ public class HistoryReservationState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
-    private String codigoReserva;
+    private Long codigoReserva;
     private LocalDateTime alteradoEm;
     @Enumerated(EnumType.STRING)
     private ReservationState estado;

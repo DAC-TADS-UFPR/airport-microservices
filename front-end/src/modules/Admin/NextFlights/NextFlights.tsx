@@ -9,146 +9,32 @@ import ModalConfirmBoarding from "../ModalConfirmBoarding/ModalConfirmBoarding";
 import { useQuery } from "@tanstack/react-query";
 import { getFlights } from "@/data/config/flight";
 import { addHours, format  } from 'date-fns';
+import { Flight } from "@/models/flight";
 interface NextFlightsProps {
   data?: any;
 }
 
-const mockedData = [
-  {
-    code: "RES001",
-    dateHour: "2023-10-10T10:00:00",
-    origin: "CWB - Curitiba",
-    destination: "GRU - São Paulo",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES002",
-    dateHour: "2023-10-11T11:00:00",
-    origin: "SSA - Salvador",
-    destination: "CNF - Belo Horizonte",
-    status: "PENDENTE",
-  },
-  {
-    code: "RES003",
-    dateHour: "2023-10-12T12:00:00",
-    origin: "POA - Porto Alegre",
-    destination: "GIG - Rio de Janeiro",
-    status: "CANCELADO",
-  },
-  {
-    code: "RES004",
-    dateHour: "2023-10-13T13:00:00",
-    origin: "FOR - Fortaleza",
-    destination: "REC - Recife",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES005",
-    dateHour: "2023-10-14T14:00:00",
-    origin: "BEL - Belém",
-    destination: "CGB - Cuiabá",
-    status: "EM ANDAMENTO",
-  },
-  {
-    code: "RES006",
-    dateHour: "2023-10-15T15:00:00",
-    origin: "MAO - Manaus",
-    destination: "NAT - Natal",
-    status: "PENDENTE",
-  },
-  {
-    code: "RES007",
-    dateHour: "2023-10-16T16:00:00",
-    origin: "FLN - Florianópolis",
-    destination: "THE - Teresina",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES008",
-    dateHour: "2023-10-17T17:00:00",
-    origin: "SLZ - São Luís",
-    destination: "VIX - Vitória",
-    status: "PENDENTE",
-  },
-  {
-    code: "RES009",
-    dateHour: "2023-10-18T18:00:00",
-    origin: "CGB - Cuiabá",
-    destination: "FOR - Fortaleza",
-    status: "CANCELADO",
-  },
-  {
-    code: "RES010",
-    dateHour: "2023-10-19T19:00:00",
-    origin: "REC - Recife",
-    destination: "POA - Porto Alegre",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES011",
-    dateHour: "2023-10-20T20:00:00",
-    origin: "GIG - Rio de Janeiro",
-    destination: "SSA - Salvador",
-    status: "EM ANDAMENTO",
-  },
-  {
-    code: "RES012",
-    dateHour: "2023-10-21T21:00:00",
-    origin: "NAT - Natal",
-    destination: "MAO - Manaus",
-    status: "PENDENTE",
-  },
-  {
-    code: "RES013",
-    dateHour: "2023-10-22T22:00:00",
-    origin: "THE - Teresina",
-    destination: "SLZ - São Luís",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES014",
-    dateHour: "2023-10-23T23:00:00",
-    origin: "VIX - Vitória",
-    destination: "FLN - Florianópolis",
-    status: "CANCELADO",
-  },
-  {
-    code: "RES015",
-    dateHour: "2023-10-24T09:00:00",
-    origin: "CNF - Belo Horizonte",
-    destination: "BEL - Belém",
-    status: "CONFIRMADO",
-  },
-  {
-    code: "RES016",
-    dateHour: "2023-10-25T08:30:00",
-    origin: "GRU - São Paulo",
-    destination: "CWB - Curitiba",
-    status: "EM ANDAMENTO",
-  },
-];
-
 const NextFlights: FC<NextFlightsProps> = () => {
   const { openModal } = useModal();
 
-  const confirmBording = () => {
+  const confirmBording = (id_voo:string) => {
     openModal({
       headerName: "Confirmar embarque do passageiro",
-      children: <ModalConfirmBoarding />,
+      children: <ModalConfirmBoarding id_voo={id_voo}/>,
     });
   };
 
-  const cancelFlight = () => {
+  const cancelFlight = (id_voo:string) => {
     openModal({
       headerName: "Cancelar voo",
-      children: <ModalCancelFlight />,
+      children: <ModalCancelFlight id_voo={id_voo}/>,
     });
   };
 
-  const confirmFlight = () => {
+  const confirmFlight = (id_voo:string) => {
     openModal({
       headerName: "Confirmar realização do voo",
-      children: <ModalConfirmFlight />,
+      children: <ModalConfirmFlight id_voo={id_voo} />,
     });
   };
 
@@ -159,18 +45,15 @@ const NextFlights: FC<NextFlightsProps> = () => {
 
   const dataFinal = format(addHours(new Date(), 48), 'yyyy-MM-dd'); 
 
-   const { data, isLoading } = useQuery({
-    queryKey: [`_`, 
-      {
-      dataInicial,
-      dataFinal
-    }
-    ],
+   const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["next-flights", { dataInicial, dataFinal }],
     queryFn: getFlights,
-
     refetchOnWindowFocus: false,
     enabled: true,
   });
+
+  const flights: Flight[] = Array.isArray(data) ? data : [];
+
 
   console.log("Dados dos voos:", data);
   
@@ -178,7 +61,13 @@ const NextFlights: FC<NextFlightsProps> = () => {
     <div className="nextFlights">
       <div className="nextFlights__title">Próximos voos (48H)</div>
       <div className="nextFlights__content">
-        {mockedData && mockedData.length > 0 ? (
+        {isLoading && <p>Carregando próximos voos...</p>}
+        {isError && (
+          <p>
+            Ocorreu um erro ao buscar voos. Tente novamente mais tarde.{" "}
+          </p>
+        )}
+        {flights && flights.length > 0 ? (
           <table className="nextFlights__table">
             <thead>
               <tr>
@@ -191,19 +80,19 @@ const NextFlights: FC<NextFlightsProps> = () => {
               </tr>
             </thead>
             <tbody>
-              {[...mockedData]
-                .sort((a, b) => new Date(b.dateHour).getTime() - new Date(a.dateHour).getTime())
-                .map((transacao, index) => (
+              {[...flights]
+                .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
+                .map((voo, index) => (
                   <tr key={index}>
-                    <td>{transacao?.code || ""}</td>
-                    <td>{formatDate({ date: transacao?.dateHour, type: "dateHour" })}</td>
-                    <td>{transacao?.origin}</td>
-                    <td>{transacao?.destination}</td>
-                    <td>{transacao?.status}</td>
+                    <td>{voo?.codigo || ""}</td>
+                    <td>{formatDate({ date: voo?.data, type: "dateHour" })}</td>
+                    <td>{voo?.aeroporto_origem?.codigo}</td>
+                    <td>{voo?.aeroporto_destino?.codigo}</td>
+                    <td>{voo?.estado}</td>
                     <td className="nextFlights__actions">
-                      <ButtonDefault children="Confirmar passageiro" size="small" color="green" onClick={confirmBording} />
-                      <ButtonDefault children="Cancelar" size="small" color="red" onClick={cancelFlight} />
-                      <ButtonDefault children="Realizar voo" size="small" onClick={confirmFlight} />
+                      <ButtonDefault children="Confirmar passageiro" size="small" color="green" onClick={() => confirmBording(voo.codigo)} />
+                      <ButtonDefault children="Cancelar" size="small" color="red" onClick={() => cancelFlight(voo.codigo)} />
+                      <ButtonDefault children="Realizar voo" size="small" onClick={() => confirmFlight(voo.codigo)} />
                     </td>
                   </tr>
                 ))}

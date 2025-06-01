@@ -1,6 +1,8 @@
 import { TForm } from "@/hooks/useForm";
 import api from "./api";
 import { parse, format } from 'date-fns';
+import { Flight } from "@/models/flight";
+import { FlightState } from "@/models/flight.state";
 
 export async function createFlight({ payload }: { payload: { form: TForm } }) {
   const { data_voo, hora, origem, destino, valor_passagem, poltronas } = payload.form;
@@ -23,7 +25,7 @@ export async function createFlight({ payload }: { payload: { form: TForm } }) {
   }
 }
 
-export async function getFlight({ _, queryKey }: any) {
+export async function getFlight({ _, queryKey }: any) : Promise<Flight> {
   const [key, id] = queryKey;
   try {
     const { data } = await api.get(`/voo/${id}`);
@@ -33,7 +35,7 @@ export async function getFlight({ _, queryKey }: any) {
   }
 }
 
-export async function getFlights({ queryKey }: any) {
+export async function getFlights({ queryKey }: any) : Promise<Flight[]> {
   const [
     key,
     { dataInicial, dataFinal, data, codigoAeroportoOrigem, codigoAeroportoDestino }
@@ -77,3 +79,11 @@ export async function updateFlight({ payload }: { payload: TForm }) {
   }
 }
 
+export async function updateFlightState(payload: FlightState) {
+  try {
+    const { data } = await api.put(`/voos/${payload.id_voo}`, { ...payload });
+    return data;
+  } catch (error: any) {
+    throw error;
+  }
+}

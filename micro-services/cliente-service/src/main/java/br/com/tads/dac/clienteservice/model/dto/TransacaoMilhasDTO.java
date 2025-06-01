@@ -26,7 +26,7 @@ public class TransacaoMilhasDTO {
 
     private String descricao;
 
-    private String codigoReserva;
+    private Long codigoReserva;
 
     private TipoTransacao tipo;
 }

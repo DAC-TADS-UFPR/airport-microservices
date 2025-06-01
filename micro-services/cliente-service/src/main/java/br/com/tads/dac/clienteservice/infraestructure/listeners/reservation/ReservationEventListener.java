@@ -6,26 +6,30 @@ import org.springframework.stereotype.Component;
 import br.com.tads.dac.clienteservice.infraestructure.config.RabbitMQConfig;
 import br.com.tads.dac.clienteservice.model.TipoTransacao;
 import br.com.tads.dac.clienteservice.model.TransacaoMilhas;
-import br.com.tads.dac.clienteservice.repository.ClienteRepository;
 import br.com.tads.dac.clienteservice.service.ClienteService;
 
 @Component
 public class ReservationEventListener {
-    private final ClienteRepository clienteRepository;
     private final ClienteService clienteService;
-    public ReservationEventListener(ClienteRepository clienteRepository , ClienteService clienteService) {
-        this.clienteRepository = clienteRepository;
+    public ReservationEventListener(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
 
     @RabbitListener(queues = RabbitMQConfig.UPDATE_RESERVATION_MILES_QUEUE)
     public void onReservationUpdateMiles(ReservationMilesUpdateEvent event) {
         try {
-            
+            TipoTransacao tipoTransacao = event.getEstado() == ReservationState.CANCELADA || event.getEstado() == ReservationState.CANCELADA_VOO
+                ? TipoTransacao.ENTRADA
+                : TipoTransacao.SAIDA;
+
+            String descricao = "Atualização de milhas para reserva: " + event.getCodigoReserva()
+                + " - Estado: " + event.getEstado().getEstado(); 
+
             TransacaoMilhas transacaoMilhas = TransacaoMilhas.builder()
                 .quantidade(event.getMilhas())
-                .tipo(TipoTransacao.SAIDA)
+                .tipo(tipoTransacao)
                 .codigoReserva(event.getCodigoReserva())
+                .descricao(descricao)
                 .build();
 
             clienteService.adicionarTransacao(event.getCodigoCliente(), transacaoMilhas);   

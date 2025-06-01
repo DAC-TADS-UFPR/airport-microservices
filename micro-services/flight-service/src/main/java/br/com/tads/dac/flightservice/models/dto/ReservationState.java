@@ -1,4 +1,5 @@
-package br.com.tads.dac.reservationservice.command.domain.model;
+package br.com.tads.dac.flightservice.models.dto;
+
 
 
 public enum ReservationState {

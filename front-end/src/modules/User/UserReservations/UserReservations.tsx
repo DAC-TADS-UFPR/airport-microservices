@@ -7,6 +7,7 @@ import ReservationCard from "../ReservationCard/ReservationCard";
 import { getReservationsByClient } from "@/data/config/reservation";
 import { ReservationDTO } from "@/models/reserva";
 import "./UserReservations.scss";
+import { ReservaStateEnum } from "@/models/reserva.state";
 
 type Status = "Next" | "Completed" | "Canceled";
 
@@ -31,8 +32,7 @@ const UserReservations: FC = () => {
 
     return reservations.filter((reserva) => {
       if (
-        reserva.estado === "CANCELADO" ||
-        reserva.estado === "CANCELADO_PELO_CLIENTE"
+        reserva.estado === ReservaStateEnum.CANCELADA
       ) {
         return navbar === "Canceled";
       }
@@ -97,8 +97,7 @@ const UserReservations: FC = () => {
           filteredReservations.map((reserva) => {
             let status: Status;
             if (
-              reserva.estado === "CANCELADO" ||
-              reserva.estado === "CANCELADO_PELO_CLIENTE"
+              reserva.estado === ReservaStateEnum.CANCELADA
             ) {
               status = "Canceled";
             } else {

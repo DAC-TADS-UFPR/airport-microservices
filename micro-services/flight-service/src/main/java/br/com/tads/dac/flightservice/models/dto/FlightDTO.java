@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FlightDTO {
-    private String codigo;
+    private Long codigo;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private OffsetDateTime data;
     private BigDecimal valorPassagem;

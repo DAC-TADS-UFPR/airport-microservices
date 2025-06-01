@@ -6,5 +6,6 @@ import lombok.Data;
 public class ReservationMilesUpdateEvent {
     private String codigoCliente;
     private Integer milhas;
-    private String codigoReserva;
+    private Long codigoReserva;
+    private ReservationState estado;
 }

@@ -34,12 +34,12 @@ public class FlightController {
     }
 
     @PatchMapping("/voos/{id}/estado")
-    public ResponseEntity<FlightDTO> updateFlightState(@PathVariable String id , @Valid @RequestBody UpdateStateRequest request) {
+    public ResponseEntity<FlightDTO> updateFlightState(@PathVariable Long id , @Valid @RequestBody UpdateStateRequest request) {
         return ResponseEntity.ok(flightService.updateFlightState(id, request));
     }
 
     @GetMapping("/voo/{id}")
-    public ResponseEntity<FlightDTO> getFlightById(@PathVariable String id) {
+    public ResponseEntity<FlightDTO> getFlightById(@PathVariable Long id) {
        return ResponseEntity.ok(flightService.getFlightById(id));
     }
 

@@ -1,4 +1,4 @@
-package br.com.tads.dac.flightservice.models.entities;
+package br.com.tads.dac.reservationservice.command.infraestructure.listeners;
 
 public enum FlightState {
     CANCELADO("CANCELADO"),
@@ -15,5 +15,4 @@ public enum FlightState {
     public String getEstado() {
         return estado;
     }
-
 }

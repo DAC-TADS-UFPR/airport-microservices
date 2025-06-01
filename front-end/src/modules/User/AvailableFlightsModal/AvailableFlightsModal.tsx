@@ -9,25 +9,8 @@ import { IReserva } from "@/models/reserva.create";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createReservation } from "@/data/config/reservation";
 import router from "next/router";
+import { Flight } from "@/models/flight";
 
-type Flight = {
-   codigo: string;
-  aeroporto_origem: {
-    codigo: string;
-    nome: string;
-    cidade: string;
-    uf: string;
-  };
-  aeroporto_destino: {
-    codigo: string;
-    nome: string;
-    cidade: string;
-    uf: string;
-  };
-  data: string;
-  horaSaida: string;
-  valor_passagem: number;
-};
 
 interface AvailableFlightsModalProps {
   data: Flight;

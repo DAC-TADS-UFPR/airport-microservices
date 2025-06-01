@@ -17,6 +17,7 @@ import br.com.tads.dac.reservationservice.command.domain.model.dto.UpdateReserva
 import br.com.tads.dac.reservationservice.command.domain.repository.*;
 import br.com.tads.dac.reservationservice.command.infraestructure.mappers.ReservationMapper;
 import br.com.tads.dac.reservationservice.config.RabbitMQConfig;
+import br.com.tads.dac.reservationservice.exceptions.InvalidStateChangeException;
 
 import java.time.LocalDateTime;
 
@@ -37,9 +38,10 @@ public class ReservationService {
         Reservation reserva = Reservation.builder()
                 .codigoVoo(request.codigoVoo())
                 .codigoCliente(request.codigoCliente())
-                .estado(ReservationState.CREATED)
+                .estado(ReservationState.CRIADA)
                 .valor(request.valor())
                 .milhasUtilizadas(request.milhasUtilizadas())
+                .quantidadePoltronas(request.quantidadePoltronas())
                 .codigoAeroportoOrigem(request.codigoAeroportoOrigem())
                 .codigoAeroportoDestino(request.codigoAeroportoDestino())
                 .build();
@@ -49,43 +51,23 @@ public class ReservationService {
         HistoryReservationState historico = HistoryReservationState.builder()
                 .codigoReserva(reserva.getCodigo())
                 .alteradoEm(LocalDateTime.now())
-                .estado(ReservationState.CREATED)
+                .estado(ReservationState.CRIADA)
                 .build();
 
         historicoRepository.save(historico);
         
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE,
-                RabbitMQConfig.ROUTING_KEY,
-                reservationMapper.toDto(reserva)
-        );
-
-        FlightSeatsUpdateEvent seatEvent = new FlightSeatsUpdateEvent();
-        seatEvent.setCodigoVoo(request.codigoVoo());
-        seatEvent.setQuantidadePoltronas(request.quantidadePoltronas());
-
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.FLIGHT_EXCHANGE,
-                RabbitMQConfig.FLIGHT_ROUTING_KEY,
-                seatEvent
-        );
-
-        ReservationMilesUpdateEvent event = new ReservationMilesUpdateEvent();
-        event.setCodigoCliente(request.codigoCliente());
-        event.setMilhas(request.milhasUtilizadas());
-        event.setCodigoReserva(reserva.getCodigo());
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.CLIENT_EXCHANGE,
-                RabbitMQConfig.CLIENT_ROUTING_KEY,
-                event
-        );
+        sendReservationUpdateEvent(reservationMapper.toDto(reserva));
+        sendSeatsUpdateEvent(request.codigoVoo(), request.quantidadePoltronas(), reserva.getEstado());
+        sendMilesUpdateEvent(request.codigoCliente(), request.milhasUtilizadas(), reserva.getCodigo(), reserva.getEstado());
 
         return reservationMapper.toDto(reserva);
     }
 
-    public ReservationDTO alterarEstado(String codigoReserva, UpdateReservationRequest request) {
+    public ReservationDTO alterarEstado(Long codigoReserva, UpdateReservationRequest request) {
         Reservation reserva = reservaRepository.findById(codigoReserva)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada: " + codigoReserva));
+        
+        validateReservationState(request.estado(), reserva.getEstado(), reserva);
 
         reserva.setEstado(request.estado());
         reserva.setAtualizadoEm(LocalDateTime.now());
@@ -99,6 +81,58 @@ public class ReservationService {
         );
         historicoRepository.save(historico);
 
+        sendReservationUpdateEvent(reservationMapper.toDto(reserva));
+
+        if (request.estado() == ReservationState.CANCELADA || request.estado() == ReservationState.CANCELADA_VOO) {
+            sendSeatsUpdateEvent(reserva.getCodigoVoo(), reserva.getQuantidadePoltronas(), reserva.getEstado());
+            sendMilesUpdateEvent(reserva.getCodigoCliente(), reserva.getMilhasUtilizadas(), reserva.getCodigo(), reserva.getEstado());
+        } 
+
         return reservationMapper.toDto(reserva);
+    }
+
+    public void sendMilesUpdateEvent(String codigoCliente, Long milhas, Long codigoReserva, ReservationState estado) {
+        ReservationMilesUpdateEvent event = new ReservationMilesUpdateEvent();
+        event.setCodigoCliente(codigoCliente);
+        event.setMilhas(milhas);
+        event.setCodigoReserva(codigoReserva);
+        event.setEstado(estado);
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.CLIENT_EXCHANGE,
+                RabbitMQConfig.CLIENT_ROUTING_KEY,
+                event
+        );
+    }
+
+    public void sendSeatsUpdateEvent(Long codigoVoo, Integer quantidadePoltronas, ReservationState estado) {
+        FlightSeatsUpdateEvent event = new FlightSeatsUpdateEvent();
+        event.setCodigoVoo(codigoVoo);
+        event.setQuantidadePoltronas(quantidadePoltronas);
+        event.setEstado(estado);
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.FLIGHT_EXCHANGE,
+                RabbitMQConfig.FLIGHT_ROUTING_KEY,
+                event
+        );
+    }
+
+    public void sendReservationUpdateEvent(ReservationDTO reserva) {
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.ROUTING_KEY,
+                reserva
+        );
+    }
+
+    public void validateReservationState(ReservationState newState , ReservationState currentState , Reservation reserva) {
+        if (newState == null || currentState == null) {
+            throw new IllegalArgumentException("Estado da reserva não pode ser nulo");
+        }
+
+        if (newState == ReservationState.EMBARCADA && currentState != ReservationState.CHECK_IN) {
+            throw new InvalidStateChangeException(currentState, newState, reserva);
+        }
     }
 }

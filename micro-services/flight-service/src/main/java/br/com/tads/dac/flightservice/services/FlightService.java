@@ -7,14 +7,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.tads.dac.flightservice.exceptions.ResourceNotFoundException;
+import br.com.tads.dac.flightservice.infraestructure.config.RabbitMQConfig;
 import br.com.tads.dac.flightservice.mappers.FlightMapper;
 import br.com.tads.dac.flightservice.models.dto.CreateFlightRequest;
 import br.com.tads.dac.flightservice.models.dto.FlightDTO;
+import br.com.tads.dac.flightservice.models.dto.ReservationState;
+import br.com.tads.dac.flightservice.models.dto.UpdateReservationStateEvent;
 import br.com.tads.dac.flightservice.models.dto.UpdateStateRequest;
 import br.com.tads.dac.flightservice.models.entities.Airport;
 import br.com.tads.dac.flightservice.models.entities.Flight;
@@ -29,27 +33,37 @@ public class FlightService {
     private FlightRepository flightRepository;
 
     @Autowired
+    private AirportService airportService;
+
+    @Autowired
     private FlightMapper flightMapper;
+
+    @Autowired    
+    private  RabbitTemplate rabbitTemplate;
 
     @Transactional(rollbackOn = Exception.class)
     public FlightDTO create(CreateFlightRequest req) {
         LocalDateTime localDate = req.getData().toLocalDateTime();
-
+        Airport airportOrigem = airportService.getByAirportCode(req.getCodigoAeroportoOrigem())
+            .orElseThrow(() -> new ResourceNotFoundException("Aeroporto de origem não encontrado: " + req.getCodigoAeroportoOrigem()));
+        Airport airportDestino = airportService.getByAirportCode(req.getCodigoAeroportoDestino())
+            .orElseThrow(() -> new ResourceNotFoundException("Aeroporto de destino não encontrado: " + req.getCodigoAeroportoDestino()));
+        
         Flight flight = Flight.builder()
             .data(localDate)                                          
             .valorPassagem(req.getValorPassagem())                                         
             .quantidadePoltronasTotal(Objects.nonNull(req.getQuantidadePoltronasTotal()) ? req.getQuantidadePoltronasTotal() : 0)                            
             .quantidadePoltronasOcupadas(Objects.nonNull(req.getQuantidadePoltronasOcupadas()) ? req.getQuantidadePoltronasOcupadas() : 0)                      
-            .aeroportoOrigem(new Airport(req.getCodigoAeroportoOrigem())) 
-            .aeroportoDestino(new Airport(req.getCodigoAeroportoDestino()))
-            .estado(FlightState.CRIADO)                                
+            .aeroportoOrigem(airportOrigem) 
+            .aeroportoDestino(airportDestino)
+            .estado(FlightState.CONFIRMADO)                                
             .build();
 
         Flight savedFlight = flightRepository.save(flight);    
         return flightMapper.fromEntity(savedFlight, ZoneOffset.of("-03:00"));
     }
 
-    public FlightDTO getFlightById(String id) {
+    public FlightDTO getFlightById(Long id) {
         Flight f = findEntityById(id);
         return flightMapper.fromEntity(f, ZoneOffset.of("-03:00"));
     }
@@ -82,7 +96,7 @@ public class FlightService {
             .collect(Collectors.toList());        
     }
 
-    public FlightDTO updateFlight(String id, Flight flight) {
+    public FlightDTO updateFlight(Long id, Flight flight) {
         Flight existing = findEntityById(id);
         
         existing.setEstado(flight.getEstado());
@@ -104,19 +118,37 @@ public class FlightService {
             .collect(Collectors.toList());
     }
 
-    public FlightDTO updateFlightState(String id, UpdateStateRequest req) {
+    public FlightDTO updateFlightState(Long id, UpdateStateRequest req) {
         Flight existing = findEntityById(id);
         existing.setEstado(req.estado());
         Flight saved = flightRepository.save(existing);
+        
+        if(req.estado() == FlightState.CANCELADO) 
+            sendStateReservationEvent(saved.getCodigo() , req.estado());
+        else if(req.estado() == FlightState.REALIZADO)
+            sendStateReservationEvent(saved.getCodigo() , req.estado());    
+
         return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
     }
 
-    public void deleteFlight(String id) {
+    public void sendStateReservationEvent(Long codigoVoo , FlightState estado) {
+        UpdateReservationStateEvent event = new UpdateReservationStateEvent();
+        event.setCodigoVoo(codigoVoo);
+        event.setEstado(estado);
+        
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.RESERVATION_EXCHANGE,
+                RabbitMQConfig.RESERVATION_UPDATE_STATE_ROUTING_KEY,
+                event
+        );
+    }
+
+    public void deleteFlight(Long id) {
         Flight f = findEntityById(id);
         flightRepository.delete(f);
     }
 
-    private Flight findEntityById(String id) {
+    private Flight findEntityById(Long id) {
         return flightRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(id));
     }

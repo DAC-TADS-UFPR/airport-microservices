@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ReservationDTO {
-    private String codigo;
-    private String codigoVoo;
+    private Long codigo;
+    private Long codigoVoo;
     private String codigoCliente;
     private ReservationState estado;
     private BigDecimal valor;

@@ -22,7 +22,6 @@ public class ReservationEventListener {
         try {
             ReservationView view = viewRepository.findById(dto.getCodigo())
             .map(existing -> {
-                // Atualiza os campos do existente
                 existing.setCodigoVoo(dto.getCodigoVoo());
                 existing.setCodigoCliente(dto.getCodigoCliente());
                 existing.setEstado(dto.getEstado());

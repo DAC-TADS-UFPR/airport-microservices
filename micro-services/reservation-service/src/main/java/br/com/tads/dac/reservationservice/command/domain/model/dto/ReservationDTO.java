@@ -13,9 +13,10 @@ import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 public class ReservationDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private String codigo;
-    private String codigoVoo;
+    private Long codigo;
+    private Long codigoVoo;
     private String codigoCliente;
+    private Integer quantidadePoltronas;
     private ReservationState estado;
     private BigDecimal valor;
     private Long milhasUtilizadas;

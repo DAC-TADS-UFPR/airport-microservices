@@ -47,10 +47,9 @@ router.get(
 router.patch(
   '/:id/estado',
   authenticateToken,
-  authorize('EMPLOYEE'),
   async (req, res) => {
     try {
-      const response = await axios.patch(`${SERVICE_CONFIG.FLIGHTS.url}/${req.params.id}/estado`, req.body);      
+      const response = await axios.patch(`${SERVICE_CONFIG.RESERVATION.url}/${req.params.id}/estado`, req.body);      
       res.status(response.status).json(response.data);
     } catch (e:any) {
       console.error('Error updating reservation state:', e.response?.data || e.message);

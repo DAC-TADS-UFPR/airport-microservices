@@ -19,7 +19,7 @@ public class ReservationViewController {
     private ReservationViewService reservationViewService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
+    public ResponseEntity<ReservationDTO> getReservation(@PathVariable Long id) {
         ReservationDTO dto = reservationViewService.getById(id);
         return ResponseEntity.ok(dto);
     }

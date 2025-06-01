@@ -1,13 +1,15 @@
-// src/modules/User/ReservationModal/ReservationModal.tsx
 "use client";
 
 import { FC } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
-import { getReservation } from "@/data/config/reservation";
+import { getReservation, updateReservationState } from "@/data/config/reservation";
 import { ReservationDTO } from "@/models/reserva";
 import "./ReservationModal.scss";
+import { ReservaState, ReservaStateEnum } from "@/models/reserva.state";
+import router from "next/router";
+import { formatDate } from "@/utils/formatDate";
 
 type Status = "Next" | "Completed" | "Canceled";
 
@@ -15,6 +17,10 @@ interface ReservationModalProps {
   reservationId: string;
   status: Status;
   onClose: () => void;
+}
+
+interface CheckInResponse {
+  message: string;
 }
 
 const ReservationModal: FC<ReservationModalProps> = ({
@@ -33,6 +39,50 @@ const ReservationModal: FC<ReservationModalProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const {mutateAsync} = useMutation<CheckInResponse, Error, ReservaState>({
+    mutationKey: ["updateReservationState"],
+    mutationFn: updateReservationState,
+    onSuccess: (data: CheckInResponse) => {
+      console.log("Check-in realizado com sucesso:", data);
+      router.push("/");
+    },
+    onError: (error: any) => {
+      console.error("Erro ao atualizar reserva:", error);
+      const apiErrors = error?.response?.data?.errors;
+      if (Array.isArray(apiErrors)) {
+        apiErrors.forEach((err: { field: string; message: string }) => {
+          console.error(`Erro no campo ${err.field}: ${err.message}`);
+        });
+      }
+    },
+  });
+
+  const doCheckIn = async () => {
+    try {
+      const state: ReservaState = {
+        id_reserva: reservationId,
+        estado: ReservaStateEnum.CHECK_IN,
+      };
+
+      await mutateAsync(state);
+    } catch (error) {
+      console.error("Erro ao realizar check-in:", error);
+    }
+  };
+
+  const doCancel = async () => {
+    try {
+      const state: ReservaState = {
+        id_reserva: reservationId,
+        estado: ReservaStateEnum.CANCELADA,
+      };
+
+      await mutateAsync(state);
+    } catch (error) {
+      console.error("Erro ao realizar check-in:", error);
+    }
+  };
+
   if (isLoading) {
     return <p className="reservationModal__status">Carregando detalhes...</p>;
   }
@@ -48,7 +98,7 @@ const ReservationModal: FC<ReservationModalProps> = ({
     );
   }
 
-  // Extrair dados da reserva
+  // 4) Se chegou aqui, "reserva" está definido e não houve erro
   const {
     codigo: codigoReserva,
     estado: estadoReserva,
@@ -58,7 +108,8 @@ const ReservationModal: FC<ReservationModalProps> = ({
     voo,
   } = reserva;
 
-  // Extrair dados do voo
+  console.log("Dados da reserva:", reserva);
+
   const {
     data: dataVoo,
     valor_passagem,
@@ -66,24 +117,13 @@ const ReservationModal: FC<ReservationModalProps> = ({
     aeroporto_destino,
   } = voo;
 
-  // Formatar datas e horas
-  const dataVooFormatada = new Date(dataVoo).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-  const horaVooFormatada = new Date(dataVoo).toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const dataVooFormatada = formatDate({ date: dataVoo, type: "date" });
+  const horaVooFormatada = formatDate({ date: dataVoo, type: "hour" });
 
-  // Exibe a hora de chegada somando 2h à hora de partida
   const chegada = new Date(dataVoo);
   chegada.setHours(chegada.getHours() + 2);
-  const horaChegadaFormatada = chegada.toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+
+  const horaChegadaFormatada = formatDate({ date: chegada, type: "hour" });
 
   return (
     <div className="reservationModal">
@@ -180,26 +220,28 @@ const ReservationModal: FC<ReservationModalProps> = ({
       <div className="reservationModal__footer">
         <ButtonDefault
           onClick={() => {
-            if (status === "Next") {
-              console.log("Realizar check-in");
+            if (reserva.estado === ReservaStateEnum.CRIADA) {
+              doCheckIn();
             } else if (status === "Completed") {
               console.log("Download do comprovante");
             } else {
               console.log("Reembolsar reserva");
             }
           }}
+          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA} 
         >
-          {status === "Next"
-            ? "Check-in"
+          {reserva.estado === ReservaStateEnum.CRIADA
+            ? isLoading
+              ? "Aguarde..."
+              : "Check-in"
             : status === "Completed"
             ? "Download"
             : "Reembolsar"}
         </ButtonDefault>
-        <ButtonDefault
-          color="red"
-          onClick={() => {
-            console.log("Cancelar reserva");
-          }}
+        <ButtonDefault 
+          color="red" 
+          onClick={() => doCancel()}
+          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA} 
         >
           Cancelar reserva
         </ButtonDefault>

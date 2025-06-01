@@ -17,9 +17,11 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 public class RabbitMQConfig {
 
     public static final String FLIGHT_EXCHANGE = "flight.exchange";
+    public static final String RESERVATION_EXCHANGE = "reservation.exchange";
     public static final String UPDATE_SEATS_QUEUE = "flight.update.poltronas.queue";
     public static final String FLIGHT_ROUTING_KEY = "flight.update.poltronas";
-    
+    public static final String RESERVATION_UPDATE_STATE_ROUTING_KEY = "reservation.update.state";
+
     @Bean
     public TopicExchange flightExchange() {
          return new TopicExchange(FLIGHT_EXCHANGE);

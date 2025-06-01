@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,9 +18,9 @@ import lombok.NoArgsConstructor;
 public class Flight {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private String codigo;
+    private Long codigo;
 
     @Column(nullable = false)
     private LocalDateTime data;

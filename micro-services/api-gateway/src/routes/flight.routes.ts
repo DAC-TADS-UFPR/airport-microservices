@@ -28,7 +28,6 @@ router.post(
 router.patch(
   '/:id/estado',
   authenticateToken,
-  authorize('EMPLOYEE'),
   async (req, res) => {
     try {
       const response = await axios.patch(`${SERVICE_CONFIG.FLIGHTS.url}/${req.params.id}/estado`, req.body);      

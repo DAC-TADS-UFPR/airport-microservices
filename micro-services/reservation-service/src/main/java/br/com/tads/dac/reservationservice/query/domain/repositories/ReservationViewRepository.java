@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.com.tads.dac.reservationservice.query.domain.models.entities.ReservationView;
 
 @Repository
-public interface ReservationViewRepository extends JpaRepository<ReservationView, String> {
+public interface ReservationViewRepository extends JpaRepository<ReservationView, Long> {
 
     List<ReservationView> findByCodigoCliente(String codigoCliente);
     

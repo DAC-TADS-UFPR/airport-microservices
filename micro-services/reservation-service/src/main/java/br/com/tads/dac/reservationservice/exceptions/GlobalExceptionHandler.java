@@ -28,6 +28,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidStateChangeException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidStateChangeException(InvalidStateChangeException ex, HttpServletRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                request.getRequestURI(),
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now(),
+                null
+        );
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {

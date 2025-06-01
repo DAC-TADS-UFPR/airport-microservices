@@ -26,13 +26,13 @@ public class ReservationController {
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<ReservationDTO> updateReservationState(@PathVariable String id , @Valid @RequestBody UpdateReservationRequest request) {
+    public ResponseEntity<ReservationDTO> updateReservationState(@PathVariable Long id , @Valid @RequestBody UpdateReservationRequest request) {
         return ResponseEntity.ok(reservaService.alterarEstado(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable String id) {
-        return ResponseEntity.ok(reservaService.alterarEstado(id, new UpdateReservationRequest(ReservationState.CANCELED)));
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long id) {
+        return ResponseEntity.ok(reservaService.alterarEstado(id, new UpdateReservationRequest(ReservationState.CANCELADA)));
     }
 
 }

@@ -76,7 +76,7 @@ public class ClienteService {
     }
 
     public void delete(String id) {
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente nao encontrado"));
+        clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente nao encontrado"));
         clienteRepository.deleteById(id);
     }
 
@@ -120,7 +120,7 @@ public class ClienteService {
                         .valorReais(e.getQuantidade() != null ?BigDecimal.valueOf(e.getQuantidade()*2) : BigDecimal.ZERO)
                         .quantidadeMilhas(e.getQuantidade())
                         .descricao(e.getDescricao())
-                        .codigoReserva(e.getCodigoReserva() != null ? e.getCodigoReserva() : "")
+                        .codigoReserva(e.getCodigoReserva())
                         .tipo(e.getTipo())
                         .build())
                 .collect(Collectors.toList());
