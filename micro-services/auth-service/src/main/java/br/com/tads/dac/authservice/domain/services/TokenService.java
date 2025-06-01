@@ -62,12 +62,12 @@ public class TokenService {
     }
     
     public User getUser(String token) {
-        Claims claims = Jwts.parserBuilder()
+        User user = null;
+        try {
+            Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token).getBody();
-        User user = null;
-        try {
             user = userService.findByEmail(claims.getSubject());
             return user;
         }  catch (Exception e) {

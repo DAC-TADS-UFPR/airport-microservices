@@ -19,9 +19,9 @@ router.post('/login', async (req, res) => {
       }
     };
 
-    if (tipo === UserType.CLIENT) {
+    if (tipo === UserType.CLIENTE) {
       userResponse = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${userId}`, options);
-    } else if (tipo === UserType.EMPLOYEE) {
+    } else if (tipo === UserType.FUNCIONARIO) {
       userResponse = await axios.get(`${SERVICE_CONFIG.EMPLOYEE.url}/${userId}`, options);
     } else {
       return res.status(400).json({ message: 'Tipo de usuário inválido.' });

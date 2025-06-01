@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:id/milhas', async (req, res) => {
+router.put('/:id/milhas', async (req, res) => {
     try {
       const response = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/${req.params.id}/milhas`, req.body);      
       res.status(response.status).json(response.data);
@@ -32,7 +32,7 @@ router.post('/:id/milhas', async (req, res) => {
 router.get(
   '/:id',
   authenticateToken,
-  authorize('CLIENT'),
+  authorize('CLIENTE'),
   async (req, res) => {
     try {
       const response = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${req.params.id}`, req.body);      
@@ -48,9 +48,27 @@ router.get(
 );
 
 router.get(
+  '/',
+  authenticateToken,
+  authorize('CLIENTE'),
+  async (req, res) => {
+    try {
+      const response = await axios.get(`${SERVICE_CONFIG.CLIENT.url}`);      
+      res.status(response.status).json(response.data);
+
+    } catch (e:any) {
+      console.error('Error fetching clients:', e.response?.data || e.message);
+      res
+        .status(e.response?.status || 500)
+        .json({ message: e.response?.data || 'Falha ao buscar clientes' });
+    }
+  }
+);
+
+router.get(
   '/:id/milhas',
   authenticateToken,
-  authorize('CLIENT'),
+  authorize('CLIENTE'),
   async (req, res) => {
     try {
       const response = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${req.params.id}/milhas`);      
@@ -68,7 +86,7 @@ router.get(
 router.get(
   '/:id/reservas',
   authenticateToken,
-  authorize('CLIENT'),
+  authorize('CLIENTE'),
   async (req, res) => {
     try {
       const result = await clientSagaOrchestrator.findReservationsByClient(req.params.id);

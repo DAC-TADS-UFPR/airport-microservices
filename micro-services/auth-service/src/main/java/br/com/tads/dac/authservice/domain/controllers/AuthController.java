@@ -37,13 +37,18 @@ public class AuthController {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body(null);
         }
-        
-        String token = authHeader.substring(7);
-        AuthResponse authResponse = authService.validateToken(token);
-        if (!authResponse.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authResponse);
+        try {
+            String token = authHeader.substring(7);
+            AuthResponse authResponse = authService.validateToken(token);
+            if (!authResponse.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authResponse);
+            }
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        return ResponseEntity.ok(authResponse);
+        
     }
 
     @PostMapping

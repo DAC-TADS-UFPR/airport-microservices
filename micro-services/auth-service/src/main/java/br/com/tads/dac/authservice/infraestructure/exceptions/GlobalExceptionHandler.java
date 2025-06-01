@@ -51,12 +51,12 @@ public class GlobalExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 request.getRequestURI(),
                 "Login ou Senha inválidos.",
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.UNAUTHORIZED.value(),
                 LocalDateTime.now(),
                 List.of()
         );
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
     
     @ExceptionHandler(UserAlredyExistsException.class)

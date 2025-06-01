@@ -25,7 +25,7 @@ export default function Page() {
     cleanupLocalStorage();
     return router.replace("/");
   }
-  if (storedRole !== "EMPLOYEE" || storedId !== id) {
+  if (storedRole !== "FUNCIONARIO" || storedId !== id) {
     return router.back();
   }
 

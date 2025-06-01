@@ -85,7 +85,7 @@ public class ClienteService {
     }
 
     public ClientDTO getById(String id) {
-        return clienteRepository.findById(id).map(t -> mapper.toDto(t)).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        return clienteRepository.findById(id).map(t -> mapper.toDto(t)).orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
     }
 
     public MilesTranscationResponseDTO adicionarTransacao(String clienteId, TransacaoMilhas transacao) {
@@ -103,7 +103,7 @@ public class ClienteService {
 
         clienteRepository.save(cliente);
         TransacaoMilhas transacaoMilhas = transacaoRepository.save(transacao);
-        return MilesTranscationResponseDTO.builder().codigo(transacaoMilhas.getId())
+        return MilesTranscationResponseDTO.builder().codigo(clienteId)
                 .saldoMilhas(transacaoMilhas.getQuantidade())
                 .build();
     }

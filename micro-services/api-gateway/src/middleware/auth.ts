@@ -30,8 +30,9 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     }
   } catch (error) {
     console.error('Erro ao validar token:', error);
+    console.log('error', error);
     if (axios.isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 401)) {
-      return res.status(403).json({ error: 'Token rejeitado pelo serviço de autenticação' });
+      return res.status(error.response?.status).json({ error: 'Token rejeitado pelo serviço de autenticação' });
     }
     return res.status(500).json({ error: 'Erro interno na autenticação' });
   }

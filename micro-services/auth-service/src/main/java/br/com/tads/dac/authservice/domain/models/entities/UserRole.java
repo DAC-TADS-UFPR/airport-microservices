@@ -1,8 +1,8 @@
 package br.com.tads.dac.authservice.domain.models.entities;
 
 public enum UserRole {
-    CLIENT("CLIENT"),
-    EMPLOYEE("EMPLOYEE");
+    CLIENTE("CLIENTE"),
+    FUNCIONARIO("FUNCIONARIO"),;
     
 
     private final String description;

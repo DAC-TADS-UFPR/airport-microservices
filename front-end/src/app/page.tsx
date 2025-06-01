@@ -31,10 +31,10 @@ export default function Page() {
       localStorage.setItem("nome", nome);
       localStorage.setItem("tipo", tipo);
 
-      if (tipo === "EMPLOYEE") {
+      if (tipo === "FUNCIONARIO") {
         router.push(`/admin/${codigo}`);
       }
-      if (tipo === "CLIENT") {
+      if (tipo === "CLIENTE") {
         router.push(`/user/${codigo}`);
       }
     },

@@ -41,11 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         jwt = authHeader.substring(7);
-        
-        User user = tokenService.getUser(jwt);
-        if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
-            if (tokenService.isTokenValid(jwt)) {
+        if (tokenService.isTokenValid(jwt)) {
+            User user = tokenService.getUser(jwt);
+            if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -57,7 +56,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+        }else{
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT token");
+            return;
         }
+        
         
         filterChain.doFilter(request, response);
             

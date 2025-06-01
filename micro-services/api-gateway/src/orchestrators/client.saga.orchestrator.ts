@@ -15,9 +15,10 @@ export class ClientSagaOrchestatorator {
             const clientResponse = await axios.post(`${SERVICE_CONFIG.CLIENT.url}/`, clientData);
             clientId = clientResponse.data?.codigo;
             if(clientResponse.status !== 201) {
-                return clientResponse;
+               
+              return clientResponse;
             }
-            const authRequest:IAuth = new IAuth(clientData.email , clientData.nome , clientId, UserType.CLIENT);
+            const authRequest:IAuth = new IAuth(clientData.email , clientData.nome , clientId, UserType.CLIENTE);
             console.log('auth create request:', authRequest);
             const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest);
             if(authResponse.status !== 201) {

@@ -15,7 +15,7 @@ export async function buyMiles({ payload }: { payload: { form: TForm } }) {
   const { miles } = payload.form;
   try {
     const clientId = localStorage.getItem("userId");
-    const { data } = await api.post(`/clientes/${clientId}/milhas`, {
+    const { data } = await api.put(`/clientes/${clientId}/milhas`, {
       quantidade: miles.value,
     });
     return data;

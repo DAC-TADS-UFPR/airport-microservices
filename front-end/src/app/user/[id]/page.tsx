@@ -29,7 +29,7 @@ export default function Page() {
     cleanupLocalStorage();
     return router.replace("/");
   }
-  if (storedRole !== "CLIENT" || storedId !== id) {
+  if (storedRole !== "CLIENTE" || storedId !== id) {
     return router.back();
   }
 

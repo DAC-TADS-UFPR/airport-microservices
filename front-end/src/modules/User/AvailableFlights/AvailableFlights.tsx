@@ -11,25 +11,8 @@ import ModalCenter from "@/components/Modal/ModalCenter/ModalCenter";
 import { useQuery } from "@tanstack/react-query";
 import { getFlights } from "@/data/config/flight";
 import { addHours, format } from "date-fns";
+import { Flight } from "@/models/flight";
 
-type Flight = {
-  codigo: string;
-  aeroporto_origem: {
-    codigo: string;
-    nome: string;
-    cidade: string;
-    uf: string;
-  };
-  aeroporto_destino: {
-    codigo: string;
-    nome: string;
-    cidade: string;
-    uf: string;
-  };
-  data: string;
-  horaSaida: string;
-  valor_passagem: number;
-};
 
 const AvailableFlights: FC = () => {
   const { openModal } = useModal();
