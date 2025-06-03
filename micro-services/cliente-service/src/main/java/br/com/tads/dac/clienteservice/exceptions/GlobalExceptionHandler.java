@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,6 +18,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -133,6 +141,78 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resp);
     }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadable(
+        HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+    // Puxa a causa mais específica (geralmente diz qual campo/ponto do JSON)
+    String detalhe = ex.getMostSpecificCause() != null 
+            ? ex.getMostSpecificCause().getMessage() 
+            : ex.getMessage();
+
+    ExceptionResponse resp = new ExceptionResponse(
+            request.getRequestURI(),
+            "Corpo da requisição inválido ou malformado: " + detalhe,
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(),
+            List.of()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
+}
+@ExceptionHandler(ConversionFailedException.class)
+public ResponseEntity<ExceptionResponse> handleConversionFailed(
+        ConversionFailedException ex, HttpServletRequest request) {
+
+    String valor = ex.getValue() != null ? ex.getValue().toString() : "null";
+    String tipoDestino = ex.getTargetType() != null ? ex.getTargetType().toString() : "desconhecido";
+    String msg = String.format("Falha ao converter o valor '%s' para o tipo '%s'.", valor, tipoDestino);
+
+    ExceptionResponse resp = new ExceptionResponse(
+            request.getRequestURI(),
+            msg,
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(),
+            List.of()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
+}
+@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+public ResponseEntity<ExceptionResponse> handleMediaTypeNotSupported(
+        HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Tipo de mídia não suportado: ").append(ex.getContentType()).append(". ");
+    sb.append("Tipos suportados: ");
+    ex.getSupportedMediaTypes().forEach(mt -> sb.append(mt).append(", "));
+
+    ExceptionResponse resp = new ExceptionResponse(
+            request.getRequestURI(),
+            sb.toString(),
+            HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+            LocalDateTime.now(),
+            List.of()
+    );
+    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(resp);
+}
+@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+public ResponseEntity<ExceptionResponse> handleMethodNotSupported(
+        HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+
+    String métodosSuportados = ex.getSupportedHttpMethods() != null
+            ? ex.getSupportedHttpMethods().stream().map(method -> method.name()).collect(Collectors.joining(", "))
+            : "";
+    String msg = String.format("Método '%s' não suportado. Métodos suportados: %s.",
+            ex.getMethod(), métodosSuportados);
+
+    ExceptionResponse resp = new ExceptionResponse(
+            request.getRequestURI(),
+            msg,
+            HttpStatus.METHOD_NOT_ALLOWED.value(),
+            LocalDateTime.now(),
+            List.of()
+    );
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(resp);
+}
 
 
 }

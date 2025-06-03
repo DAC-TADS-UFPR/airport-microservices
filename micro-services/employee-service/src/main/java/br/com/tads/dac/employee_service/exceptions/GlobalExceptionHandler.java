@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.hibernate.exception.ConstraintViolationException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -91,6 +92,22 @@ public ResponseEntity<ExceptionResponse> handleAll(Exception ex, HttpServletRequ
         List.of()
     );
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+}
+@ExceptionHandler(ConstraintViolationException.class)
+public ResponseEntity<ExceptionResponse> handleHibernateConstraintViolation(
+        ConstraintViolationException ex, HttpServletRequest request) {
+
+    // Se quiser detalhar cada violação, dá pra iterar em ex.getConstraintName() ou na causa
+    // Mas esse ConstraintViolationException do Hibernate normalmente vem quando uma FK ou UNIQUE falha no banco.
+
+    ExceptionResponse response = new ExceptionResponse(
+        request.getRequestURI(),
+        "Violação de restrição de banco: " + ex.getConstraintName(),
+        HttpStatus.BAD_REQUEST.value(), // ou INTERNAL_SERVER_ERROR, dependendo do contexto
+        LocalDateTime.now(),
+        List.of()
+    );
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 }
 
 
