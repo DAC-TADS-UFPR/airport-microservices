@@ -212,6 +212,106 @@ const mockedData = [
     seatsTotal: 160,
     status: "CANCELADO",
   },
+  {
+    code: "RES021",
+    dateHour: "2023-10-30T13:10:00",
+    origin: "CWB - Curitiba",
+    destination: "FLN - Florianópolis",
+    price: 35000,
+    seatsReserved: 70,
+    seatsTotal: 150,
+    status: "CONFIRMADO",
+  },
+  {
+    code: "RES022",
+    dateHour: "2023-10-31T22:45:00",
+    origin: "GIG - Rio de Janeiro",
+    destination: "MCZ - Maceió",
+    price: 60000,
+    seatsReserved: 90,
+    seatsTotal: 160,
+    status: "PENDENTE",
+  },
+  {
+    code: "RES023",
+    dateHour: "2023-11-01T07:30:00",
+    origin: "MAO - Manaus",
+    destination: "CGR - Campo Grande",
+    price: 85000,
+    seatsReserved: 65,
+    seatsTotal: 140,
+    status: "CONFIRMADO",
+  },
+  {
+    code: "RES024",
+    dateHour: "2023-11-02T16:15:00",
+    origin: "REC - Recife",
+    destination: "VIX - Vitória",
+    price: 52000,
+    seatsReserved: 100,
+    seatsTotal: 170,
+    status: "CANCELADO",
+  },
+  {
+    code: "RES025",
+    dateHour: "2023-11-03T10:00:00",
+    origin: "POA - Porto Alegre",
+    destination: "GIG - Rio de Janeiro",
+    price: 58000,
+    seatsReserved: 120,
+    seatsTotal: 180,
+    status: "CONFIRMADO",
+  },
+  {
+    code: "RES026",
+    dateHour: "2023-11-04T19:50:00",
+    origin: "GRU - São Paulo",
+    destination: "FOR - Fortaleza",
+    price: 75000,
+    seatsReserved: 110,
+    seatsTotal: 175,
+    status: "PENDENTE",
+  },
+  {
+    code: "RES027",
+    dateHour: "2023-11-05T06:40:00",
+    origin: "BSB - Brasília",
+    destination: "SSA - Salvador",
+    price: 49000,
+    seatsReserved: 95,
+    seatsTotal: 160,
+    status: "CONFIRMADO",
+  },
+  {
+    code: "RES028",
+    dateHour: "2023-11-06T14:30:00",
+    origin: "BEL - Belém",
+    destination: "MAO - Manaus",
+    price: 67000,
+    seatsReserved: 80,
+    seatsTotal: 150,
+    status: "CANCELADO",
+  },
+  {
+    code: "RES029",
+    dateHour: "2023-11-07T17:20:00",
+    origin: "VIX - Vitória",
+    destination: "CWB - Curitiba",
+    price: 54000,
+    seatsReserved: 110,
+    seatsTotal: 175,
+    status: "CONFIRMADO",
+  },
+  {
+    code: "RES030",
+    dateHour: "2023-11-08T09:15:00",
+    origin: "FLN - Florianópolis",
+    destination: "GRU - São Paulo",
+    price: 46000,
+    seatsReserved: 85,
+    seatsTotal: 160,
+    status: "PENDENTE",
+  },
 ];
 
 const ManageFlights: FC<ManageFlightsProps> = ({}) => {
@@ -228,7 +328,11 @@ const ManageFlights: FC<ManageFlightsProps> = ({}) => {
     <div className="manageFlights">
       <div className="manageFlights__header">
         <div className="manageFlights__title">Gerenciar voos</div>
-        <ButtonDefault children="Criar um voo" style={{ width: "auto" }} onClick={handleNewFlight} />
+        <ButtonDefault
+          children="Criar um voo"
+          style={{ width: "auto" }}
+          onClick={handleNewFlight}
+        />
       </div>
       <div className="manageFlights__content">
         {mockedData && mockedData.length > 0 ? (
@@ -246,15 +350,22 @@ const ManageFlights: FC<ManageFlightsProps> = ({}) => {
             </thead>
             <tbody>
               {[...mockedData]
-                .sort((a, b) => new Date(b.dateHour).getTime() - new Date(a.dateHour).getTime())
+                .sort(
+                  (a, b) =>
+                    new Date(b.dateHour).getTime() -
+                    new Date(a.dateHour).getTime()
+                )
                 .map((flight, index) => (
                   <tr key={index}>
                     <td>{flight?.code || ""}</td>
-                    <td>{formatDate({ date: flight?.dateHour, type: "dateHour" })}</td>
+                    <td>
+                      {formatDate({ date: flight?.dateHour, type: "dateHour" })}
+                    </td>
                     <td>{flight?.origin}</td>
                     <td>{flight?.destination}</td>
                     <td>
-                      R$ {formatToMoney(flight?.price)} / {formatFloat(formatToMoney(flight?.price) * 0.2)} Milhas
+                      R$ {formatToMoney(flight?.price)} /{" "}
+                      {formatFloat(formatToMoney(flight?.price) * 0.2)} Milhas
                     </td>
                     <td>
                       {flight?.seatsReserved} / {flight?.seatsTotal}
