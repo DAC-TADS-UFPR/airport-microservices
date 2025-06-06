@@ -12,7 +12,8 @@ public class FlightMapper {
     
    
 
-    public FlightDTO fromEntity(Flight f, ZoneOffset offset) {
+    public FlightDTO fromEntity(Flight f) {
+        ZoneOffset offset = ZoneOffset.of("-03:00");
         return FlightDTO.builder()
             .codigo(f.getCodigo())
             .data(f.getData().atOffset(offset))

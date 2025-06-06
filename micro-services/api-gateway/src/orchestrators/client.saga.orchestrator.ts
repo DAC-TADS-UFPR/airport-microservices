@@ -83,11 +83,17 @@ export class ClientSagaOrchestatorator {
         );
 
         const filteredResults = detailedReservations.filter(r => r !== null);
-
-        return {
-          status: 200,
-          data: filteredResults,
-        };
+        if (filteredResults.length === 0) {
+          return {
+            status: 204,
+            data: { message: "Nenhuma reserva encontrada para o cliente" },
+          };
+        }else{
+          return {
+            status: 200,
+            data: filteredResults,
+          };
+        }
       } catch (error) {
         const axiosError = error as AxiosError;
         console.error("Erro ao buscar reservas do cliente:", axiosError.response?.data || axiosError.message);

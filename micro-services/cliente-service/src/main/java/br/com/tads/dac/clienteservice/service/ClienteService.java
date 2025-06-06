@@ -104,7 +104,7 @@ public class ClienteService {
         clienteRepository.save(cliente);
         TransacaoMilhas transacaoMilhas = transacaoRepository.save(transacao);
         return MilesTranscationResponseDTO.builder().codigo(clienteId)
-                .saldoMilhas(transacaoMilhas.getQuantidade())
+                .saldoMilhas(cliente.getSaldoMilhas())
                 .build();
     }
 

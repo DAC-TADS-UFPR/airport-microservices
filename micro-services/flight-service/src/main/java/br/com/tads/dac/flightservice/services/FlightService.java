@@ -2,6 +2,7 @@ package br.com.tads.dac.flightservice.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +44,10 @@ public class FlightService {
 
     @Transactional(rollbackOn = Exception.class)
     public FlightDTO create(CreateFlightRequest req) {
-        LocalDateTime localDate = req.getData().toLocalDateTime();
+        LocalDateTime localDate = req.getData()
+            .toInstant()
+            .atZone(ZoneId.of("America/Sao_Paulo"))
+            .toLocalDateTime(); 
         Airport airportOrigem = airportService.getByAirportCode(req.getCodigoAeroportoOrigem())
             .orElseThrow(() -> new ResourceNotFoundException("Aeroporto de origem não encontrado: " + req.getCodigoAeroportoOrigem()));
         Airport airportDestino = airportService.getByAirportCode(req.getCodigoAeroportoDestino())
@@ -60,12 +64,12 @@ public class FlightService {
             .build();
 
         Flight savedFlight = flightRepository.save(flight);    
-        return flightMapper.fromEntity(savedFlight, ZoneOffset.of("-03:00"));
+        return flightMapper.fromEntity(savedFlight);
     }
 
     public FlightDTO getFlightById(Long id) {
         Flight f = findEntityById(id);
-        return flightMapper.fromEntity(f, ZoneOffset.of("-03:00"));
+        return flightMapper.fromEntity(f);
     }
 
     public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDate data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
@@ -74,7 +78,7 @@ public class FlightService {
             List<Flight> flights = flightRepository.findAllByDataAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(dataHora, codigoAeroportoOrigem , codigoAeroportoDestino);
             
             return flights.stream()
-                .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+                .map(f -> flightMapper.fromEntity(f))
                 .collect(Collectors.toList());
         }
 
@@ -82,7 +86,7 @@ public class FlightService {
             List<Flight> flights = flightRepository.findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(codigoAeroportoOrigem , codigoAeroportoDestino);
             
             return flights.stream()
-                .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+                .map(f -> flightMapper.fromEntity(f))
                 .collect(Collectors.toList());
         }
 
@@ -92,7 +96,7 @@ public class FlightService {
 
         List<Flight> flights = flightRepository.findAllByDataBetween(dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
         return flights.stream()
-            .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+            .map(f -> flightMapper.fromEntity(f))
             .collect(Collectors.toList());        
     }
 
@@ -108,13 +112,13 @@ public class FlightService {
         existing.setAeroportoDestino(flight.getAeroportoDestino());
 
         Flight saved = flightRepository.save(existing);
-        return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
+        return flightMapper.fromEntity(saved);
     }
 
     public List<FlightDTO> getAllFlights() {
         return flightRepository.findAll()
             .stream()
-            .map(f -> flightMapper.fromEntity(f, ZoneOffset.of("-03:00")))
+            .map(f -> flightMapper.fromEntity(f))
             .collect(Collectors.toList());
     }
 
@@ -128,7 +132,7 @@ public class FlightService {
         else if(req.estado() == FlightState.REALIZADO)
             sendStateReservationEvent(saved.getCodigo() , req.estado());    
 
-        return flightMapper.fromEntity(saved, ZoneOffset.of("-03:00"));
+        return flightMapper.fromEntity(saved);
     }
 
     public void sendStateReservationEvent(Long codigoVoo , FlightState estado) {

@@ -44,8 +44,8 @@ export async function getFlights({ queryKey }: any) : Promise<Flight[]> {
   try {
     const params = new URLSearchParams();
 
-    if (dataInicial) params.append('dataInicial', dataInicial);
-    if (dataFinal) params.append('dataFinal', dataFinal);
+    if (dataInicial) params.append('inicio', dataInicial);
+    if (dataFinal) params.append('fim', dataFinal);
     if (data) params.append('data', data);
     if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem);
     if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino);

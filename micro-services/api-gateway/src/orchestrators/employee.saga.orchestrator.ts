@@ -20,7 +20,7 @@ export class EmployeeSagaOrchestatorator {
             if(employeeResponse.status !== 201) {
                 return employeeResponse;
             }
-            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.EMPLOYEE);
+            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.FUNCIONARIO);
             console.log('authRequest', authRequest);
             const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest , options);
             if(authResponse.status !== 201) {
@@ -53,7 +53,7 @@ export class EmployeeSagaOrchestatorator {
             if(employeeResponse.status !== 200) {
                 return employeeResponse;
             }
-            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.EMPLOYEE);
+            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.FUNCIONARIO);
             const authResponse = await axios.put(`${SERVICE_CONFIG.AUTH.url}`, authRequest);
             
             return employeeResponse;

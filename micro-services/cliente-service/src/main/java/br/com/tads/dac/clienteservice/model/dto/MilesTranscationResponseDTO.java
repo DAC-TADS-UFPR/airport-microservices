@@ -7,5 +7,5 @@ import lombok.Data;
 @Builder
 public class MilesTranscationResponseDTO {
     private String codigo;
-    private int saldoMilhas;
+    private Long saldoMilhas;
 }

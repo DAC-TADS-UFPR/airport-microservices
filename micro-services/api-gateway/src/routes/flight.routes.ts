@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
   '/',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('FUNCIONARIO'),
   async (req, res) => {
     try {
       console.log('url', `${SERVICE_CONFIG.FLIGHTS.url}/voos`);
@@ -30,7 +30,7 @@ router.patch(
   authenticateToken,
   async (req, res) => {
     try {
-      const response = await axios.patch(`${SERVICE_CONFIG.FLIGHTS.url}/${req.params.id}/estado`, req.body);      
+      const response = await axios.patch(`${SERVICE_CONFIG.FLIGHTS.url}/voos/${req.params.id}/estado`, req.body);      
       res.status(response.status).json(response.data);
     } catch (e:any) {
       console.error('Error updating flight state:', e.response?.data || e.message);
@@ -48,7 +48,7 @@ router.get(
     try {
       const { id } = req.params;
 
-      const response = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/${id}`, {
+      const response = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${id}`, {
         headers: {
           Authorization: req.headers.authorization || '',
         },
@@ -70,8 +70,8 @@ router.get(
   async (req, res) => {
     try {
       const {
-        dataInicial,
-        dataFinal,
+        inicio,
+        fim,
         data,
         codigoAeroportoOrigem,
         codigoAeroportoDestino
@@ -79,12 +79,12 @@ router.get(
 
       const params = new URLSearchParams();
 
-      if (dataInicial) params.append('dataInicial', dataInicial as string);
-      if (dataFinal) params.append('dataFinal', dataFinal as string);
+      if (inicio) params.append('dataInicial', inicio as string);
+      if (fim) params.append('dataFinal', fim as string);
       if (data) params.append('data', data as string);
       if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem as string);
       if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino as string);
-
+      console.log('params', params.toString());
       const url = `${SERVICE_CONFIG.FLIGHTS.url}/voos?${params.toString()}`;
 
       const response = await axios.get(url, {
