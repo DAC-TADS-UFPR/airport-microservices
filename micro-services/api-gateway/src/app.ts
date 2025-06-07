@@ -7,6 +7,7 @@ import airportRoutes from './routes/airport.routes';
 import reservationRoutes from './routes/reservation.routes';
 import { logApiRequest, logApiResponse } from './config/logger';
 import cors from 'cors';
+import { setupAxiosInterceptors } from './config/axios.config';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -22,7 +23,6 @@ const corsOptions = {
 
 app.use(express.json());
 
-  
 app.use((req, res, next) => {
     logApiRequest(req);
     next();
@@ -35,6 +35,11 @@ app.use((req, res, next) => {
       return originalSend.call(this, body);
     };
     next();
+});
+
+app.use((req, res, next) => {
+  setupAxiosInterceptors(req);
+  next();
 });
   
 app.use(authRoutes);

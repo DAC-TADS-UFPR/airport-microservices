@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import br.com.tads.dac.reservationservice.command.domain.model.ReservationState;
 
 @Entity
@@ -36,8 +39,10 @@ public class ReservationView {
     private Long milhasUtilizadas;
 
     private String codigoAeroportoOrigem;
-    private String codigoAeroPortoDestino;
+    private String codigoAeroportoDestino;
 
+    @CreationTimestamp
     private LocalDateTime criadoEm;
+    @UpdateTimestamp
     private LocalDateTime atualizadoEm;
 }

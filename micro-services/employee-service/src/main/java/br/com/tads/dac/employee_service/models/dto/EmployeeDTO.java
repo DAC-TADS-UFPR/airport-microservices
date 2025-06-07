@@ -11,4 +11,5 @@ public class EmployeeDTO {
     private final String email;
     private final String cpf;
     private final String telefone;
+    private final String tipo = "FUNCIONARIO";
 }

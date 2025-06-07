@@ -29,14 +29,14 @@ router.post('/' , authenticateToken, async (req : Request, res :Response) => {
 router.get(
   '/',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('FUNCIONARIO'),
   async (req, res) => {
     try {
       const response = await axios.get(`${SERVICE_CONFIG.EMPLOYEE.url}`);      
       res.status(response.status).json(response.data);
 
     } catch (e:any) {
-      console.error('Error fetching reservation:', e.response?.data || e.message);
+      console.error('Error fetching employee:', e.response?.data || e.message);
       res
         .status(e.response?.status || 500)
         .json({ message: e.response?.data?.message || 'Falha ao buscar funcionario' });
@@ -47,7 +47,7 @@ router.get(
 router.get(
   '/:id',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('FUNCIONARIO'),
   async (req, res) => {
     try {
       const response = await axios.get(`${SERVICE_CONFIG.EMPLOYEE.url}/${req.params.id}`);      
@@ -65,7 +65,7 @@ router.get(
 router.put(
   '/:id',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('FUNCIONARIO'),
   async (req, res) => {
     try {
       const response = await employeeSagaOrchestrator.updateEmployee(req.body)
@@ -83,10 +83,10 @@ router.put(
 router.delete(
   '/:id',
   authenticateToken,
-  authorize('EMPLOYEE'),
+  authorize('FUNCIONARIO'),
   async (req, res) => {
     try {
-      const response = await axios.delete(`${SERVICE_CONFIG.RESERVATION.url}/${req.params.id}`);      
+      const response = await axios.delete(`${SERVICE_CONFIG.EMPLOYEE.url}/${req.params.id}`);      
       res.status(response.status).json(response.data);
 
     } catch (e:any) {

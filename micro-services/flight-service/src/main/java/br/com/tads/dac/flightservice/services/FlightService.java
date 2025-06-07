@@ -72,10 +72,9 @@ public class FlightService {
         return flightMapper.fromEntity(f);
     }
 
-    public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDate data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
+    public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDateTime data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
         if (data != null) {
-            LocalDateTime dataHora = data.atStartOfDay();
-            List<Flight> flights = flightRepository.findAllByDataAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(dataHora, codigoAeroportoOrigem , codigoAeroportoDestino);
+            List<Flight> flights = flightRepository.findAllByDataAfterAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(data, codigoAeroportoOrigem , codigoAeroportoDestino);
             
             return flights.stream()
                 .map(f -> flightMapper.fromEntity(f))
@@ -138,7 +137,7 @@ public class FlightService {
     public void sendStateReservationEvent(Long codigoVoo , FlightState estado) {
         UpdateReservationStateEvent event = new UpdateReservationStateEvent();
         event.setCodigoVoo(codigoVoo);
-        event.setEstado(estado);
+        event.setEstadoVoo(estado);
         
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.RESERVATION_EXCHANGE,

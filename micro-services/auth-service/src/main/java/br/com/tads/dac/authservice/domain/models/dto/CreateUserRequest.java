@@ -25,4 +25,6 @@ public class CreateUserRequest {
     private String nome;
 
     private String userId;
+
+    private String senha;
 }

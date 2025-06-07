@@ -33,7 +33,7 @@ public class TokenService {
 
     private String buildToken(User user, long expiration) {
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(user.getUserId())
                 .claim("userType", user.getUserType())
                 .claim("userId", user.getUserId())
                 .claim("name", user.getName())
@@ -68,7 +68,7 @@ public class TokenService {
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token).getBody();
-            user = userService.findByEmail(claims.getSubject());
+            user = userService.findByUserId(claims.getSubject());
             return user;
         }  catch (Exception e) {
             e.printStackTrace();

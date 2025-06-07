@@ -21,4 +21,5 @@ public class CreateFlightRequest{
     private Integer quantidadePoltronasOcupadas;
     private String codigoAeroportoOrigem;
     private String codigoAeroportoDestino;
+    private String estado; // Changed from FlightState enum to String
 }

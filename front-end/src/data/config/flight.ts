@@ -3,6 +3,7 @@ import api from "./api";
 import { parse, format } from 'date-fns';
 import { Flight } from "@/models/flight";
 import { FlightState } from "@/models/flight.state";
+import { FlightsResponse } from "@/models/flights.response";
 
 export async function createFlight({ payload }: { payload: { form: TForm } }) {
   const { data_voo, hora, origem, destino, valor_passagem, poltronas } = payload.form;
@@ -35,7 +36,7 @@ export async function getFlight({ _, queryKey }: any) : Promise<Flight> {
   }
 }
 
-export async function getFlights({ queryKey }: any) : Promise<Flight[]> {
+export async function getFlights({ queryKey }: any) : Promise<FlightsResponse> {
   const [
     key,
     { dataInicial, dataFinal, data, codigoAeroportoOrigem, codigoAeroportoDestino }

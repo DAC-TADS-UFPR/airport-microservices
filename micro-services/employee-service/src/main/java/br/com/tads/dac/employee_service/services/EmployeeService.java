@@ -44,10 +44,11 @@ public class EmployeeService {
         entity.setTelefone(obj.telefone());
     }
 
-    public void delete(String id) {
+    public EmployeeDTO delete(String id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionario nao encontrado"));
         employee.setActive(false);
         employeeRepository.save(employee);
+        return mapper.toDto(employeeRepository.save(employee));
     }
 
     public List<EmployeeDTO> getAll() {

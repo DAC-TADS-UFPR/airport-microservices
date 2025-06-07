@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.tads.dac.authservice.domain.models.dto.AuthRequest;
 import br.com.tads.dac.authservice.domain.models.dto.AuthResponse;
 import br.com.tads.dac.authservice.domain.models.dto.CreateUserRequest;
+import br.com.tads.dac.authservice.domain.models.dto.LogoutDTO;
 import br.com.tads.dac.authservice.domain.models.dto.UserDTO;
 import br.com.tads.dac.authservice.domain.services.AuthService;
 import br.com.tads.dac.authservice.domain.services.UserService;

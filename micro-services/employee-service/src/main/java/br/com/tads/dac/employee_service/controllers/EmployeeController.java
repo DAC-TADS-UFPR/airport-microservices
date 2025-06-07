@@ -65,9 +65,8 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        employeeService.delete(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EmployeeDTO> delete(@PathVariable String id) {
+        return ResponseEntity.ok().body(employeeService.delete(id));
     }
 
     @GetMapping

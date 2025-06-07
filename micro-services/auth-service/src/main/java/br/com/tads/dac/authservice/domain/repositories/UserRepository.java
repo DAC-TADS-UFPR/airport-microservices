@@ -21,4 +21,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     boolean existsByEmailAndUserIdNot(String login, String userId);
 
     Optional<User> getByUserId(String userId);
+
+    Optional<User> findByUserId(String userId);
 }

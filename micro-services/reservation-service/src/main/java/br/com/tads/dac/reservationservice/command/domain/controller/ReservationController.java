@@ -3,6 +3,7 @@ package br.com.tads.dac.reservationservice.command.domain.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDTO> criarReserva(@RequestBody @Valid CreateReservationRequest request) {
-        return ResponseEntity.ok().body(reservaService.criarReserva(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.criarReserva(request));
     }
 
     @PatchMapping("/{id}/estado")

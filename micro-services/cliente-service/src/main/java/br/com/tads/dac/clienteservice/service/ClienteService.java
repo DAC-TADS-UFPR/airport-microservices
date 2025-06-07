@@ -102,7 +102,7 @@ public class ClienteService {
         }
 
         clienteRepository.save(cliente);
-        TransacaoMilhas transacaoMilhas = transacaoRepository.save(transacao);
+        transacaoRepository.save(transacao);
         return MilesTranscationResponseDTO.builder().codigo(clienteId)
                 .saldoMilhas(cliente.getSaldoMilhas())
                 .build();
@@ -125,19 +125,10 @@ public class ClienteService {
                         .build())
                 .collect(Collectors.toList());
 
-        int saldo = listaDTO.stream()
-                .mapToInt(tx -> {
-                    if (tx.getTipo().name().equalsIgnoreCase("ENTRADA")) {
-                        return tx.getQuantidadeMilhas();
-                    } else {
-                        return -tx.getQuantidadeMilhas();
-                    }
-                })
-                .sum();
-
+       
         return ClienteTransacoesResponseDTO.builder()
                 .codigo(cliente.getId())
-                .saldoMilhas(saldo)
+                .saldoMilhas(cliente.getSaldoMilhas())
                 .transacoes(listaDTO)
                 .build();
     }

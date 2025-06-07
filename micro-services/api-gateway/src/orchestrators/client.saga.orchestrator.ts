@@ -103,4 +103,18 @@ export class ClientSagaOrchestatorator {
         };
       }
     }
+
+    findClientById = async (id: string): Promise<{ status: number; data: IClient | any }> => {
+        try {
+            const response = await axios.get(`${SERVICE_CONFIG.CLIENT.url}/${id}`);
+            return { status: response.status, data: response.data };
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.error('Error fetching client by ID:', axiosError.response?.data || axiosError.message);
+            return {
+                status: axiosError.response?.status || 500,
+                data: axiosError.response?.data || { message: "Erro interno ao buscar cliente" },
+            };
+        }
+    }
 }

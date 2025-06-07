@@ -83,32 +83,33 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(Exception.class)
-public ResponseEntity<ExceptionResponse> handleAll(Exception ex, HttpServletRequest request) {
-    ExceptionResponse body = new ExceptionResponse(
-        request.getRequestURI(),
-        "Ocorreu um erro inesperado.",
-        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        LocalDateTime.now(),
-        List.of()
-    );
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-}
-@ExceptionHandler(ConstraintViolationException.class)
-public ResponseEntity<ExceptionResponse> handleHibernateConstraintViolation(
-        ConstraintViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAll(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace();
+        ExceptionResponse body = new ExceptionResponse(
+            request.getRequestURI(),
+            "Ocorreu um erro inesperado.",
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now(),
+            List.of()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleHibernateConstraintViolation(
+            ConstraintViolationException ex, HttpServletRequest request) {
 
-    // Se quiser detalhar cada violação, dá pra iterar em ex.getConstraintName() ou na causa
-    // Mas esse ConstraintViolationException do Hibernate normalmente vem quando uma FK ou UNIQUE falha no banco.
+        // Se quiser detalhar cada violação, dá pra iterar em ex.getConstraintName() ou na causa
+        // Mas esse ConstraintViolationException do Hibernate normalmente vem quando uma FK ou UNIQUE falha no banco.
 
-    ExceptionResponse response = new ExceptionResponse(
-        request.getRequestURI(),
-        "Violação de restrição de banco: " + ex.getConstraintName(),
-        HttpStatus.BAD_REQUEST.value(), // ou INTERNAL_SERVER_ERROR, dependendo do contexto
-        LocalDateTime.now(),
-        List.of()
-    );
-    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-}
+        ExceptionResponse response = new ExceptionResponse(
+            request.getRequestURI(),
+            "Violação de restrição de banco: " + ex.getConstraintName(),
+            HttpStatus.BAD_REQUEST.value(), // ou INTERNAL_SERVER_ERROR, dependendo do contexto
+            LocalDateTime.now(),
+            List.of()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
 
 

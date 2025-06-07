@@ -1,6 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { SERVICE_CONFIG } from "../config/services";
 import { ReservationFullResponse } from "../models/reservation/ReservationFull";
+import { ClientSagaOrchestatorator } from "./client.saga.orchestrator";
+
+const clientSagaOrchestrator = new ClientSagaOrchestatorator();
 
 export class ReservationSagaOrchestatorator {
   public constructor() {}
@@ -47,6 +50,47 @@ export class ReservationSagaOrchestatorator {
         status: axiosError.response?.status || 500,
         data: axiosError.response?.data || { message: "Erro interno ao montar dados da reserva" },
       };
+    }
+  }
+
+  createReservation = async (createReservationRequest: any): Promise<{ status: number; data: ReservationFullResponse | any }> => {
+    try {
+      const flightResponse = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${createReservationRequest.codigo_voo}`);
+      if (!flightResponse.data) {
+        return { status: 404, data: { message: 'Voo não encontrado' } };
+      }
+
+      const clientResponse = await clientSagaOrchestrator.findClientById(createReservationRequest.codigo_cliente);
+      if (clientResponse.status !== 200) {
+        return { status: clientResponse.status, data: clientResponse.data };
+      }
+      const client = clientResponse.data;
+      console.log('client', client);
+      console.log('createReservationRequest', createReservationRequest);
+      if (client.saldo_milhas < createReservationRequest.milhas_utilizadas) {
+        console.log("client.saldoMilhas", client.saldoMilhas);
+        console.log("typeof client.saldoMilhas", typeof client.saldoMilhas);
+        return { status: 400, data: { erro: 'Saldo de milhas insuficiente' } };
+      }
+
+      const responseCreate = await axios.post(`${SERVICE_CONFIG.RESERVATION.url}/`, createReservationRequest);
+      const newReservation: ReservationFullResponse = {
+        codigo: responseCreate.data.codigo,
+        codigo_cliente: responseCreate.data.codigo_cliente,
+        valor: responseCreate.data.valor,
+        milhas_utilizadas: responseCreate.data.milhas_utilizadas,
+        quantidade_poltronas: responseCreate.data.quantidade_poltronas,
+        voo: flightResponse.data,
+        estado: responseCreate.data.estado,
+        data: responseCreate.data.data,
+      };
+
+      await new Promise(resolve => setTimeout(resolve, 1200));
+
+      return { status: responseCreate.status, data: newReservation };
+    } catch (e: any) {
+      console.error("Error creating reservation:", e.response?.data || e.message);
+      return { status: e.response?.status || 500, data: { message: e.response?.data || "Erro ao criar reserva" } };
     }
   }
 }

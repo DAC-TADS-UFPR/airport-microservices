@@ -27,7 +27,7 @@ public class ReservationViewService {
                         .valor(reservation.getValor())
                         .milhasUtilizadas(reservation.getMilhasUtilizadas())
                         .codigoAeroportoOrigem(reservation.getCodigoAeroportoOrigem())
-                        .codigoAeroPortoDestino(reservation.getCodigoAeroPortoDestino())
+                        .codigoAeroportoDestino(reservation.getCodigoAeroportoDestino())
                         .criadoEm(reservation.getCriadoEm())
                         .atualizadoEm(reservation.getAtualizadoEm())
                         .build())
@@ -51,7 +51,7 @@ public class ReservationViewService {
                 .valor(r.getValor())
                 .milhasUtilizadas(r.getMilhasUtilizadas())
                 .codigoAeroportoOrigem(r.getCodigoAeroportoOrigem())
-                .codigoAeroPortoDestino(r.getCodigoAeroPortoDestino())
+                .codigoAeroportoDestino(r.getCodigoAeroportoDestino())
                 .criadoEm(r.getCriadoEm())
                 .atualizadoEm(r.getAtualizadoEm())
                 .build();

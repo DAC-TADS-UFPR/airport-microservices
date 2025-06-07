@@ -17,7 +17,7 @@ public class ReservationDTO {
     private BigDecimal valor;
     private Long milhasUtilizadas;
     private String codigoAeroportoOrigem;
-    private String codigoAeroPortoDestino;
+    private String codigoAeroportoDestino;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
 }

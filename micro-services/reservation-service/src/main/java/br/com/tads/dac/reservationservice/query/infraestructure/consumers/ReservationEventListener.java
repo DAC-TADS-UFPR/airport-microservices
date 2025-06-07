@@ -28,7 +28,7 @@ public class ReservationEventListener {
                 existing.setValor(dto.getValor());
                 existing.setMilhasUtilizadas(dto.getMilhasUtilizadas());
                 existing.setCodigoAeroportoOrigem(dto.getCodigoAeroportoOrigem());
-                existing.setCodigoAeroPortoDestino(dto.getCodigoAeroPortoDestino());
+                existing.setCodigoAeroportoDestino(dto.getCodigoAeroportoDestino());
                 return existing;
             })
             .orElseGet(() -> ReservationView.builder()
@@ -39,7 +39,7 @@ public class ReservationEventListener {
                 .valor(dto.getValor())
                 .milhasUtilizadas(dto.getMilhasUtilizadas())
                 .codigoAeroportoOrigem(dto.getCodigoAeroportoOrigem())
-                .codigoAeroPortoDestino(dto.getCodigoAeroPortoDestino())
+                .codigoAeroportoDestino(dto.getCodigoAeroportoDestino())
                 .build()
             );
 

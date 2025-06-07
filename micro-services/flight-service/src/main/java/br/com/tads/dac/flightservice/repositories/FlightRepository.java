@@ -14,11 +14,9 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
     // Busca todos os voos cuja data (LocalDateTime) esteja entre dois instantes
     List<Flight> findAllByDataBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Flight> findAllByDataAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(
-        LocalDateTime dataHora,
-        String codigoAeroportoOrigem,
-        String codigoAeroportoDestino
-    );
+
+    List<Flight> findAllByDataAfterAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(
+      LocalDateTime data, String origem, String destino);
 
     List<Flight> findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(
         String codigoAeroportoOrigem,

@@ -16,7 +16,7 @@ public class ClienteTransacoesResponseDTO {
 
     private String codigo;
 
-    private Integer saldoMilhas;
+    private Long saldoMilhas;
 
     private List<TransacaoMilhasDTO> transacoes;
 }

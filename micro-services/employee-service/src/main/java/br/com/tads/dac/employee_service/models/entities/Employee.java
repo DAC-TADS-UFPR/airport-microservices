@@ -16,18 +16,16 @@ import org.hibernate.annotations.Where;
 @Data
 public class Employee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String codigo;
-
+    
     @Column(nullable = false)
     @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
     private String nome;
-
+    
     @Column(nullable = false)
     @Size(max = 255, message = "E-mail deve ter no máximo 255 caracteres")
     private String email;
-
+    
+    @Id
     @Column(unique = true, nullable = false)
     @Size(min = 11, max = 11, message = "CPF deve ter 11 dígitos")
     private String cpf;

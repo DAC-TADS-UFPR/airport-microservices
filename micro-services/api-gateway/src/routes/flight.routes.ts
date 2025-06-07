@@ -48,11 +48,7 @@ router.get(
     try {
       const { id } = req.params;
 
-      const response = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${id}`, {
-        headers: {
-          Authorization: req.headers.authorization || '',
-        },
-      });
+      const response = await axios.get(`${SERVICE_CONFIG.FLIGHTS.url}/voo/${id}`);
 
       res.status(response.status).json(response.data);
     } catch (e: any) {
@@ -73,8 +69,8 @@ router.get(
         inicio,
         fim,
         data,
-        codigoAeroportoOrigem,
-        codigoAeroportoDestino
+        destino,
+        origem
       } = req.query;
 
       const params = new URLSearchParams();
@@ -82,8 +78,8 @@ router.get(
       if (inicio) params.append('dataInicial', inicio as string);
       if (fim) params.append('dataFinal', fim as string);
       if (data) params.append('data', data as string);
-      if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem as string);
-      if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino as string);
+      if (origem) params.append('codigoAeroportoOrigem', origem as string);
+      if (destino) params.append('codigoAeroportoDestino', destino as string);
       console.log('params', params.toString());
       const url = `${SERVICE_CONFIG.FLIGHTS.url}/voos?${params.toString()}`;
 
@@ -93,7 +89,16 @@ router.get(
         },
       });
 
-      res.status(response.status).json(response.data);
+      res.status(response.status).json(
+        {
+          voos: response.data,
+          data:data,
+          origem: origem,
+          destino: destino,
+          inicio: inicio,
+          fim: fim
+        }
+      );
 
     } catch (e: any) {
       console.error('Error fetching flights:', e.response?.data || e.message);

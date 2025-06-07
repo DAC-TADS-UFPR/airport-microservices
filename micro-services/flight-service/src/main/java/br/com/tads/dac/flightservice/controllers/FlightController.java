@@ -1,5 +1,6 @@
 package br.com.tads.dac.flightservice.controllers;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class FlightController {
     public ResponseEntity<List<FlightDTO>> getFlights(
         @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataFinal,
 		@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataInicial,
-        @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate data,
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX") @RequestParam(required = false) LocalDateTime data,
         @RequestParam(required = false) String codigoAeroportoOrigem,
         @RequestParam(required = false) String codigoAeroportoDestino
     ) {

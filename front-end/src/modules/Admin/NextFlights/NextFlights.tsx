@@ -52,10 +52,7 @@ const NextFlights: FC<NextFlightsProps> = () => {
     enabled: true,
   });
 
-  const flights: Flight[] = Array.isArray(data) ? data : [];
-
-
-  console.log("Dados dos voos:", data);
+  const flights: Flight[] = Array.isArray(data?.voos) ? data.voos : [];
   
   return (
     <div className="nextFlights">

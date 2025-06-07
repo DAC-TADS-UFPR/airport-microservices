@@ -17,7 +17,7 @@ public class ReservationMapper {
             .valor(entity.getValor())
             .milhasUtilizadas(entity.getMilhasUtilizadas())
             .codigoAeroportoOrigem(entity.getCodigoAeroportoOrigem())
-            .codigoAeroPortoDestino(entity.getCodigoAeroportoDestino())
+            .codigoAeroportoDestino(entity.getCodigoAeroportoDestino())
             .quantidadePoltronas(entity.getQuantidadePoltronas())
             .build();
     }

@@ -14,7 +14,7 @@ public class EmployeeMapper {
 
     public EmployeeDTO toDto(Employee entity) {
         return EmployeeDTO.builder()
-            .codigo(entity.getCodigo())
+            .codigo(entity.getCpf())
             .nome(entity.getNome())
             .email(entity.getEmail())
             .cpf(entity.getCpf())

@@ -20,7 +20,7 @@ export class EmployeeSagaOrchestatorator {
             if(employeeResponse.status !== 201) {
                 return employeeResponse;
             }
-            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.FUNCIONARIO);
+            const authRequest:IAuth = new IAuth( employeeData.email, employeeData.nome ,employeeId, UserType.FUNCIONARIO , employeeData.senha);
             console.log('authRequest', authRequest);
             const authResponse = await axios.post(`${SERVICE_CONFIG.AUTH.url}/`, authRequest , options);
             if(authResponse.status !== 201) {
@@ -46,7 +46,7 @@ export class EmployeeSagaOrchestatorator {
 
     public async updateEmployee(employeeData: IEmployee): Promise<any> {
         try {
-            const employeeResponse = await axios.put(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeData.codigo}`, employeeData);
+            const employeeResponse = await axios.put(`${SERVICE_CONFIG.EMPLOYEE.url}/${employeeData.cpf}`, employeeData);
             const employeeId = employeeResponse.data?.codigo;
             console.log('employeeId', employeeId);
             console.log('data', employeeResponse.data);

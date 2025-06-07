@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee,String> {
     Optional<Employee> findByCpf(String cpf);
     List<Employee> findAllByActiveTrue();
-    Optional<Employee> findByCodigoAndActiveTrue(String id);
+    Optional<Employee> findByCpfAndActiveTrue(String id);
 }
