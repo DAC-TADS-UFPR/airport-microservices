@@ -11,4 +11,5 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
     Optional<Employee> findByCpf(String cpf);
     List<Employee> findAllByActiveTrue();
     Optional<Employee> findByCpfAndActiveTrue(String id);
+    Optional<Employee> findByIdAndStatus(String id, boolean b);
 }

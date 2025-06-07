@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.hibernate.exception.ConstraintViolationException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
@@ -111,6 +112,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleEntityNotFoundException(
+            EntityNotFoundException ex, 
+            HttpServletRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(), // ou INTERNAL_SERVER_ERROR, dependendo do contexto
+            LocalDateTime.now(),
+            List.of()
+        );
 
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.NOT_FOUND);
+    }
 
 }

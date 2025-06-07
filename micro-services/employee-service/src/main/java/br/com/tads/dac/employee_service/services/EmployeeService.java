@@ -58,8 +58,8 @@ public class EmployeeService {
     }
 
     public EmployeeDTO getById(String id) {
-        return employeeRepository.findById(id).map(employee -> mapper.toDto(employee))
-                .orElseThrow(() -> new ResourceNotFoundException(id));  
+        return employeeRepository.findByIdAndStatus(id,true).map(employee -> mapper.toDto(employee))
+                .orElseThrow(() -> new EntityNotFoundException(id));  
     }
 
 }
