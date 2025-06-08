@@ -39,7 +39,6 @@ const NextFlights: FC<NextFlightsProps> = () => {
   };
 
   const agora = new Date();
-  const daqui48h = addHours(agora, 48);
 
   const dataInicial = format(new Date(), 'yyyy-MM-dd');
 
@@ -56,7 +55,7 @@ const NextFlights: FC<NextFlightsProps> = () => {
   
   return (
     <div className="nextFlights">
-      <div className="nextFlights__title">Próximos voos (48H)</div>
+      <div className="nextFlights__title">voos (48H)</div>
       <div className="nextFlights__content">
         {isLoading && <p>Carregando próximos voos...</p>}
         {isError && (
@@ -87,9 +86,16 @@ const NextFlights: FC<NextFlightsProps> = () => {
                     <td>{voo?.aeroporto_destino?.codigo}</td>
                     <td>{voo?.estado}</td>
                     <td className="nextFlights__actions">
-                      <ButtonDefault children="Confirmar passageiro" size="small" color="green" onClick={() => confirmBording(voo.codigo)} />
-                      <ButtonDefault children="Cancelar" size="small" color="red" onClick={() => cancelFlight(voo.codigo)} />
-                      <ButtonDefault children="Realizar voo" size="small" onClick={() => confirmFlight(voo.codigo)} />
+                      {
+                        voo.estado == "CONFIRMADO" && (
+                          <>
+                            <ButtonDefault children="Confirmar passageiro" size="small" color="green" onClick={() => confirmBording(voo.codigo)} />
+                            <ButtonDefault children="Cancelar" size="small" color="red" onClick={() => cancelFlight(voo.codigo)} />
+                            <ButtonDefault children="Realizar voo" size="small" onClick={() => confirmFlight(voo.codigo)} />
+                          </>
+                        )
+                      }
+                      
                     </td>
                   </tr>
                 ))}

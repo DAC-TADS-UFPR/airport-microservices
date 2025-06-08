@@ -50,8 +50,7 @@ export default function Page() {
         <div className="user__infoContainer">
           <UserMilesCard data={data?.saldo_milhas}/>
           <div className="user__infoContainer user__infoContainer--row">
-            <UserHistoryCard info="Earned" />
-            <UserHistoryCard info="Used" />
+          
           </div>
         </div>
         <div className="user__navigation">

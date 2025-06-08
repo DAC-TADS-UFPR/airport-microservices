@@ -1,9 +1,12 @@
 import { TForm } from "@/hooks/useForm";
 import api from "./api";
 
-export async function createEmployee({ payload }: { payload: TForm }) {
+export async function createEmployee({ payload }:any) {
   try {
-    const { data } = await api.post(`/funcionarios`, { ...payload });
+    var { nome, cpf, email, telefone , senha} = payload;
+    cpf = cpf.replace(/\D/g, '');
+    telefone = telefone.replace(/\D/g, '');
+    const { data } = await api.post(`/funcionarios`, { nome, cpf, email, telefone , senha });
     return data;
   } catch (error: any) {
     throw error;
@@ -29,3 +32,11 @@ export async function updateEmployee({ payload }: { payload: TForm }) {
   }
 }
 
+export async function deleteEmployee(cpf: string) {
+  try {
+    const { data } = await api.delete(`/funcionarios/${cpf}`);
+    return data;
+  } catch (error: any) {
+    throw error;
+  }
+}

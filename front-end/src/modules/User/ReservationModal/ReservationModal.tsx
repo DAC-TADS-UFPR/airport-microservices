@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import ImgDefault from "@/components/ImgDefault/ImgDefault";
@@ -10,6 +10,7 @@ import "./ReservationModal.scss";
 import { ReservaState, ReservaStateEnum } from "@/models/reserva.state";
 import router from "next/router";
 import { formatDate } from "@/utils/formatDate";
+import ResultModal from "../../ResultModal/ResultModal";
 
 type Status = "Next" | "Completed" | "Canceled";
 
@@ -28,6 +29,10 @@ const ReservationModal: FC<ReservationModalProps> = ({
   status,
   onClose,
 }) => {
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const {
     data: reserva,
     isLoading,
@@ -39,20 +44,26 @@ const ReservationModal: FC<ReservationModalProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const {mutateAsync} = useMutation<CheckInResponse, Error, ReservaState>({
+  const {mutateAsync, isPending} = useMutation<CheckInResponse, Error, ReservaState>({
     mutationKey: ["updateReservationState"],
     mutationFn: updateReservationState,
     onSuccess: (data: CheckInResponse) => {
-      console.log("Check-in realizado com sucesso:", data);
-      router.push("/");
+      setIsSuccess(true);
+      setResultMessage("Operação realizada com sucesso!");
+      setShowResultModal(true);
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 2000);
     },
     onError: (error: any) => {
-      console.error("Erro ao atualizar reserva:", error);
+      setIsSuccess(false);
+      setResultMessage("Erro ao realizar operação. Por favor, tente novamente.");
+      setShowResultModal(true);
       const apiErrors = error?.response?.data?.errors;
       if (Array.isArray(apiErrors)) {
-        apiErrors.forEach((err: { field: string; message: string }) => {
-          console.error(`Erro no campo ${err.field}: ${err.message}`);
-        });
+        const errorMessages = apiErrors.map(err => err.message).join(", ");
+        setResultMessage(errorMessages);
       }
     },
   });
@@ -80,6 +91,13 @@ const ReservationModal: FC<ReservationModalProps> = ({
       await mutateAsync(state);
     } catch (error) {
       console.error("Erro ao realizar check-in:", error);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowResultModal(false);
+    if (isSuccess) {
+      window.location.reload();
     }
   };
 
@@ -246,6 +264,14 @@ const ReservationModal: FC<ReservationModalProps> = ({
           Cancelar reserva
         </ButtonDefault>
       </div>
+
+      <ResultModal
+        open={showResultModal}
+        isSuccess={isSuccess}
+        isPending={isPending}
+        message={resultMessage}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };

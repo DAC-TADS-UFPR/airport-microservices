@@ -2,11 +2,10 @@ import "./ModalNewEmployee.scss";
 import { FC } from "react";
 import { useForm } from "@/hooks/useForm";
 import { useModalCenter } from "@/components/Modal/ModalCenter/ModalCenter";
-import formatToMoney from "@/utils/formatToMoney";
 import InputText from "@/components/Inputs/InputText/InputText";
-import InputDate from "@/components/Inputs/InputDate/InputDate";
-import InputCurrency from "@/components/Inputs/InputCurrency/InputCurrency";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { useMutation } from "@tanstack/react-query";
+import { createEmployee } from "@/data/config/employee";
 
 interface ModalNewEmployeeProps {
   data?: any;
@@ -16,79 +15,136 @@ const ModalNewEmployee: FC<ModalNewEmployeeProps> = ({ data }) => {
   const { closeModal } = useModalCenter();
 
   const { form, loading, setLoading, changeState, validation } = useForm({
-    date: {
+    name: {
       invalid: false,
-      errorLabel: "Digite a data do voo.",
+      errorLabel: "Digite o nome do funcionário.",
       value: "",
     },
-    time: {
+    cpf: {
       invalid: false,
-      errorLabel: "Digite o horário do voo.",
+      errorLabel: "Digite o CPF do funcionário.",
       value: "",
     },
-    origin: {
+    email: {
       invalid: false,
-      errorLabel: "Digite a origem do voo.",
+      errorLabel: "Digite o email do funcionário.",
       value: "",
     },
-    destination: {
+    phone: {
       invalid: false,
-      errorLabel: "Digite o destino do voo.",
+      errorLabel: "Digite o telefone do funcionário.",
       value: "",
     },
-    price: {
+    senha: {
       invalid: false,
-      errorLabel: "Digite o preço do voo.",
-      value: formatToMoney(0) || "",
-    },
-    seatsTotal: {
-      invalid: false,
-      errorLabel: "Digite o número total de assentos do voo.",
+      errorLabel: "Digite a senha do funcionário.",
       value: "",
-    },
+    }
   });
+
+  const { mutateAsync } = useMutation({
+    mutationKey: ["createEmployee"],
+    mutationFn: createEmployee,
+    onSuccess: (data) => {      
+      closeModal();
+    },
+    onError: (error: any) => {
+      console.error("Error creating employee:", error);
+    }
+  });
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      if (validation()) return; 
+      const data = {
+        name: form.name.value,
+        cpf: form.cpf.value,
+        email: form.email.value,
+        phone: form.phone.value,
+      };
+      await mutateAsync({data});
+    } catch (error) {
+      console.error("Error creating employee:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="modalNewEmployee">
-      <span className="modalNewEmployee__description">Preencha os campos para cadastrar um novo funcionário.</span>
+      <span className="modalNewEmployee__description">
+        Preencha os campos para cadastrar um novo funcionário.
+      </span>
+      
       <div className="modalNewEmployee__grid">
         <InputText
-          id="nome"
-          label={"Nome do Funcionário"}
-          name="text"
+          id="name"
+          label="Nome do Funcionário"
+          name="name"
           placeholder="Nome do Funcionario"
-          onChange={(e) => {
-            changeState("text", "value", e.target.value);
-          }}
+          value={form.name.value}
+          erroMsg={form.name.errorLabel}
+          onChange={(e) => changeState("name", "value", e.target.value)}
         />
+        
         <InputText
-          id="CPF"
-          label={"CPF"}
+          id="cpf"
+          label="CPF"
+          name="cpf"
           placeholder="000.000.000-00"
-          name="CPF"
-          type="text"
-          onChange={(e) => {
-            changeState("text", "value", e.target.value);
-          }}
+          value={form.cpf.value}
+          erroMsg={form.cpf.errorLabel}
+          onChange={(e) => changeState("cpf", "value", e.target.value.replace(/\D/g, ''))}
         />
+        
         <InputText
           id="email"
-          label={"Email"}
+          label="Email"
+          name="email"
           placeholder="nome.funcionario@gmail.com"
-          onChange={(e) => {
-            changeState("text", "value", e.target.value);
-          }}
+          value={form.email.value}
+          erroMsg={form.email.errorLabel}
+          onChange={(e) => changeState("email", "value", e.target.value)}
         />
+        
         <InputText
-          id="telefone"
-          label={"Telefone"}
+          id="phone"
+          label="Telefone"
+          name="phone"
           placeholder="(DDD) 90000-0000"
-          onChange={(e) => {
-            changeState("text", "value", e.target.value);
-          }}
+          value={form.phone.value}
+          erroMsg={form.phone.errorLabel}
+          onChange={(e) => changeState("phone", "value", e.target.value)}
         />
-        <ButtonDefault children={"Cancelar"} color="white" onClick={closeModal} />
-        <ButtonDefault children={"Cadastrar funcionário"} onClick={closeModal} />
+        
+        <InputText
+          id="senha"
+          label="Senha"
+          name="senha"
+          type="password"
+          placeholder="Senha do Funcionário"
+          value={form.senha.value}
+          erroMsg={form.senha.errorLabel}
+          onChange={(e) => changeState("senha", "value", e.target.value)}
+        />
+
+        <div className="modalNewEmployee__buttons">
+          <ButtonDefault 
+            color="white" 
+            onClick={closeModal}
+            disabled={loading}
+          >
+            Cancelar
+          </ButtonDefault>
+          
+          <ButtonDefault 
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? 'Cadastrando...' : 'Cadastrar funcionário'}
+          </ButtonDefault>
+        </div>
       </div>
     </div>
   );

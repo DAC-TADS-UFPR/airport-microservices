@@ -31,19 +31,12 @@ export async function getReservationsByClient({ queryKey }: any): Promise<Reserv
 
 
 export async function updateReservatioon({ payload }: { payload: TForm }) {
-  try {
     const { data } = await api.put(`/reservas/${payload.codigo}`, { ...payload });
     return data;
-  } catch (error: any) {
-    throw error;
-  }
+  
 }
 
 export async function updateReservationState(payload: ReservaState) {
-  try {
     const { data } = await api.patch(`/reservas/${payload.id_reserva}/estado`, { ...payload });
     return data;
-  } catch (error: any) {
-    throw error;
-  }
 }

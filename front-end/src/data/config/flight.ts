@@ -48,8 +48,8 @@ export async function getFlights({ queryKey }: any) : Promise<FlightsResponse> {
     if (dataInicial) params.append('inicio', dataInicial);
     if (dataFinal) params.append('fim', dataFinal);
     if (data) params.append('data', data);
-    if (codigoAeroportoOrigem) params.append('codigoAeroportoOrigem', codigoAeroportoOrigem);
-    if (codigoAeroportoDestino) params.append('codigoAeroportoDestino', codigoAeroportoDestino);
+    if (codigoAeroportoOrigem) params.append('origem', codigoAeroportoOrigem);
+    if (codigoAeroportoDestino) params.append('destino', codigoAeroportoDestino);
 
     const url = `/voos?${params.toString()}`;
     const { data: responseData } = await api.get(url);
@@ -82,7 +82,7 @@ export async function updateFlight({ payload }: { payload: TForm }) {
 
 export async function updateFlightState(payload: FlightState) {
   try {
-    const { data } = await api.put(`/voos/${payload.id_voo}`, { ...payload });
+    const { data } = await api.patch(`/voos/${payload.id_voo}/estado`, { ...payload });
     return data;
   } catch (error: any) {
     throw error;

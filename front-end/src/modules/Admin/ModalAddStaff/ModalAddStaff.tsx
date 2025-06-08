@@ -9,6 +9,7 @@ import InputCpf from "@/components/Inputs/InputCpf/InputCpf";
 import InputText from "@/components/Inputs/InputText/InputText";
 import InputPhone from "@/components/Inputs/InputPhone/InputPhone";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
+import { se } from "date-fns/locale";
 
 interface ModalAddStaffProps {
   data?: any;
@@ -22,6 +23,7 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
     email: { invalid: false, errorLabel: "Digite seu e-mail", value: data?.email || "" },
     cpf: { invalid: false, errorLabel: "Digite seu CPF", value: data?.cpf || "" },
     phone: { invalid: false, errorLabel: "Digite seu telefone", value: data?.telefone || "" },
+    senha: { invalid: false, errorLabel: "Digite sua senha", value: "" },
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -56,6 +58,7 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
       email: form.email.value,
       cpf: form.cpf.value,
       telefone: form.phone.value,
+      senha: form.senha.value,
       ...(data?.cpf && { codigo: data.codigo }),
     };
     await mutateAsync({ payload });
@@ -106,6 +109,17 @@ const ModalAddStaff: FC<ModalAddStaffProps> = ({ data }) => {
           value={form.phone.value}
           invalid={form.phone.invalid}
           onChange={(e) => changeState("phone", "value", e.target.value)}
+        />
+        <InputText
+          disabled={loading}
+          id="senha"
+          label="Senha"
+          name="senha"
+          type="password"
+          value={form.senha.value}
+          erroMsg={form.senha.errorLabel}
+          invalid={form.senha.invalid}
+          onChange={(e) => changeState("senha", "value", e.target.value)}
         />
         <ButtonDefault children={isPending ? "Carregando..." : "Adicionar funcionário"} type="submit" disabled={isPending || loading} />
       </form>

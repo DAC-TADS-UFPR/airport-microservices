@@ -25,45 +25,35 @@ const AvailableFlights: FC = () => {
   const [filteredFlights, setFilteredFlights] = useState<Flight[]>([]);
 
   const agora = new Date();
-  const daqui48h = addHours(agora, 48);
-  const dataInicial = format(agora, "yyyy-MM-dd");
-  const dataFinal = format(daqui48h, "yyyy-MM-dd");
+  const data = format(agora, "yyyy-MM-dd'T'HH:mm:ssxxx");
 
   const {
-    data: initialData,
+    data: flightsResponse,
     isLoading: isLoadingInitial,
     isError: initialError,
+    refetch: fetchFlights
   } = useQuery({
-    queryKey: ["availableFlights-inicial", { dataInicial, dataFinal }],
-    queryFn: getFlights,
-    refetchOnWindowFocus: false,
-    enabled: true,
-  });
-
-  useEffect(() => {
-    if (initialData) {
-      setFilteredFlights(initialData);
-    }
-  }, [initialData]);
-
-  const {
-    data: filteredData,
-    isLoading: isLoadingFiltered,
-    isError: filteredError,
-    refetch: refetchFilteredFlights,
-  } = useQuery({
-    queryKey: ["availableFlights-filtro", { codigoAeroportoOrigem, codigoAeroportoDestino, dataInicial, dataFinal }],
+    queryKey: ["availableFlights-inicial", {codigoAeroportoOrigem, codigoAeroportoDestino, data}],
     queryFn: getFlights,
     refetchOnWindowFocus: false,
     enabled: false,
   });
 
-  useEffect(() => {
-    if (filteredData) {
-      setFilteredFlights(filteredData);
-    }
-  }, [filteredData]);
+  const handleSearch = async () => {
+      await fetchFlights();
+  };
 
+  useEffect(() => {
+      fetchFlights();
+  } , [codigoAeroportoOrigem, codigoAeroportoDestino, data]);
+
+  useEffect(() => {
+    if (flightsResponse) {
+      setFilteredFlights(flightsResponse.voos);
+    }
+  }, [flightsResponse]);
+
+  
   const openDetailsModal = (flight: Flight) => {
     setSelectedFlight(flight);
     setModalActive(true);
@@ -74,20 +64,7 @@ const AvailableFlights: FC = () => {
     setSelectedFlight(null);
   };
 
-  const handleSearch = async () => {
-    if (!codigoAeroportoOrigem && !codigoAeroportoDestino) {
-      if (initialData) {
-        setFilteredFlights(initialData);
-      }
-      return;
-    }
-
-    try {
-      await refetchFilteredFlights();
-    } catch (e) {
-      console.error("Erro ao buscar voos filtrados:", e);
-    }
-  };
+  
 
   return (
     <div className="availableFlights">

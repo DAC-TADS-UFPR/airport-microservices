@@ -1,5 +1,5 @@
+"use client";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
-import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import "./AvailableFlightsModal.scss";
 import { FC, useState } from "react";
 import { useModal } from "@/components/Provider/ModalProvider/ModalProvider";
@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createReservation } from "@/data/config/reservation";
 import router from "next/router";
 import { Flight } from "@/models/flight";
+import ResultModal from '../../ResultModal/ResultModal';
 
 
 interface AvailableFlightsModalProps {
@@ -19,22 +20,17 @@ interface AvailableFlightsModalProps {
 interface CreateReservationResponse {
   message: string;
 }
-
-const gerarCodigoReserva = () => {
-  const letras = Array.from({ length: 3 }, () =>
-    String.fromCharCode(65 + Math.floor(Math.random() * 26))
-  ).join("");
-  const numeros = Math.floor(100 + Math.random() * 900);
-  return `${letras}${numeros}`;
-};
-
 const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
   data,
   onClose,
 }) => {
+  const router = useRouter();
   const [quantidade, setQuantidade] = useState(1);
   const [milhasSaldo, setMilhasSaldo] = useState(1000);
   const [milhasUsadas, setMilhasUsadas] = useState(0);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const milhasPorAssento = data.valor_passagem * 0.2;
   const totalMilhas = milhasPorAssento * quantidade;
   const valorTotal = data.valor_passagem * quantidade;
@@ -44,15 +40,21 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
     mutationKey: ["createReservation"],
     mutationFn: createReservation,
     onSuccess: (data: CreateReservationResponse) => {
-      console.log("User created successfully", data);
-      router.push("/");
+      setIsSuccess(true);
+      setResultMessage("Reserva criada com sucesso!");
+      setShowResultModal(true);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     },
     onError: (error: any) => {
-      console.error("Error creating user", error);
+      setIsSuccess(false);
+      setResultMessage("Erro ao criar reserva. Por favor, tente novamente.");
+      setShowResultModal(true);
       const apiErrors = error?.response?.data?.errors;
       if (Array.isArray(apiErrors)) {
-        apiErrors.forEach((err: { field: string; message: string }) => {
-        });
+        const errorMessages = apiErrors.map(err => err.message).join(", ");
+        setResultMessage(errorMessages);
       }
     },
   });
@@ -67,8 +69,13 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
       codigo_aeroporto_destino: data.aeroporto_destino.codigo,
     };
     await mutateAsync({ ...novaReserva });
-    setMilhasSaldo((prev) => prev - milhasUsadas);
-    onClose();
+  };
+
+  const handleModalClose = () => {
+    setShowResultModal(false);
+    if (isSuccess) {
+      window.location.reload();
+    }
   };
 
   return (
@@ -144,6 +151,14 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
           </ButtonDefault>
         </div>
       </div>
+
+      <ResultModal
+        open={showResultModal}
+        isSuccess={isSuccess}
+        isPending={isPending}
+        message={resultMessage}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };
