@@ -58,7 +58,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO getById(String id) {
-        return employeeRepository.findByIdAndStatus(id,true).map(employee -> mapper.toDto(employee))
+        return employeeRepository.findByCpfAndActiveTrue(id).map(employee -> mapper.toDto(employee))
                 .orElseThrow(() -> new EntityNotFoundException(id));  
     }
 

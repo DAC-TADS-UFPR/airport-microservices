@@ -116,7 +116,7 @@ services:
       - CLIENT_SERVICE_URL=http://cliente-service:8085/api/clientes
       - FLIGHT_SERVICE_URL=http://flight-service:8083/api
       - EMPLOYEE_SERVICE_URL=http://employee-service:8087/api/funcionarios
-      - RESERVATION_SERVICE_URL=http://reservation-service:8089/api/reservas
+      - RESERVATION_SERVICE_URL=http://reservation-service:8084/api/reservas
       - RESERVATION_VIEW_SERVICE_URL=http://reservation-service:8084/api/reservas/view
     depends_on:
       - auth-service

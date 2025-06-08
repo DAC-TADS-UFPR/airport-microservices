@@ -100,12 +100,22 @@ public class ClienteService {
         } else if (transacao.getTipo() == TipoTransacao.SAIDA) {
             cliente.setSaldoMilhas(cliente.getSaldoMilhas() - transacao.getQuantidade());
         }
-
+        setTransactionDescription(transacao);
         clienteRepository.save(cliente);
         transacaoRepository.save(transacao);
         return MilesTranscationResponseDTO.builder().codigo(clienteId)
                 .saldoMilhas(cliente.getSaldoMilhas())
                 .build();
+    }
+
+    public void setTransactionDescription(TransacaoMilhas transacao) {
+        if(Objects.nonNull(transacao.getTipo()) && Objects.isNull(transacao.getDescricao()) && transacao.getDescricao().isEmpty()) {
+            if (transacao.getTipo() == TipoTransacao.ENTRADA) {
+                transacao.setDescricao("Crédito de milhas");
+            } else if (transacao.getTipo() == TipoTransacao.SAIDA) {
+                transacao.setDescricao("Débito de milhas");
+            }
+        }
     }
 
     public ClienteTransacoesResponseDTO getTransacoes(String clienteId) {

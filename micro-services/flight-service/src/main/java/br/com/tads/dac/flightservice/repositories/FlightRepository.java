@@ -22,4 +22,6 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
         String codigoAeroportoOrigem,
         String codigoAeroportoDestino
     );
+
+    List<Flight> findAllByDataAfter(LocalDateTime data);
 }

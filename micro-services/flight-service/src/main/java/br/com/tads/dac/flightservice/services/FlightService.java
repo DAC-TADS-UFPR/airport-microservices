@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -73,19 +74,26 @@ public class FlightService {
     }
 
     public List<FlightDTO> getFlights(LocalDate dataInicial, LocalDate dataFinal , LocalDateTime data , String codigoAeroportoOrigem, String codigoAeroportoDestino) {
+         List<Flight> flights = new ArrayList<>();
         if (data != null) {
-            List<Flight> flights = flightRepository.findAllByDataAfterAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(data, codigoAeroportoOrigem , codigoAeroportoDestino);
+            if (codigoAeroportoOrigem != null && codigoAeroportoDestino != null) {
+                flights = flightRepository.findAllByDataAfterAndAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(data, codigoAeroportoOrigem , codigoAeroportoDestino);
+            }else{
+                flights = flightRepository.findAllByDataAfter(data);
+            }
             
             return flights.stream()
                 .map(f -> flightMapper.fromEntity(f))
+                .sorted((f1, f2) -> f1.getData().compareTo(f2.getData()))
                 .collect(Collectors.toList());
         }
 
         if (codigoAeroportoOrigem != null && codigoAeroportoDestino != null) {
-            List<Flight> flights = flightRepository.findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(codigoAeroportoOrigem , codigoAeroportoDestino);
+            flights = flightRepository.findAllByAeroportoOrigem_CodigoAndAeroportoDestino_Codigo(codigoAeroportoOrigem , codigoAeroportoDestino);
             
             return flights.stream()
                 .map(f -> flightMapper.fromEntity(f))
+                .sorted((f1, f2) -> f1.getData().compareTo(f2.getData()))
                 .collect(Collectors.toList());
         }
 
@@ -93,9 +101,10 @@ public class FlightService {
             throw new IllegalArgumentException("Data inicial e data final são obrigatórias.");
         }
 
-        List<Flight> flights = flightRepository.findAllByDataBetween(dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
+        flights = flightRepository.findAllByDataBetween(dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
         return flights.stream()
             .map(f -> flightMapper.fromEntity(f))
+            .sorted((f1, f2) -> f1.getData().compareTo(f2.getData()))
             .collect(Collectors.toList());        
     }
 

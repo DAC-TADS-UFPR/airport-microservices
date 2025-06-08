@@ -16,7 +16,7 @@ export class EmployeeSagaOrchestatorator {
                 }
             }      
             const employeeResponse = await axios.post(`${SERVICE_CONFIG.EMPLOYEE.url}`, employeeData);
-            var employeeId = employeeResponse.data?.codigo;
+            var employeeId = employeeResponse.data?.cpf;
             if(employeeResponse.status !== 201) {
                 return employeeResponse;
             }
