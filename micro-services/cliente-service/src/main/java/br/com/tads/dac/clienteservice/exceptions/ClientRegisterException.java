@@ -2,6 +2,7 @@ package br.com.tads.dac.clienteservice.exceptions;
 
 import java.util.List;
 
+
 public class ClientRegisterException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
