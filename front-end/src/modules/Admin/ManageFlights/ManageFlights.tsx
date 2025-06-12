@@ -27,8 +27,8 @@ const ManageFlights: FC<ManageFlightsProps> = () => {
 
   const currentYearStart = new Date(new Date().getFullYear(), 0, 1);
   const today = new Date();
-  const dataInicial = format(currentYearStart, 'yyyy-MM-dd');
-  const dataFinal = format(today, 'yyyy-MM-dd');
+  const dataInicial = format(currentYearStart, "yyyy-MM-dd");
+  const dataFinal = format(today, "yyyy-MM-dd");
 
   const {
     data: flightsData,
@@ -40,7 +40,7 @@ const ManageFlights: FC<ManageFlightsProps> = () => {
     refetchOnWindowFocus: false,
   });
 
-  const flights:Flight[] = flightsData?.voos || [];
+  const flights: Flight[] = flightsData?.voos || [];
 
   return (
     <div className="manageFlights">
@@ -54,7 +54,10 @@ const ManageFlights: FC<ManageFlightsProps> = () => {
       </div>
       <div className="manageFlights__content">
         {isLoading ? (
-          <p>Carregando voos...</p>
+          <div className="manageFlights__loading">
+            <div className="spinner" />
+            <p>Carregando voos...</p>
+          </div>
         ) : isError ? (
           <p>Ocorreu um erro ao buscar os voos.</p>
         ) : flights.length > 0 ? (
@@ -72,23 +75,31 @@ const ManageFlights: FC<ManageFlightsProps> = () => {
             </thead>
             <tbody>
               {flights.map((flight: Flight, index: number) => (
-                  <tr key={index}>
-                    <td>{flight?.codigo || ""}</td>
-                    <td>
-                      {formatDate({ date: flight?.data, type: "dateHour" })}
-                    </td>
-                    <td>{flight?.aeroporto_origem.codigo}</td>
-                    <td>{flight?.aeroporto_destino.codigo}</td>
-                    <td>
-                      R$ {formatToMoney(flight?.valor_passagem)} /{" "}
-                      {formatFloat(formatToMoney(flight?.valor_passagem) * 0.2)} Milhas
-                    </td>
-                    <td>
-                      {flight?.quantidade_poltronas_ocupadas} / {flight?.quantidade_poltronas_total}
-                    </td>
-                    <td>{flight.estado}</td>
-                  </tr>
-                ))}
+                <tr key={index}>
+                  <td>{flight?.codigo || ""}</td>
+                  <td>
+                    {formatDate({ date: flight?.data, type: "dateHour" })}
+                  </td>
+                  <td>{flight?.aeroporto_origem.codigo}</td>
+                  <td>{flight?.aeroporto_destino.codigo}</td>
+                  <td>
+                    R$ {formatToMoney(flight?.valor_passagem)} /{" "}
+                    {formatFloat(formatToMoney(flight?.valor_passagem) * 0.2)}{" "}
+                    Milhas
+                  </td>
+                  <td>
+                    {flight?.quantidade_poltronas_ocupadas} /{" "}
+                    {flight?.quantidade_poltronas_total}
+                  </td>
+                  <td>
+                    <span
+                      className={`manageFlights__status ${flight.estado.toLowerCase()}`}
+                    >
+                      {flight.estado}
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         ) : (
