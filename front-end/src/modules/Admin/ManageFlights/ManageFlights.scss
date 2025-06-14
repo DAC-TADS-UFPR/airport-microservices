@@ -1,75 +1,128 @@
 .manageFlights {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  @include resize(gap, 32);
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__title {
+    font-weight: 500;
+    @include resize(font-size, $h3-fs);
+    @include resize(line-height, $h3-lh);
+    @include resize(letter-spacing, $h3-ls);
+  }
+
+  &__content {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     width: 100%;
-    @include resize(gap, 32);
+    @include resize(gap, 16);
+    @include resize(padding-inline, 16);
+    @include resize(padding-block, 16);
+    background-color: $color-white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    &__header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
 
-    &__title {
-        font-weight: 500;
-        @include resize(font-size, $h3-fs);
-        @include resize(line-height, $h3-lh);
-        @include resize(letter-spacing, $h3-ls);
-    }
+      thead {
+        border-bottom: 1px solid rgba($color-gray-10, 0.05);
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        @include resize(gap, 16);
-        @include resize(padding-inline, 16);
-        @include resize(padding-block, 16);
-        background-color: $color-white;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-
-            thead {
-                border-bottom: 1px solid rgba($color-gray-10, 0.05);
-
-                th {
-                    font-weight: 600;
-                    @include resize(padding, 8);
-                    @include resize(font-size, $l1-fs);
-                    @include resize(line-height, $l1-lh);
-                    @include resize(letter-spacing, $l1-ls);
-                }
-            }
-
-            tbody {
-                tr {
-                    @include resize(height, 56);
-                    &:nth-child(even) {
-                        background-color: rgba($color-gray-10, 0.025);
-                    }
-                    td {
-                        text-align: center;
-                        @include resize(padding, 8);
-                        @include resize(font-size, $l1-fs);
-                        @include resize(line-height, $l1-lh);
-                        @include resize(letter-spacing, $l1-ls);
-                    }
-                    .nextFlights__actions {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: center;
-                        @include resize(gap, 8);
-                    }
-                }
-            }
+        th {
+          font-weight: 600;
+          @include resize(padding, 8);
+          @include resize(font-size, $l1-fs);
+          @include resize(line-height, $l1-lh);
+          @include resize(letter-spacing, $l1-ls);
         }
+      }
+
+      tbody {
+        tr {
+          @include resize(height, 56);
+          &:nth-child(even) {
+            background-color: rgba($color-gray-10, 0.025);
+          }
+          td {
+            text-align: center;
+            @include resize(padding, 8);
+            @include resize(font-size, $l1-fs);
+            @include resize(line-height, $l1-lh);
+            @include resize(letter-spacing, $l1-ls);
+          }
+          .nextFlights__actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            @include resize(gap, 8);
+          }
+        }
+      }
     }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
+
+    &.ativo {
+      color: #2ecc71;
+    } // verde
+    &.cancelado {
+      color: #e74c3c;
+    } // vermelho
+    &.pendente {
+      color: #f39c12;
+    } // amarelo
+  }
 }
