@@ -26,9 +26,9 @@ const ManageFlights: FC<ManageFlightsProps> = () => {
   };
 
   const currentYearStart = new Date(new Date().getFullYear(), 0, 1);
-  const today = new Date();
+  const currentYearEnd = new Date(new Date().getFullYear(), 11, 31);
   const dataInicial = format(currentYearStart, 'yyyy-MM-dd');
-  const dataFinal = format(today, 'yyyy-MM-dd');
+  const dataFinal = format(currentYearEnd, 'yyyy-MM-dd');
 
   const {
     data: flightsData,

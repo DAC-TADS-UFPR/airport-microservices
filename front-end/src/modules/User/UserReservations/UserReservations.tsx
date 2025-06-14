@@ -38,10 +38,10 @@ const UserReservations: FC = () => {
       }
 
       const vooDate = new Date(reserva.voo.data);
-      if (vooDate > now && navbar === "Next") {
+      if (reserva.estado !== ReservaStateEnum.REALIZADA && navbar === "Next") {
         return true;
       }
-      if (vooDate <= now && navbar === "Completed") {
+      if (reserva.estado === ReservaStateEnum.REALIZADA && navbar === "Completed") {
         return true;
       }
       return false;
@@ -102,9 +102,9 @@ const UserReservations: FC = () => {
               status = "Canceled";
             } else {
               const vooDate = new Date(reserva.voo.data);
-              status = vooDate > now ? "Next" : "Completed";
+              status = reserva.estado !== ReservaStateEnum.REALIZADA ? "Next" : "Completed";
             }
-
+            
             return (
               <ReservationCard
                 key={reserva.codigo}

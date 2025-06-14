@@ -109,7 +109,7 @@ public class ClienteService {
     }
 
     public void setTransactionDescription(TransacaoMilhas transacao) {
-        if(Objects.nonNull(transacao.getTipo()) && Objects.isNull(transacao.getDescricao()) && transacao.getDescricao().isEmpty()) {
+        if(Objects.nonNull(transacao.getTipo()) && (Objects.isNull(transacao.getDescricao()) || transacao.getDescricao().isEmpty())) {
             if (transacao.getTipo() == TipoTransacao.ENTRADA) {
                 transacao.setDescricao("Crédito de milhas");
             } else if (transacao.getTipo() == TipoTransacao.SAIDA) {

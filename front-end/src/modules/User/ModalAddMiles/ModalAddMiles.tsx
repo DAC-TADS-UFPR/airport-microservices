@@ -25,7 +25,7 @@ const ModalAddMiles: FC<ModalAddMilesProps> = ({ data }) => {
     mutationFn: buyMiles,
     onSuccess: (data: CreateMilesResponse) => {
       console.log("User created successfully", data);
-      router.push("/");
+      window.location.reload();
     },
     onError: (error: any) => {
       console.error("Error creating user", error);
