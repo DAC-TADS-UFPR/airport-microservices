@@ -12,5 +12,5 @@
    ```
 3. Run the following command to build the project images:
    ```sh
-  ./run.sh
+     ./run.sh
    ```
