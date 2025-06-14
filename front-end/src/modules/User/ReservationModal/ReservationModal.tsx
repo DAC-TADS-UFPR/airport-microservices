@@ -116,7 +116,6 @@ const ReservationModal: FC<ReservationModalProps> = ({
     );
   }
 
-  // 4) Se chegou aqui, "reserva" está definido e não houve erro
   const {
     codigo: codigoReserva,
     estado: estadoReserva,
@@ -246,7 +245,7 @@ const ReservationModal: FC<ReservationModalProps> = ({
               console.log("Reembolsar reserva");
             }
           }}
-          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA} 
+          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA || reserva.estado === ReservaStateEnum.REALIZADA} 
         >
           {reserva.estado === ReservaStateEnum.CRIADA
             ? isLoading
@@ -259,7 +258,7 @@ const ReservationModal: FC<ReservationModalProps> = ({
         <ButtonDefault 
           color="red" 
           onClick={() => doCancel()}
-          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA} 
+          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA || reserva.estado === ReservaStateEnum.REALIZADA} 
         >
           Cancelar reserva
         </ButtonDefault>

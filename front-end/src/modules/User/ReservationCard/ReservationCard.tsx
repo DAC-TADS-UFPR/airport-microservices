@@ -32,20 +32,17 @@ const ReservationCard: FC<ReservationCardProps> = ({ data, status }) => {
     });
   };
 
-  // Extraindo informações do objeto `data`
   const reservationCode = data.codigo;
   const flight = data.voo;
   const origem = flight.aeroporto_origem;
   const destino = flight.aeroporto_destino;
 
-  // Formata a data do voo só para exibir (DD MMM YYYY)
   const flightDateFormatted = new Date(flight.data).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 
-  // Formata a hora de partida (HH:mm)
   const flightTimeFormatted = new Date(flight.data).toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",

@@ -65,11 +65,7 @@ export class ReservationSagaOrchestatorator {
         return { status: clientResponse.status, data: clientResponse.data };
       }
       const client = clientResponse.data;
-      console.log('client', client);
-      console.log('createReservationRequest', createReservationRequest);
       if (client.saldo_milhas < createReservationRequest.milhas_utilizadas) {
-        console.log("client.saldoMilhas", client.saldoMilhas);
-        console.log("typeof client.saldoMilhas", typeof client.saldoMilhas);
         return { status: 400, data: { erro: 'Saldo de milhas insuficiente' } };
       }
 
@@ -85,7 +81,7 @@ export class ReservationSagaOrchestatorator {
         data: responseCreate.data.data,
       };
 
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       return { status: responseCreate.status, data: newReservation };
     } catch (e: any) {

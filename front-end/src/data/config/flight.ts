@@ -15,8 +15,8 @@ export async function createFlight({ payload }: { payload: { form: TForm } }) {
     const { data } = await api.post(`/voos`, 
       { 
         data: `${formattedDate}`,
-        codigo_aeroporto_origem: origem.value,
-        codigo_aeroporto_destino: destino.value,
+        codigo_aeroporto_origem: upperCase(origem.value),
+        codigo_aeroporto_destino: upperCase(destino.value),
         valor_passagem: valor_passagem.value.replace('.', '').replace(',', '.'),
         quantidade_poltronas_total: poltronas.value,
     });
@@ -25,6 +25,10 @@ export async function createFlight({ payload }: { payload: { form: TForm } }) {
     throw error;
   }
 }
+
+const upperCase = (str: string) => {
+  return str?.toUpperCase();
+};
 
 export async function getFlight({ _, queryKey }: any) : Promise<Flight> {
   const [key, id] = queryKey;
@@ -48,8 +52,8 @@ export async function getFlights({ queryKey }: any) : Promise<FlightsResponse> {
     if (dataInicial) params.append('inicio', dataInicial);
     if (dataFinal) params.append('fim', dataFinal);
     if (data) params.append('data', data);
-    if (codigoAeroportoOrigem) params.append('origem', codigoAeroportoOrigem);
-    if (codigoAeroportoDestino) params.append('destino', codigoAeroportoDestino);
+    if (codigoAeroportoOrigem) params.append('origem', upperCase(codigoAeroportoOrigem));
+    if (codigoAeroportoDestino) params.append('destino', upperCase(codigoAeroportoDestino));
 
     const url = `/voos?${params.toString()}`;
     const { data: responseData } = await api.get(url);

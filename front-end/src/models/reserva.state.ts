@@ -10,4 +10,6 @@ export enum ReservaStateEnum {
     CHECK_IN = "CHECK-IN",
     CRIADA = "CRIADA",
     EMBARCADA = "EMBARCADA",
+    REALIZADA = "REALIZADA",
+    NAO_REALIZADA = "NAO_REALIZADA",
 }

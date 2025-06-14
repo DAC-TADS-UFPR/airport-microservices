@@ -108,7 +108,7 @@ services:
       test: ["CMD", "rabbitmqctl", "status"]
 
   api-gateway:
-    build: ./api-gateway
+    build: ./micro-services/api-gateway
     ports:
       - "3000:3000"
     environment:
@@ -126,7 +126,7 @@ services:
       - reservation-service
    
   auth-service:
-    build: ./auth-service
+    build: ./micro-services/auth-service
     container_name: auth-service
     ports:
       - "8086:8086"
@@ -138,7 +138,7 @@ services:
       - mongodb-auth
  
   cliente-service:
-    build: ./cliente-service
+    build: ./micro-services/cliente-service
     container_name: cliente-service
     ports:
       - "8085:8085"
@@ -155,7 +155,7 @@ services:
         condition: service_healthy
   
   flight-service:
-    build: ./flight-service
+    build: ./micro-services/flight-service
     container_name: flight-service
     ports:
       - "8083:8083"
@@ -171,7 +171,7 @@ services:
       postgres-flight:
         condition: service_healthy
   employee-service:
-    build: ./employee-service
+    build: ./micro-services/employee-service
     container_name: employee-service
     ports:
       - "8087:8087"
@@ -188,7 +188,7 @@ services:
         condition: service_healthy
 
   reservation-service:
-    build: ./reservation-service
+    build: ./micro-services/reservation-service
     container_name: reservation-service
     ports:
       - "8084:8084"
@@ -204,3 +204,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy  
+  
+  front-end:
+    build: ./front-end
+    container_name: front-end
+    ports:
+      - "3001:3000"
+    environment:
+      REACT_APP_API_GATEWAY_URL: http://api-gateway:3000
+    depends_on:
+      - api-gateway
