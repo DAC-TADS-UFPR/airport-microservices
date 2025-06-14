@@ -8,19 +8,9 @@
 
 2. Navigate to the project directory:
    ```sh
-   cd airport-microservices/micro-services
+   cd airport-microservices
    ```
 3. Run the following command to build the project images:
    ```sh
-   mvn clean install -DskipTests
-   ```
-   
-4. Run the following command to run the images in docker and run the project:
-   ```sh
-   docker-compose up -d
-   ```
-
-5. To check running containers:
-   ```sh
-   docker ps
+  ./run.sh
    ```
