@@ -1,24 +1,41 @@
-import "./ModalSelectSeat.css";
-import React, { useState } from "react";
+// ModalSelectSeat.tsx
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import styles from "./ModalSelectSeat.module.css";
 
-interface Seat {
+type Column = string;
+
+export interface Seat {
   row: number;
-  column: string;
+  column: Column;
   isSelected: boolean;
   isAvailable: boolean;
 }
 
-interface ModalSelectSeatProps {
+interface Props {
   rows?: number;
-  columns?: string[];
-  onClose: () => void;
-  onConfirm: (selectedSeats: Seat[]) => void;
+  columns?: Column[];
+  onClose: VoidFunction;
+  onConfirm: (seats: Seat[]) => void;
 }
 
-const defaultColumns = ["A", "B", "C", "D", "E", "F"];
+const DEFAULT_COLUMNS = ["A", "B", "C", "D", "E", "F"];
 
-export const ModalSelectSeat: React.FC<ModalSelectSeatProps> = ({ rows = 30, columns = defaultColumns, onClose, onConfirm }) => {
-  const [seats, setSeats] = useState<Seat[]>(() => {
+// small component for each seat cell
+const SeatButton: FC<{
+  seat: Seat;
+  onToggle: (seat: Seat) => void;
+}> = ({ seat, onToggle }) => {
+  const cls = [styles.seat, !seat.isAvailable && styles.occupied, seat.isSelected && styles.selected].filter(Boolean).join(" ");
+  return (
+    <div className={cls} onClick={() => seat.isAvailable && onToggle(seat)}>
+      {seat.column}
+    </div>
+  );
+};
+
+export const ModalSelectSeat: FC<Props> = ({ rows = 30, columns = DEFAULT_COLUMNS, onClose, onConfirm }) => {
+  // generate initial seat list only once
+  const initialSeats = useMemo(() => {
     const list: Seat[] = [];
     for (let r = 1; r <= rows; r++) {
       for (const c of columns) {
@@ -26,54 +43,55 @@ export const ModalSelectSeat: React.FC<ModalSelectSeatProps> = ({ rows = 30, col
           row: r,
           column: c,
           isSelected: false,
-          isAvailable: Math.random() > 0.1, // 10% chance occupied
+          isAvailable: Math.random() > 0.1,
         });
       }
     }
     return list;
-  });
+  }, [rows, columns]);
 
-  const toggleSeat = (row: number, column: string) => {
-    setSeats((prev) =>
-      prev.map((s) => {
-        if (s.row === row && s.column === column && s.isAvailable) {
-          return { ...s, isSelected: !s.isSelected };
-        }
-        return s;
-      })
-    );
-  };
+  const [seats, setSeats] = useState<Seat[]>(initialSeats);
 
-  const handleConfirm = () => {
-    const selected = seats.filter((s) => s.isSelected);
-    onConfirm(selected);
-  };
+  // toggle a seat's selected state
+  const handleToggle = useCallback((target: Seat) => {
+    setSeats((prev) => prev.map((s) => (s.row === target.row && s.column === target.column ? { ...s, isSelected: !s.isSelected } : s)));
+  }, []);
 
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>Selecione seu(s) assento(s)</h2>
-        <div className="seats-grid">
-          {Array.from({ length: rows }, (_, i) => i + 1).map((r) => (
-            <div key={r} className="seat-row">
-              <span className="row-label">{r}</span>
-              {columns.map((c) => {
-                const seat = seats.find((s) => s.row === r && s.column === c)!;
-                const classNames = ["seat", !seat.isAvailable && "seat-occupied", seat.isSelected && "seat-selected"].filter(Boolean).join(" ");
-                return (
-                  <div key={`${r}-${c}`} className={classNames} onClick={() => toggleSeat(r, c)}>
-                    {c}
-                  </div>
-                );
-              })}
-            </div>
+  // gather selected seats once on confirm
+  const handleConfirm = useCallback(() => {
+    onConfirm(seats.filter((s) => s.isSelected));
+  }, [onConfirm, seats]);
+
+  // optional: reset when modal re-opens
+  useEffect(() => {
+    setSeats(initialSeats);
+  }, [initialSeats]);
+
+  // render rows
+  const grid = useMemo(() => {
+    return Array.from({ length: rows }, (_, i) => i + 1).map((rowNum) => {
+      const rowSeats = seats.filter((s) => s.row === rowNum);
+      return (
+        <div key={rowNum} className={styles.row}>
+          <div className={styles.rowLabel}>{rowNum}</div>
+          {rowSeats.map((seat) => (
+            <SeatButton key={`${seat.row}-${seat.column}`} seat={seat} onToggle={handleToggle} />
           ))}
         </div>
-        <div className="modal-actions">
-          <button className="btn btn-cancel" onClick={onClose}>
+      );
+    });
+  }, [rows, seats, handleToggle]);
+
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2>Selecione seu(s) assento(s)</h2>
+        <div className={styles.grid}>{grid}</div>
+        <div className={styles.actions}>
+          <button onClick={onClose} className={styles.cancel}>
             Cancelar
           </button>
-          <button className="btn btn-confirm" onClick={handleConfirm}>
+          <button onClick={handleConfirm} className={styles.confirm}>
             Confirmar
           </button>
         </div>
