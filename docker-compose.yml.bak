@@ -1,0 +1,216 @@
+volumes:
+  mongodb-auth-data:
+  postgres-cliente-data:
+  postgres-flight-data:
+  postgres-employee-data:
+  postgres-reservation-query-data:
+  postgres-reservation-command-data:
+
+
+services:
+  mongodb-auth:
+    image: mongo:6
+    container_name: mongodb-auth
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: auth_pass
+      MONGO_INITDB_DATABASE: auth_db
+    volumes:
+      - mongodb-auth-data:/data/db
+    ports:
+      - "27018:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+
+  postgres-cliente:
+    image: postgres:15
+    container_name: postgres-cliente
+    environment:
+      POSTGRES_DB: cliente_db
+      POSTGRES_USER: cliente_user
+      POSTGRES_PASSWORD: cliente_pass
+    ports:
+      - "5433:5432"  
+    volumes:
+      - postgres-cliente-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cliente_user -d cliente_db"]
+
+  postgres-flight:
+    image: postgres:15
+    container_name: postgres-flight
+    environment:
+      POSTGRES_DB: flight_db
+      POSTGRES_USER: flight_user
+      POSTGRES_PASSWORD: flight_pass
+    ports:
+      - "5439:5432"  
+    volumes:
+      - postgres-flight-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flight_user -d flight_db"]
+
+  postgres-employee:
+    image: postgres:15
+    container_name: postgres-employee
+    environment:
+      POSTGRES_DB: employee_db
+      POSTGRES_USER: employee_user
+      POSTGRES_PASSWORD: employee_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-employee-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U employee_user -d employee_db"]
+
+  postgres-reservation-command:
+    image: postgres:12
+    container_name: postgres-reservation-command
+    environment:
+      POSTGRES_DB: reservation_db
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: reservation_pass
+    ports:
+      - "5438:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-reservation-query:
+    image: postgres:12
+    container_name: postgres-reservation-query
+    environment:
+      POSTGRES_DB: reservation_db
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: reservation_pass
+    ports:
+      - "5437:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: rabbit_pass
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+
+  api-gateway:
+    build: ./micro-services/api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:8086/api/auth
+      - CLIENT_SERVICE_URL=http://cliente-service:8085/api/clientes
+      - FLIGHT_SERVICE_URL=http://flight-service:8083/api
+      - EMPLOYEE_SERVICE_URL=http://employee-service:8087/api/funcionarios
+      - RESERVATION_SERVICE_URL=http://reservation-service:8084/api/reservas
+      - RESERVATION_VIEW_SERVICE_URL=http://reservation-service:8084/api/reservas/view
+    depends_on:
+      - auth-service
+      - cliente-service
+      - flight-service
+      - employee-service
+      - reservation-service
+   
+  auth-service:
+    build: ./micro-services/auth-service
+    container_name: auth-service
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:auth_pass@mongodb-auth:27017/auth_db?authSource=admin
+      JWT_SECRET: wu9VYp7NkD3Gq1rLv2xE5zP8cJ6bX9mQ0oA4fK7yH1tS5dF3gU6iW4nM2jR9eB0vC8lO5pI3hT7kY2
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - mongodb-auth
+ 
+  cliente-service:
+    build: ./micro-services/cliente-service
+    container_name: cliente-service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-cliente:5432/cliente_db
+      SPRING_DATASOURCE_USERNAME: cliente_user
+      SPRING_DATASOURCE_PASSWORD: cliente_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
+    depends_on:
+      postgres-cliente:
+        condition: service_healthy
+  
+  flight-service:
+    build: ./micro-services/flight-service
+    container_name: flight-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight:5432/flight_db
+      SPRING_DATASOURCE_USERNAME: flight_user
+      SPRING_DATASOURCE_PASSWORD: flight_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
+    depends_on:
+      postgres-flight:
+        condition: service_healthy
+  employee-service:
+    build: ./micro-services/employee-service
+    container_name: employee-service
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-employee:5432/employee_db
+      SPRING_DATASOURCE_USERNAME: employee_user
+      SPRING_DATASOURCE_PASSWORD: employee_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
+    depends_on:
+      postgres-employee:
+        condition: service_healthy
+
+  reservation-service:
+    build: ./micro-services/reservation-service
+    container_name: reservation-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: rabbit_pass
+    depends_on:
+      postgres-reservation-query:
+        condition: service_healthy
+      postgres-reservation-command:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy  
+  
+  front-end:
+    build: ./front-end
+    container_name: front-end
+    ports:
+      - "3001:3000"
+    environment:
+      REACT_APP_API_GATEWAY_URL: http://api-gateway:3000
+    depends_on:
+      - api-gateway

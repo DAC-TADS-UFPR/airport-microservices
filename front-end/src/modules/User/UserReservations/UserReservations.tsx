@@ -32,7 +32,7 @@ const UserReservations: FC = () => {
 
     return reservations.filter((reserva) => {
       if (
-        reserva.estado === ReservaStateEnum.CANCELADA
+        reserva.estado === ReservaStateEnum.CANCELADA || reserva.estado === ReservaStateEnum.CANCELADA_VOO
       ) {
         return navbar === "Canceled";
       }
@@ -97,7 +97,7 @@ const UserReservations: FC = () => {
           filteredReservations.map((reserva) => {
             let status: Status;
             if (
-              reserva.estado === ReservaStateEnum.CANCELADA
+              reserva.estado === ReservaStateEnum.CANCELADA || reserva.estado === ReservaStateEnum.CANCELADA_VOO
             ) {
               status = "Canceled";
             } else {
