@@ -3,6 +3,9 @@ import ImgDefault from "@/components/ImgDefault/ImgDefault";
 import ButtonDefault from "@/components/Buttons/ButtonDefault/ButtonDefault";
 import "./AvailableFlightCard.scss";
 
+
+
+
 interface AvailableFlightCardProps {
   flightCode: string;
   originCode: string;
@@ -24,6 +27,7 @@ const AvailableFlightCard: FC<AvailableFlightCardProps> = ({
   time,
   onDetailsClick,
 }) => {
+ 
   return (
     <div className="availableFlightsModal">
       {/* Header */}

@@ -11,6 +11,8 @@ import { createReservation } from "@/data/config/reservation";
 import router from "next/router";
 import { Flight } from "@/models/flight";
 import ResultModal from '../../ResultModal/ResultModal';
+import { useParams } from "next/navigation";
+import { getCliente } from "@/data/config/client";
 
 
 interface AvailableFlightsModalProps {
@@ -35,7 +37,14 @@ const AvailableFlightsModal: FC<AvailableFlightsModalProps> = ({
   const totalMilhas = milhasPorAssento * quantidade;
   const valorTotal = data.valor_passagem * quantidade;
   const valorComMilhas = Math.max(0, valorTotal - milhasUsadas / 0.2);
+   const { id } = useParams();
+  // const { client, isLoading } = useQuery({
+  //   queryKey: [`cliente-${id}`, id],
+  //   queryFn: getCliente,
 
+  //   refetchOnWindowFocus: false,
+  // });
+  // setMilhasSaldo(client?.saldo_milhas || 0);
   const { mutateAsync, isPending } = useMutation<CreateReservationResponse, Error, IReserva>({
     mutationKey: ["createReservation"],
     mutationFn: createReservation,

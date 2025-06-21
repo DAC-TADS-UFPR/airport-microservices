@@ -111,7 +111,7 @@ public class ClienteService {
     public void setTransactionDescription(TransacaoMilhas transacao) {
         if(Objects.nonNull(transacao.getTipo()) && (Objects.isNull(transacao.getDescricao()) || transacao.getDescricao().isEmpty())) {
             if (transacao.getTipo() == TipoTransacao.ENTRADA) {
-                transacao.setDescricao("Crédito de milhas");
+                transacao.setDescricao("Compra de milhas");
             } else if (transacao.getTipo() == TipoTransacao.SAIDA) {
                 transacao.setDescricao("Débito de milhas");
             }
@@ -127,7 +127,7 @@ public class ClienteService {
         List<TransacaoMilhasDTO> listaDTO = entidades.stream()
                 .map(e -> TransacaoMilhasDTO.builder()
                         .data(e.getDataHora())
-                        .valorReais(e.getQuantidade() != null ?BigDecimal.valueOf(e.getQuantidade()*2) : BigDecimal.ZERO)
+                        .valorReais(e.getQuantidade() != null ?BigDecimal.valueOf(e.getQuantidade()*5) : BigDecimal.ZERO)
                         .quantidadeMilhas(e.getQuantidade())
                         .descricao(e.getDescricao())
                         .codigoReserva(e.getCodigoReserva())
