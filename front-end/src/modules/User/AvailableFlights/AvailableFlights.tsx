@@ -124,7 +124,7 @@ const AvailableFlights: FC = () => {
                    time={`${new Date(flight.data).toLocaleTimeString("pt-BR", {
                     hour: "2-digit",
                     minute: "2-digit",
-                  })} - 2h`}
+                  })}`}
                   onDetailsClick={() => openDetailsModal(flight)}
                 />
               </div>

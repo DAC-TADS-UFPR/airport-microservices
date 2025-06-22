@@ -142,6 +142,14 @@ const ReservationModal: FC<ReservationModalProps> = ({
 
   const horaChegadaFormatada = formatDate({ date: chegada, type: "hour" });
 
+  const now = new Date();
+  const diffHours =    (new Date(dataVoo).getTime() - now.getTime()) / (1000 * 60 * 60);
+  // só permite check-in se reserva criada e faltarem <= 48h
+  const canCheckIn =
+    reserva.estado === ReservaStateEnum.CRIADA &&
+    diffHours <= 48 &&
+    diffHours >= 0;
+
   return (
     <div className="reservationModal">
       {/* Header */}
@@ -235,26 +243,15 @@ const ReservationModal: FC<ReservationModalProps> = ({
 
       {/* Footer */}
       <div className="reservationModal__footer">
-        <ButtonDefault
-          onClick={() => {
-            if (reserva.estado === ReservaStateEnum.CRIADA) {
-              doCheckIn();
-            } else if (status === "Completed") {
-              console.log("Download do comprovante");
-            } else {
-              console.log("Reembolsar reserva");
-            }
-          }}
-          disabled={isLoading  || reserva.estado === ReservaStateEnum.CANCELADA || reserva.estado === ReservaStateEnum.REALIZADA} 
-        >
-          {reserva.estado === ReservaStateEnum.CRIADA
-            ? isLoading
-              ? "Aguarde..."
-              : "Check-in"
-            : status === "Completed"
-            ? "Download"
-            : "Reembolsar"}
-        </ButtonDefault>
+      {reserva.estado === ReservaStateEnum.CRIADA && 
+          // só mostra e permite clicar se faltar <=48h
+          canCheckIn ? (
+            <ButtonDefault onClick={doCheckIn} disabled={isLoading}>
+              {isLoading ? "Aguarde..." : "Check-in"}
+            </ButtonDefault>
+          ) : null 
+         }
+ 
         <ButtonDefault 
           color="red" 
           onClick={() => doCancel()}

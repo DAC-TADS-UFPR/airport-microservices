@@ -21,7 +21,8 @@ interface ManageStaffProps {
 const ManageStaff: FC<ManageStaffProps> = () => {
   const { openModal } = useModal();
   const queryClient = useQueryClient();
-  const  [currentCpf , setCurrentCpf] = useState<string | null>(null);
+  const [currentCpf, setCurrentCpf] = useState<string | null>(null);
+
   const handleNewMember = (funcionario?: any) => {
     openModal({
       headerName: "Adicionar novo funcionário",
@@ -29,11 +30,16 @@ const ManageStaff: FC<ManageStaffProps> = () => {
     });
   };
 
-  var { data: staffMembers, isLoading } = useQuery<StaffMember[]>({
+  var { data: staffMembers = [], isLoading } = useQuery<StaffMember[]>({
     queryKey: ["staffMembers"],
     queryFn: getEmployee,
     refetchOnWindowFocus: false,
   });
+
+  // Order by name
+  const sortedStaffMembers = [...staffMembers].sort((a, b) =>
+    a.nome.localeCompare(b.nome)
+  );
 
   const { mutateAsync: deleteEmployeeMutation } = useMutation({
     mutationKey: ["deleteEmployee"],
@@ -52,8 +58,6 @@ const ManageStaff: FC<ManageStaffProps> = () => {
     await deleteEmployeeMutation(cpf);
   };
 
-  
-
   return (
     <div className="manageStaff">
       <div className="manageStaff__header">
@@ -69,7 +73,7 @@ const ManageStaff: FC<ManageStaffProps> = () => {
       <div className="manageStaff__content">
         {isLoading ? (
           <p>Carregando...</p>
-        ) : staffMembers && staffMembers.length > 0 ? (
+        ) : sortedStaffMembers.length > 0 ? (
           <table>
             <thead>
               <tr>
@@ -81,7 +85,7 @@ const ManageStaff: FC<ManageStaffProps> = () => {
               </tr>
             </thead>
             <tbody>
-              {staffMembers.map((member) => (
+              {sortedStaffMembers.map((member) => (
                 <tr key={member.cpf}>
                   <td>{member.nome}</td>
                   <td>{member.cpf}</td>

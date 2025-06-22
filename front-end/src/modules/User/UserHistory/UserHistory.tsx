@@ -41,7 +41,7 @@ const UserHistory: FC = () => {
     () => historicoData?.transacoes || [],
     [historicoData]
   );
-
+console.log(historicoData)
   if (isLoading) {
     return <p className="userHistory__status">Carregando histórico...</p>;
   }
