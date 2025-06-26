@@ -29,5 +29,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('pendente', 'confirmada', 'cancelada'),
       allowNull: false,
     },
+     {
+    tableName: 'reservas',
+    timestamps: true,
+    underscored: true,
+    
   });
+  
 };
+const { Sequelize, DataTypes } = require('sequelize');
+const ReservaModel = require('../models/reserva');
+
+const sequelize = new Sequelize('nome_do_banco', 'usuario', 'senha', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false,
+});
+
+const Reserva = ReservaModel(sequelize, DataTypes);
+
+
+ 
+
+
