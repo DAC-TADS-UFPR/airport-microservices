@@ -36,7 +36,7 @@ const ManageStaff: FC<ManageStaffProps> = () => {
     refetchOnWindowFocus: false,
   });
 
-  // Order by name
+  // Ordena por nome
   const sortedStaffMembers = [...staffMembers].sort((a, b) =>
     a.nome.localeCompare(b.nome)
   );

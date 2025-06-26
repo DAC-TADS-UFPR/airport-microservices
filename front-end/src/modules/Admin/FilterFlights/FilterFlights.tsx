@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, ChangeEvent } from "react";
 
+// Interface que define a estrutura de um objeto de voo
 interface Flight {
   id: string;
   flightNumber: string;
@@ -10,8 +11,10 @@ interface Flight {
   status: "Scheduled" | "Boarding" | "Departed" | "Arrived" | "Cancelled";
 }
 
+// Lista com todos os status possíveis de um voo
 const ALL_STATUSES: Flight["status"][] = ["Scheduled", "Boarding", "Departed", "Arrived", "Cancelled"];
 
+// Função simulada para buscar voos (mock), com delay de 500ms
 const fetchFlights = async (): Promise<Flight[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -40,11 +43,12 @@ const fetchFlights = async (): Promise<Flight[]> => {
 };
 
 const FilterFlights: React.FC = () => {
+  // Estados para armazenar todos os voos, status de carregamento e erro
   const [allFlights, setAllFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter state
+  // Estados para armazenar os filtros inseridos pelo usuário
   const [flightNumberFilter, setFlightNumberFilter] = useState<string>("");
   const [originFilter, setOriginFilter] = useState<string>("");
   const [destinationFilter, setDestinationFilter] = useState<string>("");
@@ -52,6 +56,7 @@ const FilterFlights: React.FC = () => {
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
 
+  // Carrega os dados de voos quando o componente é montado
   useEffect(() => {
     const load = async () => {
       try {
@@ -66,6 +71,7 @@ const FilterFlights: React.FC = () => {
     load();
   }, []);
 
+  // Filtro memoizado para evitar recomputações desnecessárias
   const filteredFlights = useMemo(() => {
     return allFlights.filter((f) => {
       if (flightNumberFilter && !f.flightNumber.toLowerCase().includes(flightNumberFilter.toLowerCase())) {
@@ -94,6 +100,7 @@ const FilterFlights: React.FC = () => {
     });
   }, [allFlights, flightNumberFilter, originFilter, destinationFilter, statusFilter, startDateFilter, endDateFilter]);
 
+  // Função genérica para lidar com mudanças em inputs e selects
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     switch (name) {
@@ -118,6 +125,7 @@ const FilterFlights: React.FC = () => {
     }
   };
 
+  // Renderização condicional com mensagens de carregamento ou erro
   if (loading) return <div>Loading flights...</div>;
   if (error) return <div>Error: {error}</div>;
 
