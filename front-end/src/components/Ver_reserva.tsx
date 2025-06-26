@@ -48,6 +48,15 @@ const sequelize = new Sequelize('nome_do_banco', 'usuario', 'senha', {
 
 const Reserva = ReservaModel(sequelize, DataTypes);
 
+sequelize.sync({ force: true })
+  .then(() => {
+    console.log("Tabela de Reservas sincronizada com sucesso.");
+  })
+  .catch((error) => {
+    console.error("Erro ao sincronizar a tabela de Reservas:", error);
+  });
+
+
 
  
 
